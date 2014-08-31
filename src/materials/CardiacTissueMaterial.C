@@ -94,7 +94,5 @@ CardiacTissueMaterial::computeQpProperties()
   Tstar(0, 0) += coupledValue("Ta")[_qp] * Cstar_inv(0,0);
   // rotate back into outer coordinate system
   _T[_qp] = _P[_qp] * Tstar * _P[_qp].transpose(); // TODO: also symmetric
-  
-  // stress potential
-  _TF[_qp] = _T[_qp]*_F[_qp]).transpose();
+
 }
