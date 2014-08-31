@@ -3,6 +3,10 @@
 #include "AppFactory.h"
 #include "ModulesApp.h"
 
+#include "StressDiffusion.h"
+#include "CardiacTissueMaterial.h"
+
+
 template<>
 InputParameters validParams<EweApp>()
 {
@@ -37,6 +41,9 @@ EweApp::registerApps()
 void
 EweApp::registerObjects(Factory & factory)
 {
+  // Register any custom objects you have built on the MOOSE Framework
+  registerKernel(StressDiffusion);
+  registerMaterial(CardiacTissueMaterial);
 }
 
 void

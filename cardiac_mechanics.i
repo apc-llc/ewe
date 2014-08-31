@@ -75,25 +75,29 @@
     y = y                            # .. y
     z = z                            # .. z
     p = p                            # .. p (pressure / Lagrange multiplier for incompressibility)
-    #TODO: add this Ta = Ta                          # .. active strain, i.e. strain that results from electrophysiology
+    #TODO: add this Ta = Ta                          # .. active strain, i.e. strain that results from electrophysiology, default (if unset) = 0
   [../]
 []
 
 [Kernels]
-  [./dummy_x]
-    type = Diffusion
+  [./stress_diffusion_x]
     variable = x
+    type = StressDiffusion
+    component = "X"
   [../]
 
-  [./dummy_y]
-    type = Diffusion
+  [./stress_diffusion_y]
     variable = y
+    type = StressDiffusion
+    component = "Y"
   [../]
 
-  [./dummy_z]
-    type = Diffusion
+  [./stress_diffusion_z]
     variable = z
+    type = StressDiffusion
+    component = "Z"
   [../]
+
 []
 
 [Executioner]

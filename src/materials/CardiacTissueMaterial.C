@@ -40,20 +40,18 @@ CardiacTissueMaterial::CardiacTissueMaterial(const std::string & name,
     ,
     // Declare that this material is going to provide a RealTensorValue
     // valued property named "PiolaKirchoff2nd" that Kernels can use.
-    _T(declareProperty<RealTensorValue>("PiolaKirchoff2nd_fibres"))
+    _T(declareProperty<RealTensorValue>("PiolaKirchoff2nd"))
     ,
     // Declare that this material is going to provide a RealTensorValue
     // valued property named "stress_potential" that Kernels can use.
     _FT(declareProperty<RealTensorValue>("stress_potential"))
-
-    // Get the reference to the variable coupled into this Material
-  //  _diffusion_gradient(isCoupled("diffusion_gradient") ? coupledGradient("diffusion_gradient") : _grad_zero),
-
-{
-  _k = SymmTensor(getParam<std::vector<Real> >("k_MN"));
-  _a = SymmTensor(getParam<std::vector<Real> >("a_MN"));
-  _b = SymmTensor(getParam<std::vector<Real> >("b_MN"));
-}
+    ,
+    _k(SymmTensor(getParam<std::vector<Real> >("k_MN")))
+    ,
+    _a(SymmTensor(getParam<std::vector<Real> >("a_MN")))
+    ,
+    _b(SymmTensor(getParam<std::vector<Real> >("b_MN")))
+{}
 
 void
 CardiacTissueMaterial::computeQpProperties()
