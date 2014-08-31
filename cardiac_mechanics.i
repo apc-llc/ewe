@@ -38,30 +38,52 @@
   [../]
 []
 
-#[BCs]
-#
-#  [./y_force]
-#    type = NeumannBC
-#    variable = y_disp
-#    boundary = 2
-#    value = -1.0
-#  [../]
-#
-#  [./left]
-#    type = DirichletBC
-#    variable = x_disp
-#    boundary = 3
-#    value = 0.0
-#  [../]
-#
-#  [./bottom]
-#    type = DirichletBC
-#    variable = y_disp
-#    boundary = 1
-#    value = 0.0
-#  [../]
-#
-#[]
+[BCs]s
+  [./force_x]
+    type = ForceBC
+    variable = x
+    value = 0.0
+    component = x
+    boundary = 'left right top bottom back front'
+  [../]
+
+  [./force_y]
+    type = ForceBC
+    variable = y
+    value = 0.0
+    component = x
+    boundary = 'left right top bottom back front'
+  [../]
+
+  [./force_z]
+    type = ForceBC
+    variable = z
+    value = 0.0
+    component = x
+    boundary = 'left right top bottom back front'
+  [../]
+
+  [./disp_x]
+    type = DirichletBC
+    variable = x
+    value = 0.0
+    boundary = 'left right top bottom back front'
+  [../]
+
+  [./disp_y]
+    type = DirichletBC
+    variable = y
+    value = 0.0
+    boundary = 'left right top bottom back front'
+  [../]
+
+  [./disp_z]
+    type = DirichletBC
+    variable = z
+    value = 0.0
+    boundary = 'left right top bottom back front'
+  [../]
+[]
 
 [Materials]
   [./constant]
