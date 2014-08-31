@@ -30,17 +30,21 @@ CardiacTissueMaterial::CardiacTissueMaterial(const std::string & name,
                                  InputParameters parameters) :
     Material(name, parameters)
     ,
-    // Declare that this material is going to provide a SymmTensor
+    // Declare that this material is going to provide a RealTensorValue
     // valued property named "FibreOrientation" that Kernels can use.
     _P(declareProperty<RealTensorValue>("FibreOrientation"))          // TODO: these have to be set in the constructor appropriately
     ,
-    // Declare that this material is going to provide a SymmTensor
+    // Declare that this material is going to provide a RealTensorValue
     // valued property named "deformation_gradient" that kernels can use.
     _F(declareProperty<RealTensorValue>("deformation_gradient"))
     ,
-    // Declare that this material is going to provide a SymmTensor
+    // Declare that this material is going to provide a RealTensorValue
     // valued property named "PiolaKirchoff2nd" that Kernels can use.
     _T(declareProperty<RealTensorValue>("PiolaKirchoff2nd_fibres"))
+    ,
+    // Declare that this material is going to provide a RealTensorValue
+    // valued property named "stress_potential" that Kernels can use.
+    _FT(declareProperty<RealTensorValue>("stress_potential"))
 
     // Get the reference to the variable coupled into this Material
   //  _diffusion_gradient(isCoupled("diffusion_gradient") ? coupledGradient("diffusion_gradient") : _grad_zero),
@@ -90,4 +94,7 @@ CardiacTissueMaterial::computeQpProperties()
   Tstar(0, 0) += coupledValue("Ta")[_qp] * Cstar_inv(0,0);
   // rotate back into outer coordinate system
   _T[_qp] = _P[_qp] * Tstar * _P[_qp].transpose(); // TODO: also symmetric
+  
+  // stress potential
+  _TF[_qp] = _T[_qp]*_F[_qp]).transpose();
 }

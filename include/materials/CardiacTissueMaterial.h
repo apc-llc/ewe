@@ -50,6 +50,12 @@ private:
    * for the 2nd Piola-Kirchoff stress tensor 
    */
   MaterialProperty<RealTensorValue> & _T;
+  
+  /**
+   * Member reference to the computed values
+   * for someting like the stress potential T*F^t
+   */
+  MaterialProperty<RealTensorValue> & _FT;
 
 };
 
