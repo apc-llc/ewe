@@ -63,17 +63,21 @@
 #
 #[]
 
-#[Materials]
-#  [./constant]
-#    type = LinearIsotropicMaterial
-#    block = 1
-#    youngs_modulus = 1e6
-#    poissons_ratio = .3
-#    disp_x = x_disp
-#    disp_y = y_disp
-#    disp_z = z_disp
-#  [../]
-#[]
+[Materials]
+  [./constant]
+    type = LinearIsotropicMaterial
+    block = 1
+    # material parameters in the order 11 22 33 12 23 31 (symmetric), taken from [Nash & Hunter, 2000], Table I
+    k_MN = 1.937 0.028 0.310 1.000 1.000 1.000
+    a_MN = 0.523 0.681 1.037 0.731 0.886 0.731
+    b_MN = 1.351 5.991 0.398 2.000 2.000 2.000
+    x = x                            # connection between coupled variables in the material and our simulation variables for x
+    y = y                            # .. y
+    z = z                            # .. z
+    p = p                            # .. p (pressure / Lagrange multiplier for incompressibility)
+    #TODO: add this Ta = Ta                          # .. active strain, i.e. strain that results from electrophysiology
+  [../]
+[]
 
 [Kernels]
   [./dummy_x]
