@@ -36,6 +36,11 @@
     order = FIRST
     family = LAGRANGE
   [../]
+
+  [./p]
+    order = FIRST
+    family = LAGRANGE
+  [../]
 []
 
 [BCs]
@@ -86,13 +91,13 @@
 []
 
 [Materials]
-  [./constant]
-    type = LinearIsotropicMaterial
+  [./cardiac_tissues]
+    type = CardiacTissueMaterial
     block = 1
     # material parameters in the order 11 22 33 12 23 31 (symmetric), taken from [Nash & Hunter, 2000], Table I
-    k_MN = 1.937 0.028 0.310 1.000 1.000 1.000
-    a_MN = 0.523 0.681 1.037 0.731 0.886 0.731
-    b_MN = 1.351 5.991 0.398 2.000 2.000 2.000
+    k_MN = '1.937 0.028 0.310 1.000 1.000 1.000'
+    a_MN = '0.523 0.681 1.037 0.731 0.886 0.731'
+    b_MN = '1.351 5.991 0.398 2.000 2.000 2.000'
     x = x                            # connection between coupled variables in the material and our simulation variables for x
     y = y                            # .. y
     z = z                            # .. z
