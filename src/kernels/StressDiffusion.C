@@ -13,7 +13,7 @@
 template<>
 InputParameters validParams<StressDiffusion>()
 {
-  InputParameters params = validParams<StressDiffusion>();
+  InputParameters params = validParams<Kernel>();
   MooseEnum component("X=0, Y=1, Z=2");
   params.addRequiredParam<MooseEnum>("component", component, "Component, this kernel works on (selects row in 2ndPiolaKirchoff stress tensor): X, Y, or Z.");
   return params;

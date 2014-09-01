@@ -105,19 +105,19 @@
   [./stress_diffusion_x]
     variable = x
     type = StressDiffusion
-    component = "X"
+    component = X
   [../]
 
   [./stress_diffusion_y]
     variable = y
     type = StressDiffusion
-    component = "Y"
+    component = Y
   [../]
 
   [./stress_diffusion_z]
     variable = z
     type = StressDiffusion
-    component = "Z"
+    component = Z
   [../]
 
 []
