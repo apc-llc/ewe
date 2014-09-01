@@ -10,7 +10,7 @@
 
 #include "Material.h"
 #include "SymmTensor.h"
-#include "libmesh/tensor_value.h"
+#include "RankTwoTensor.h"
 
 //Forward Declarations
 class CardiacTissueMaterial;
@@ -35,19 +35,19 @@ private:
    * Member reference to the (static) values
    * for the orientation of the fibre coordinate system
    */
-  MaterialProperty<RealTensorValue> & _P;
+  MaterialProperty<RankTwoTensor> & _P;
 
   /**
    * Member reference to the computed values
    * for the deformation gradient tensor
    */
-  MaterialProperty<RealTensorValue> & _F;
+  MaterialProperty<RankTwoTensor> & _F;
   
   /**
    * Member reference to the computed values
    * for the 2nd Piola-Kirchoff stress tensor 
    */
-  MaterialProperty<RealTensorValue> & _T;
+  MaterialProperty<RankTwoTensor> & _T;
 
 
   SymmTensor _k, _a, _b;

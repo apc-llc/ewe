@@ -32,15 +32,15 @@ CardiacTissueMaterial::CardiacTissueMaterial(const std::string & name,
     ,
     // Declare that this material is going to provide a RealTensorValue
     // valued property named "FibreOrientation" that Kernels can use.
-    _P(declareProperty<RealTensorValue>("FibreOrientation"))          // TODO: these have to be set in the constructor appropriately
+    _P(declareProperty<RankTwoTensor>("FibreOrientation"))          // TODO: these have to be set in the constructor appropriately
     ,
     // Declare that this material is going to provide a RealTensorValue
     // valued property named "deformation_gradient" that kernels can use.
-    _F(declareProperty<RealTensorValue>("deformation_gradient"))
+    _F(declareProperty<RankTwoTensor>("deformation_gradient"))
     ,
     // Declare that this material is going to provide a RealTensorValue
     // valued property named "PiolaKirchoff2nd" that Kernels can use.
-    _T(declareProperty<RealTensorValue>("PiolaKirchoff2nd"))
+    _T(declareProperty<RankTwoTensor>("PiolaKirchoff2nd"))
     ,
     _k(SymmTensor(getParam<std::vector<Real> >("k_MN")))
     ,
@@ -61,16 +61,16 @@ CardiacTissueMaterial::computeQpProperties()
                              coupledGradient("z")[_qp]);
                              
   // Cauchy Green Deformation tensor in fibre-oriented coordinates C* = P^t F^tF P
-  RealTensorValue Cstar = _P[_qp].transpose() * _F[_qp].transpose() * _F[_qp] * _P[_qp]; // TODO: efficiency: we know that F^tF is symmetric but compute all 9 elements instead of the 6 unique ones
+  const RankTwoTensor Cstar = _P[_qp].transpose() * _F[_qp].transpose() * _F[_qp] * _P[_qp]; // TODO: efficiency: we know that F^tF is symmetric but compute all 9 elements instead of the 6 unique ones
 
   // ...and its inverse...
-  RealTensorValue Cstar_inv = Cstar.inverse(); // TODO: ditto
+  const RankTwoTensor Cstar_inv = Cstar.inverse(); // TODO: ditto
   
   // Lagrange-Green strain tensor
-  RealTensorValue Estar = (Cstar - RealTensorValue(1., 0., 0., 0., 1., 0., 0., 0., 1.)) * 0.5;  //TODO: also symmetric
+  const RankTwoTensor Estar = (Cstar - RealTensorValue(1., 0., 0., 0., 1., 0., 0., 0., 1.)) * 0.5;  //TODO: also symmetric
   
   // derivative of elastic energy
-  RealTensorValue dWdE;
+  RankTwoTensor dWdE;
   
   for (int M=0;M<3;M++)
     for (int N=0;N<3;N++) {
@@ -83,7 +83,7 @@ CardiacTissueMaterial::computeQpProperties()
   
   // 2nd Piola Kirchoff tensor
   // elastic forces
-  RealTensorValue Tstar = (dWdE + dWdE.transpose())*0.5 - Cstar_inv*coupledValue("p")[_qp];  // TODO: also symmetric
+  RankTwoTensor Tstar = (dWdE + dWdE.transpose())*0.5 - Cstar_inv*coupledValue("p")[_qp];  // TODO: also symmetric
   // active strain
   Tstar(0, 0) += coupledValue("Ta")[_qp] * Cstar_inv(0,0);
   // rotate back into outer coordinate system
