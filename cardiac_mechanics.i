@@ -91,9 +91,8 @@
 []
 
 [Materials]
-  [./cardiac_tissues]
+  [./cardiac_tissue]
     type = CardiacTissueMaterial
-    block = 1
     # material parameters in the order 11 22 33 12 23 31 (symmetric), taken from [Nash & Hunter, 2000], Table I
     k_MN = '1.937 0.028 0.310 1.000 1.000 1.000'
     a_MN = '0.523 0.681 1.037 0.731 0.886 0.731'

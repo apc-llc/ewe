@@ -1,7 +1,6 @@
 #include "EweApp.h"
 #include "Moose.h"
 #include "AppFactory.h"
-#include "ModulesApp.h"
 
 #include "StressDiffusion.h"
 #include "CardiacTissueMaterial.h"
@@ -22,11 +21,9 @@ EweApp::EweApp(const std::string & name, InputParameters parameters) :
   srand(processor_id());
 
   Moose::registerObjects(_factory);
-  ModulesApp::registerObjects(_factory);
   EweApp::registerObjects(_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
-  ModulesApp::associateSyntax(_syntax, _action_factory);
   EweApp::associateSyntax(_syntax, _action_factory);
 }
 
