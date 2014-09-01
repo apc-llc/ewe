@@ -1,4 +1,14 @@
-#Run with 4 procs
+[Debug]
+  active                         = __all__                     # If specified only the blocks named will be visited and made active
+  show_actions                   = 0                           # Print out the actions being executed
+  show_material_props            = 0                           # Print out the material properties supplied for each block, face, neighbor, ...
+                                                               # and/or sideset
+  show_parser                    = 0                           # Shows parser block extraction and debugging information
+  show_top_residuals             = 0                           # The number of top residuals to print out (0 = no output)
+  show_var_residual_norms        = 0                           # Print the residual norms of the individual solution variables at each ...
+                                                               # nonlinear iteration
+  #show_var_residual              =                             # Variables for which residuals will be sent to the output file
+[]
 
 [Mesh]
       dim                        = 3                           # The dimension of the mesh to be generated
@@ -91,7 +101,8 @@
 []
 
 [Materials]
-  [./cardiac_tissue]
+  [./CardiacTissueMaterial]
+    block = 0
     type = CardiacTissueMaterial
     # material parameters in the order 11 22 33 12 23 31 (symmetric), taken from [Nash & Hunter, 2000], Table I
     k_MN = '1.937 0.028 0.310 1.000 1.000 1.000'
