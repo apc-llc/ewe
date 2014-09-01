@@ -7,7 +7,7 @@
 #define STRESSDIFFUSION_H
 
 #include "Kernel.h"
-#include "libmesh/tensor_value.h"
+#include "RankTwoTensor.h"
 
 //Forward Declarations
 class StressDiffusion;
@@ -34,7 +34,7 @@ protected:
    * Member reference to the computed values
    * for the 2nd Piola-Kirchoff stress tensor 
    */
-  MaterialProperty<RealTensorValue> & _T;
+  MaterialProperty<RankTwoTensor> & _T;
 
   /**
    * Member reference for storing the spatial

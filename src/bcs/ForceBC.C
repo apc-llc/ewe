@@ -17,7 +17,7 @@ InputParameters validParams<ForceBC>()
 
 ForceBC::ForceBC(const std::string & name, InputParameters parameters) :
     IntegratedBC(name, parameters),
-    _T(getMaterialProperty<RealTensorValue>("PiolaKirchoff2nd")),
+    _T(getMaterialProperty<RankTwoTensor>("PiolaKirchoff2nd")),
     _c(getParam<MooseEnum>("component"))
 {}
 

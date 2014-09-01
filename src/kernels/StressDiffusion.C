@@ -23,7 +23,7 @@ InputParameters validParams<StressDiffusion>()
 StressDiffusion::StressDiffusion(const std::string & name,
                                    InputParameters parameters) :
     Kernel(name,parameters),
-    _T(getMaterialProperty<RealTensorValue>("PiolaKirchoff2nd")),
+    _T(getMaterialProperty<RankTwoTensor>("PiolaKirchoff2nd")),
     _c(getParam<MooseEnum>("component"))
 {}
 
