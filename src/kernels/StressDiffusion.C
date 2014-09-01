@@ -30,11 +30,11 @@ StressDiffusion::StressDiffusion(const std::string & name,
 Real
 StressDiffusion::computeQpResidual()
 {
-  return ((_grad_test[_c][_qp])*(_T[_qp].row(_c)*_grad_u[_qp]))(0); // TODO: explicit conversion libMesh::TypeVector<double> to libMesh::Real ; have to check if this is really a 1-entry vector before
+  return ((_grad_test[_i][_qp])*(_T[_qp].row(_c)*_grad_u[_qp]))(0); // TODO: explicit conversion libMesh::TypeVector<double> to libMesh::Real ; have to check if this is really a 1-entry vector before
 }
 
 Real
 StressDiffusion::computeQpJacobian()
 {
-  return ((_grad_test[_c][_qp])*(_T[_qp].row(_c)*_grad_phi[_j][_qp]))(0); // TODO: dito
+  return ((_grad_test[_i][_qp])*(_T[_qp].row(_c)*_grad_phi[_j][_qp]))(0); // TODO: dito
 }
