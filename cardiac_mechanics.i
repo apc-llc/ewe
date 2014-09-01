@@ -125,6 +125,10 @@
     component = Z
   [../]
 
+  [./incompressibility_det]
+    variable = p
+    type = IncompressibilityDeterminant
+  [../]  
 []
 
 [Executioner]
