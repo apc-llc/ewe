@@ -44,6 +44,12 @@ private:
    * component, this kernel works on 
    */
   MooseEnum _c;
+
+  /**
+   * Member reference for storing the
+   * value to be acquired on the boundarys
+   */
+  Real _value;
 };
 
 #endif //FORCEBC_H
