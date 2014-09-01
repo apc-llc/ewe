@@ -38,12 +38,12 @@
   [../]
 []
 
-[BCs]s
+[BCs]
   [./force_x]
     type = ForceBC
     variable = x
     value = 0.0
-    component = x
+    component = X
     boundary = 'left right top bottom back front'
   [../]
 
@@ -51,7 +51,7 @@
     type = ForceBC
     variable = y
     value = 0.0
-    component = x
+    component = Y
     boundary = 'left right top bottom back front'
   [../]
 
@@ -59,7 +59,7 @@
     type = ForceBC
     variable = z
     value = 0.0
-    component = x
+    component = Z
     boundary = 'left right top bottom back front'
   [../]
 

@@ -5,6 +5,7 @@
 
 #include "StressDiffusion.h"
 #include "CardiacTissueMaterial.h"
+#include "ForceBC.h"
 
 
 template<>
@@ -44,6 +45,7 @@ EweApp::registerObjects(Factory & factory)
   // Register any custom objects you have built on the MOOSE Framework
   registerKernel(StressDiffusion);
   registerMaterial(CardiacTissueMaterial);
+  registerBoundaryCondition(ForceBC);
 }
 
 void
