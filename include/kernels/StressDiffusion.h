@@ -19,7 +19,7 @@ class StressDiffusion;
 template<>
 InputParameters validParams<StressDiffusion>();
 
-class StressDiffusion : public Diffusion
+class StressDiffusion : public Kernel
 {
 public:
 
@@ -40,6 +40,6 @@ protected:
    * Member reference for storing the spatial
    * component, this kernel works on 
    */
-  MooseEnum & _c;
+  MooseEnum _c;
 };
 #endif //STRESSDIFFUSION_H

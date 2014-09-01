@@ -31,8 +31,6 @@ protected:
   virtual void computeQpProperties();
 
 private:
-  SymmTensor _k, _a, _b;
-
   /**
    * Member reference to the (static) values
    * for the orientation of the fibre coordinate system
@@ -50,6 +48,9 @@ private:
    * for the 2nd Piola-Kirchoff stress tensor 
    */
   MaterialProperty<RealTensorValue> & _T;
+
+
+  SymmTensor _k, _a, _b;
 };
 
 #endif //CARDIACTISSUEMATERIAL_H

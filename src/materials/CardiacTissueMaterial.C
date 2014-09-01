@@ -42,10 +42,6 @@ CardiacTissueMaterial::CardiacTissueMaterial(const std::string & name,
     // valued property named "PiolaKirchoff2nd" that Kernels can use.
     _T(declareProperty<RealTensorValue>("PiolaKirchoff2nd"))
     ,
-    // Declare that this material is going to provide a RealTensorValue
-    // valued property named "stress_potential" that Kernels can use.
-    _FT(declareProperty<RealTensorValue>("stress_potential"))
-    ,
     _k(SymmTensor(getParam<std::vector<Real> >("k_MN")))
     ,
     _a(SymmTensor(getParam<std::vector<Real> >("a_MN")))
@@ -81,13 +77,13 @@ CardiacTissueMaterial::computeQpProperties()
       if (Estar(M,N) >= 0) {
         dWdE(M,N) = _k(M, N) * Estar(M,N) / pow(abs(_a(M,N) - Estar(M,N)), _b(M,N));
       } else {
-        dWdE(M,N) = 0.
+        dWdE(M,N) = 0.;
       }
     }
   
   // 2nd Piola Kirchoff tensor
   // elastic forces
-  RealTensorValue Tstar = (dWdE + dWde.transpose())*0.5 - Cstar_inv*coupledValue("p")[_qp];  // TODO: also symmetric
+  RealTensorValue Tstar = (dWdE + dWdE.transpose())*0.5 - Cstar_inv*coupledValue("p")[_qp];  // TODO: also symmetric
   // active strain
   Tstar(0, 0) += coupledValue("Ta")[_qp] * Cstar_inv(0,0);
   // rotate back into outer coordinate system
