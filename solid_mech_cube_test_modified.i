@@ -142,15 +142,12 @@
   end_time = 1
 #  num_steps = 5000
   dtmax = 0.1
-  dtmin = 0.1
+  dtmin = 0.01
 
   [./TimeStepper]
-    type = ConstantDT
+    type = SolutionTimeAdaptiveDT
     dt = 0.1
-#    optimal_iterations = 12
-#    linear_iteration_ratio = 100
-#    time_t  = '-100 0' # direct control of time steps vs time (optional)
-#    time_dt = '100  900'
+    adapt_log = True
   [../]
 []
 
