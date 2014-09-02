@@ -193,15 +193,15 @@
 []
 
 [Executioner]
-  type = Steady
+  type = Transient
 
   solve_type = PJFNK
 
   l_max_its = 100
 
-#  start_time = 0.0
-#  num_steps = 4
-#  dt = 0.000005
+  start_time = 0.0
+  num_steps = 5
+  dt = 0.000001
 []
 
 [Outputs]
