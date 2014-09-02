@@ -51,6 +51,21 @@
     order = FIRST
     family = LAGRANGE
   [../]
+  
+  [./vx]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
+  [./vy]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
+  [./vz]
+    order = FIRST
+    family = LAGRANGE
+  [../]
 []
 
 [BCs]
@@ -118,26 +133,44 @@
 
 [Kernels]
   [./stress_diffusion_x]
-    variable = x
-    type = StressDiffusion
+    type      = StressDiffusion
+    variable  = x
     component = X
+  [../]
+  [./momentum_transient_x]
+    type     = MomentumTransient
+    variable = x
+    v        = vx
+    rho = 1.05e-6                    # mass density, according to [Whiteley 2007, pg. 2204]: 1.05e-6 kPa s**2/mm**2  
   [../]
 
   [./stress_diffusion_y]
-    variable = y
-    type = StressDiffusion
+    type      = StressDiffusion
+    variable  = y
     component = Y
+  [../]
+  [./momentum_transient_y]
+    type     = MomentumTransient
+    variable = y
+    v        = vy
+    rho = 1.05e-6                    # mass density, according to [Whiteley 2007, pg. 2204]: 1.05e-6 kPa s**2/mm**2  
   [../]
 
   [./stress_diffusion_z]
-    variable = z
-    type = StressDiffusion
+    type      = StressDiffusion
+    variable  = z
     component = Z
+  [../]
+  [./momentum_transient_z]
+    type     = MomentumTransient
+    variable = z
+    v        = vz
+    rho = 1.05e-6                    # mass density, according to [Whiteley 2007, pg. 2204]: 1.05e-6 kPa s**2/mm**2  
   [../]
 
   [./incompressibility_det]
-    variable = p
     type = IncompressibilityDeterminant
+    variable = p
   [../]  
 []
 

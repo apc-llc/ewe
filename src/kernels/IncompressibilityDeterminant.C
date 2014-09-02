@@ -29,7 +29,7 @@ IncompressibilityDeterminant::computeQpResidual()
   return _test[_i][_qp]*(_F[_qp].det()-1.);
 }
 
-/* TODO: JAcobian is missing - have fun with this one :-)
+/* TODO: Jacobian is missing - have fun with this one :-)
 Real
 IncompressibilityDeterminant::computeQpJacobian()
 {
