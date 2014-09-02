@@ -51,21 +51,6 @@
     order = FIRST
     family = LAGRANGE
   [../]
-  
-  [./vx]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./vy]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./vz]
-    order = FIRST
-    family = LAGRANGE
-  [../]
 []
 
 [BCs]
@@ -129,6 +114,13 @@
     p = p                            # .. p (pressure / Lagrange multiplier for incompressibility)
     #TODO: add this Ta = Ta                          # .. active strain, i.e. strain that results from electrophysiology, default (if unset) = 0
   [../]
+
+  [./density]
+    type = GenericConstantMaterial
+    block = 0
+    prop_names = 'density'
+    prop_values = 1.05e-6                    # mass density, according to [Whiteley 2007, pg. 2204]: 1.05e-6 kPa s**2/mm**2
+  [../]
 []
 
 [Kernels]
@@ -137,11 +129,9 @@
     variable  = x
     component = X
   [../]
-  [./momentum_transient_x]
-    type     = MomentumTransient
+  [./transient_x]
+    type     = SolidMechImplicitEuler
     variable = x
-    v        = vx
-    rho = 1.05e-6                    # mass density, according to [Whiteley 2007, pg. 2204]: 1.05e-6 kPa s**2/mm**2  
   [../]
 
   [./stress_diffusion_y]
@@ -149,11 +139,9 @@
     variable  = y
     component = Y
   [../]
-  [./momentum_transient_y]
-    type     = MomentumTransient
+  [./transient_y]
+    type     = SolidMechImplicitEuler
     variable = y
-    v        = vy
-    rho = 1.05e-6                    # mass density, according to [Whiteley 2007, pg. 2204]: 1.05e-6 kPa s**2/mm**2  
   [../]
 
   [./stress_diffusion_z]
@@ -161,29 +149,9 @@
     variable  = z
     component = Z
   [../]
-  [./momentum_transient_z]
-    type     = MomentumTransient
+  [./transient_z]
+    type     = SolidMechImplicitEuler
     variable = z
-    v        = vz
-    rho = 1.05e-6                    # mass density, according to [Whiteley 2007, pg. 2204]: 1.05e-6 kPa s**2/mm**2  
-  [../]
-
-  [./position_transient_x]
-    type     = PositionTransient
-    variable = vx
-    x        = x
-  [../]
-
-  [./position_transient_y]
-    type     = PositionTransient
-    variable = vy
-    x        = y
-  [../]
-
-  [./position_transient_z]
-    type     = PositionTransient
-    variable = vz
-    x        = z
   [../]
 
   [./incompressibility_det]
