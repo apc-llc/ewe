@@ -168,6 +168,24 @@
     rho = 1.05e-6                    # mass density, according to [Whiteley 2007, pg. 2204]: 1.05e-6 kPa s**2/mm**2  
   [../]
 
+  [./position_transient_x]
+    type     = PositionTransient
+    variable = vx
+    x        = x
+  [../]
+
+  [./position_transient_y]
+    type     = PositionTransient
+    variable = vy
+    x        = y
+  [../]
+
+  [./position_transient_z]
+    type     = PositionTransient
+    variable = vz
+    x        = z
+  [../]
+
   [./incompressibility_det]
     type = IncompressibilityDeterminant
     variable = p

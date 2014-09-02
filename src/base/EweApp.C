@@ -4,6 +4,7 @@
 
 #include "StressDiffusion.h"
 #include "MomentumTransient.h"
+#include "PositionTransient.h"
 #include "CardiacTissueMaterial.h"
 #include "ForceBC.h"
 #include "IncompressibilityDeterminant.h"
@@ -44,6 +45,7 @@ EweApp::registerObjects(Factory & factory)
   // Register any custom objects you have built on the MOOSE Framework
   registerKernel(StressDiffusion);
   registerKernel(MomentumTransient);
+  registerKernel(PositionTransient);
   registerKernel(IncompressibilityDeterminant);
   registerMaterial(CardiacTissueMaterial);
   registerBoundaryCondition(ForceBC);
