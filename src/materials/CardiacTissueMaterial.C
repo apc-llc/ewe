@@ -53,39 +53,40 @@ void
 CardiacTissueMaterial::computeQpProperties()
 {
   // TODO: for now we set fibre orientation identical to original coordinates
-  _P[_qp] = RealTensorValue(1., 0., 0., 0., 1., 0., 0., 0., 1.);
+  _P[_qp] = RankTwoTensor(1., 0., 0., 0., 1., 0., 0., 0., 1.);
 
   // deformation gradient is straightforward
-  _F [_qp] = RealTensorValue(coupledGradient("x")[_qp],
-                             coupledGradient("y")[_qp],
-                             coupledGradient("z")[_qp]);
+  _F [_qp] = RankTwoTensor(coupledGradient("x")[_qp],
+                           coupledGradient("y")[_qp],
+                           coupledGradient("z")[_qp]);
                              
-  // Cauchy Green Deformation tensor in fibre-oriented coordinates C* = P^t F^tF P
+  // Cauchy Green deformation tensor in fibre-oriented coordinates C* = P^t F^tF P
   const RankTwoTensor Cstar = _P[_qp].transpose() * _F[_qp].transpose() * _F[_qp] * _P[_qp]; // TODO: efficiency: we know that F^tF is symmetric but compute all 9 elements instead of the 6 unique ones
 
-  // ...and its inverse...
-  const RankTwoTensor Cstar_inv = Cstar.inverse(); // TODO: ditto
-  
   // Lagrange-Green strain tensor
-  const RankTwoTensor Estar = (Cstar - RealTensorValue(1., 0., 0., 0., 1., 0., 0., 0., 1.)) * 0.5;  //TODO: also symmetric
+  RankTwoTensor Estar = Cstar*0.5;
+  Estar.addIa(-0.5); //TODO: also symmetric
   
   // derivative of elastic energy
   RankTwoTensor dWdE;
   
   for (int M=0;M<3;M++)
     for (int N=0;N<3;N++) {
-      if (Estar(M,N) >= 0) {
+      if (Estar(M,N) > 0) {
         dWdE(M,N) = _k(M, N) * Estar(M,N) / pow(abs(_a(M,N) - Estar(M,N)), _b(M,N));
       } else {
         dWdE(M,N) = 0.;
       }
     }
   
+  // Inverse of the Cauchy Green deformation tensor in fibre-oriented coordinates
+  //FIXME const RankTwoTensor Cstar_inv = Cstar.inverse(); // TODO: ditto
+  
   // 2nd Piola Kirchoff tensor
   // elastic forces
-  RankTwoTensor Tstar = (dWdE + dWdE.transpose())*0.5 - Cstar_inv*coupledValue("p")[_qp];  // TODO: also symmetric
+  RankTwoTensor Tstar = (dWdE + dWdE.transpose())*0.5;//FIXME - Cstar_inv*coupledValue("p")[_qp];  // TODO: also symmetric
   // active strain
-  Tstar(0, 0) += coupledValue("Ta")[_qp] * Cstar_inv(0,0);
+  //FIXME Tstar(0, 0) += coupledValue("Ta")[_qp] * Cstar_inv(0,0);
   // rotate back into outer coordinate system
   _T[_qp] = _P[_qp] * Tstar * _P[_qp].transpose(); // TODO: also symmetric
 

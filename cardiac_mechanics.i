@@ -1,7 +1,7 @@
 [Debug]
   active                         = __all__                     # If specified only the blocks named will be visited and made active
   show_actions                   = 0                           # Print out the actions being executed
-  show_material_props            = 0                           # Print out the material properties supplied for each block, face, neighbor, ...
+  show_material_props            = 1                           # Print out the material properties supplied for each block, face, neighbor, ...
                                                                # and/or sideset
   show_parser                    = 0                           # Shows parser block extraction and debugging information
   show_top_residuals             = 0                           # The number of top residuals to print out (0 = no output)
