@@ -36,18 +36,6 @@
   [./z_disp]
     order = FIRST
     family = LAGRANGE
-    
-    [./InitialCondition]
-      type  = ConstantIC
-      value = -0.15
-      boundary = front
-    [../]
-
-    #[./InitialCondition]
-    #  type  = ConstantIC
-    #  value =  0.15
-    #  boundary = back
-    #[../]
   [../]
 []
 
@@ -59,24 +47,24 @@
   [../]
 []
 
-#[Kernels]
-#  active='xtime ytime ztime'
-#
-#  [./xtime]
-#    type = SolidMechImplicitEuler
-#    variable = x_disp
-#  [../]
-#
-#  [./ytime]
-#    type = SolidMechImplicitEuler
-#    variable = y_disp
-#  [../]
-#
-#  [./ztime]
-#    type = SolidMechImplicitEuler
-#    variable = z_disp
-#  [../]
-#[]
+[Kernels]
+  active='xtime ytime ztime'
+
+  [./xtime]
+    type = SolidMechImplicitEuler
+    variable = x_disp
+  [../]
+
+  [./ytime]
+    type = SolidMechImplicitEuler
+    variable = y_disp
+  [../]
+
+  [./ztime]
+    type = SolidMechImplicitEuler
+    variable = z_disp
+  [../]
+[]
 
 
 [BCs]
@@ -104,19 +92,19 @@
   [../]
 
 
-#  [./z_compression_bottom]
-#    type = DirichletBC
-#    variable = z_disp
-#    boundary = front
-#    value = -0.3
-#  [../]
-#
-#  [./z_compression_top]
-#    type = DirichletBC
-#    variable = z_disp
-#    boundary = back
-#    value =  0.3
-#  [../]
+  [./z_compression_bottom]
+    type = DirichletBC
+    variable = z_disp
+    boundary = front
+    value = 0.0
+  [../]
+
+  [./z_compression_top]
+    type = FunctionDirichletBC
+    variable = z_disp
+    boundary = back
+    function = pull
+  [../]
 []
 
 [Materials]
@@ -142,14 +130,37 @@
   type = Transient
 
   solve_type = PJFNK
+  petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
+  petsc_options_value = '201                hypre    boomeramg      4'
+  line_search = 'none'
 
 
   nl_rel_step_tol = 1.e-13
   l_max_its = 100
 
-  start_time = 0.0
-  num_steps = 3
-  dt = 0.05
+  start_time = 0
+  end_time = 1
+#  num_steps = 5000
+  dtmax = 0.1
+  dtmin = 0.1
+
+  [./TimeStepper]
+    type = ConstantDT
+    dt = 0.1
+#    optimal_iterations = 12
+#    linear_iteration_ratio = 100
+#    time_t  = '-100 0' # direct control of time steps vs time (optional)
+#    time_dt = '100  900'
+  [../]
+[]
+
+[Functions]
+  [./pull]
+    type = PiecewiseLinear
+    x = '0.0 0.1      0.2     0.3    0.4        0.5      0.6   0.7      0.8    0.9    1.0'
+    y = '0.0 0.000167 0.00133 0.0045 0.010667   0.020833 0.036 0.057167 0.0853 0.1215 0.16667'
+    scale_factor = 1
+  [../]
 []
 
 [Outputs]
