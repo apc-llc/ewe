@@ -9,7 +9,7 @@
                                                                # for requested dimension)
       nx                         = 5                          # Number of elements in the X direction
       ny                         = 5                          # Number of elements in the Y direction
-      nz                         = 5                          # Number of elements in the Z direction
+      nz                         = 50                         # Number of elements in the Z direction
       partitioner                = default                     # Specifies a mesh partitioner to use when splitting the mesh for a parallel ...
                                                                # computation.
       type                       = GeneratedMesh
@@ -17,8 +17,8 @@
       xmin                       = -0.5                           # Lower X Coordinate of the generated mesh
       ymax                       =  0.5                           # Upper Y Coordinate of the generated mesh
       ymin                       = -0.5                           # Lower Y Coordinate of the generated mesh
-      zmax                       =  0.5                           # Upper Z Coordinate of the generated mesh
-      zmin                       = -0.5                           # Lower Z Coordinate of the generated mesh
+      zmax                       =  5.0                           # Upper Z Coordinate of the generated mesh
+      zmin                       = -5.0                           # Lower Z Coordinate of the generated mesh
   displacements='x_disp y_disp z_disp'
 []
 
@@ -135,7 +135,7 @@
   line_search = 'none'
 
 
-  nl_rel_step_tol = 1.e-13
+  nl_rel_step_tol = 1.e-8
   l_max_its = 100
 
   start_time = 0
@@ -154,8 +154,8 @@
 [Functions]
   [./pull]
     type = PiecewiseLinear
-    x = '0.0 0.1      0.2     0.3    0.4        0.5      0.6   0.7      0.8    0.9    1.0'
-    y = '0.0 0.000167 0.00133 0.0045 0.010667   0.020833 0.036 0.057167 0.0853 0.1215 0.16667'
+    x = '0.0 1.0'
+    y = '0.0 3.0'
     scale_factor = 1
   [../]
 []
