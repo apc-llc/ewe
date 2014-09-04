@@ -149,17 +149,23 @@
   [./displacement_x]
     type = DirichletBC
     variable = disp_x
-    boundary = 'front'
+    boundary = 'front back'
     value = 0.0
   [../]
   [./displacement_y]
     type = DirichletBC
     variable = disp_y
+    boundary = 'front back'
+    value = 0.0
+  [../]
+  [./displacement_z]
+    type = DirichletBC
+    variable = disp_z
     boundary = 'front'
     value = 0.0
   [../]
 
-  [./displacement_z]
+  [./moving_z]
     type = FunctionDirichletBC
     variable = disp_z
     boundary = 'back'
