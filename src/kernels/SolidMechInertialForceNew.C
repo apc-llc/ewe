@@ -11,10 +11,8 @@ InputParameters validParams<SolidMechInertialForceNew>()
 {
   InputParameters params = validParams<Kernel>();
     params.set<bool>("use_displaced_mesh") = true;
-    params.addRequiredCoupledVar("velocity","velocity variable");
     params.addRequiredCoupledVar("acceleration","acceleration variable");
     params.addRequiredParam<Real>("beta","beta parameter");
-    params.addRequiredParam<Real>("gamma","gamma parameter");
   return params;
 }
 
