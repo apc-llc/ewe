@@ -58,21 +58,21 @@
 
 [Kernels]
   [./inertia_x]
-    type = SolidMechInertialForce
+    type = SolidMechInertialForceNew
     variable     = disp_x
     velocity     = vel_x
     acceleration = accel_x
     beta  = 0.25
   [../]
   [./inertia_y]
-    type = SolidMechInertialForce
+    type = SolidMechInertialForceNew
     variable     = disp_y
     velocity     = vel_y
     acceleration = accel_y
     beta  = 0.25
   [../]
   [./inertia_z]
-    type = SolidMechInertialForce
+    type = SolidMechInertialForceNew
     variable     = disp_z
     velocity     = vel_z
     acceleration = accel_z
