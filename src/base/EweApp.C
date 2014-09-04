@@ -7,6 +7,7 @@
 #include "CardiacTissueMaterial.h"
 #include "ForceBC.h"
 #include "IncompressibilityDeterminant.h"
+#include "SolidMechInertialForceNew.h"
 
 
 template<>
@@ -46,6 +47,7 @@ EweApp::registerObjects(Factory & factory)
   // Register any custom objects you have built on the MOOSE Framework
   registerKernel(StressDiffusion);
   registerKernel(IncompressibilityDeterminant);
+  registerKernel(SolidMechInertialForceNew);
   registerMaterial(CardiacTissueMaterial);
   registerBoundaryCondition(ForceBC);
 }

@@ -63,7 +63,6 @@
     velocity     = vel_x
     acceleration = accel_x
     beta  = 0.25
-    gamma = 0.5
   [../]
   [./inertia_y]
     type = SolidMechInertialForce
@@ -71,7 +70,6 @@
     velocity     = vel_y
     acceleration = accel_y
     beta  = 0.25
-    gamma = 0.5
   [../]
   [./inertia_z]
     type = SolidMechInertialForce
@@ -79,7 +77,6 @@
     velocity     = vel_z
     acceleration = accel_z
     beta  = 0.25
-    gamma = 0.5
   [../]
 []
 
