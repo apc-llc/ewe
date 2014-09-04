@@ -49,6 +49,7 @@
 []
 
 [SolidMechanics]
+  # for every variable given, this sets up a StressDivergence kernel (see SolidMechanicsAction.C)  
   [./solid]
     disp_x = disp_x
     disp_y = disp_y
@@ -149,25 +150,19 @@
   [./displacement_x]
     type = DirichletBC
     variable = disp_x
-    boundary = 'front back'
-    value = 0.0
-  [../]
-  [./displacement_y]
-    type = DirichletBC
-    variable = disp_y
-    boundary = 'front back'
+    boundary = 'back'
     value = 0.0
   [../]
   [./displacement_z]
     type = DirichletBC
     variable = disp_z
-    boundary = 'front'
+    boundary = 'back'
     value = 0.0
   [../]
 
-  [./moving_z]
+  [./moving_y]
     type = FunctionDirichletBC
-    variable = disp_z
+    variable = disp_y
     boundary = 'back'
     function = pull
   [../]
@@ -205,7 +200,7 @@
   l_max_its = 100
 
   start_time = 0
-  end_time = 1
+  end_time = 100
 #  num_steps = 5000
   dtmax = 0.1
   dtmin = 0.01
@@ -220,8 +215,8 @@
 [Functions]
   [./pull]
     type = PiecewiseLinear
-    x = '0.0 1.0'
-    y = '0.0 3.0'
+    x = '0.0 1.0 100.0'
+    y = '0.0 3.0   3.0'
     scale_factor = 1
   [../]
 []
