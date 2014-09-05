@@ -7,9 +7,9 @@
                                                                # on the command line
       # elem_type                =                             # The type of element from libMesh to generate (default: linear element ...
                                                                # for requested dimension)
-      nx                         = 5                          # Number of elements in the X direction
-      ny                         = 5                          # Number of elements in the Y direction
-      nz                         = 50                         # Number of elements in the Z direction
+      nx                         = 4                          # Number of elements in the X direction
+      ny                         = 4                          # Number of elements in the Y direction
+      nz                         = 10                         # Number of elements in the Z direction
       partitioner                = default                     # Specifies a mesh partitioner to use when splitting the mesh for a parallel ...
                                                                # computation.
       type                       = GeneratedMesh
@@ -40,12 +40,18 @@
 []
 
 [AuxVariables]
-  [./vel_x]  [../]
-  [./vel_y]  [../]
-  [./vel_z]  [../]
-  [./accel_x]  [../]
-  [./accel_y]  [../]
-  [./accel_z]  [../]
+  [./vel_x]
+  [../]
+  [./vel_y]
+  [../]
+  [./vel_z]
+  [../]
+  [./accel_x]
+  [../]
+  [./accel_y]
+  [../]
+  [./accel_z]
+  [../]
 []
 
 [SolidMechanics]
@@ -192,7 +198,7 @@
 
   solve_type = PJFNK
   petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  petsc_options_value = '201                hypre    boomeramg      4'
+  petsc_options_value = '201                 hypre    boomeramg      4'
   line_search = 'none'
 
 
@@ -227,7 +233,7 @@
   [./console]
     type = Console
     perf_log = true
-    #linear_residuals = true
+    linear_residuals = true
   [../]
   
   [./exodus_displaced]
