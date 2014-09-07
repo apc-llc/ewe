@@ -3,13 +3,6 @@
 #include "AppFactory.h"
 #include "ModulesApp.h"
 
-#include "StressDiffusion.h"
-#include "CardiacTissueMaterial.h"
-#include "ForceBC.h"
-#include "IncompressibilityDeterminant.h"
-#include "SolidMechInertialForceNew.h"
-#include "AccVelStoringMaterial.h"
-
 
 template<>
 InputParameters validParams<EweApp>()
@@ -46,12 +39,6 @@ void
 EweApp::registerObjects(Factory & factory)
 {
   // Register any custom objects you have built on the MOOSE Framework
-  registerKernel(StressDiffusion);
-  registerKernel(IncompressibilityDeterminant);
-  registerKernel(SolidMechInertialForceNew);
-  registerMaterial(CardiacTissueMaterial);
-  registerMaterial(AccVelStoringMaterial);
-  registerBoundaryCondition(ForceBC);
 }
 
 void
