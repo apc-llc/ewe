@@ -4,34 +4,34 @@
 /****************************************************************/
 
 #include "SolidMechInertialForceNew.h"
-#include "SubProblem.h"
+#include "MooseEnum.h"
 
 template<>
 InputParameters validParams<SolidMechInertialForceNew>()
 {
   InputParameters params = validParams<Kernel>();
-    params.set<bool>("use_displaced_mesh") = true;
-    params.addRequiredCoupledVar("acceleration","acceleration variable");
-    params.addRequiredParam<Real>("beta","beta parameter");
+  params.set<bool>("use_displaced_mesh") = true;
+  MooseEnum component("X=0, Y=1, Z=2");
+  params.addRequiredParam<MooseEnum>("component", component, "Cartesian component, this kernel works on: X, Y, or Z.");
   return params;
 }
 
 SolidMechInertialForceNew::SolidMechInertialForceNew(const std::string & name, InputParameters parameters)
   :Kernel(name,parameters),
-   _density(getMaterialProperty<Real>("density")),
-   _accel(coupledValue("acceleration")),
-   _beta(getParam<Real>("beta"))
+   _force(getMaterialProperty<Point>("force")),
+   _df_du(getMaterialProperty<Point>("dforce_du")),
+   _c(getParam<MooseEnum>("component"))
 {}
 
 Real
 SolidMechInertialForceNew::computeQpResidual()
 {
-  return _test[_i][_qp]*_density[_qp]*_accel[_qp];
+  return _test[_i][_qp]*_force[_qp](_c);
 }
 
 Real
 SolidMechInertialForceNew::computeQpJacobian()
 {
-  return _test[_i][_qp]*_density[_qp]*-1/(_beta*(_dt*_dt));
+  return _test[_i][_qp]*_df_du[_qp](_c);
 }
 

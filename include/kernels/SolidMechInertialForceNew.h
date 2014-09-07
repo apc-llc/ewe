@@ -27,9 +27,9 @@ protected:
   virtual Real computeQpJacobian();
 
 private:
-  MaterialProperty<Real> & _density;
-  const VariableValue & _accel;
-  const Real _beta;
+  const MaterialProperty<Point> & _force;
+  const MaterialProperty<Point> & _df_du;
+  const MooseEnum _c;
 
 };
 #endif //SOLIDMECHINERTIALFORCENEW_H

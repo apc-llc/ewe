@@ -8,6 +8,7 @@
 #include "ForceBC.h"
 #include "IncompressibilityDeterminant.h"
 #include "SolidMechInertialForceNew.h"
+#include "AccVelStoringMaterial.h"
 
 
 template<>
@@ -49,6 +50,7 @@ EweApp::registerObjects(Factory & factory)
   registerKernel(IncompressibilityDeterminant);
   registerKernel(SolidMechInertialForceNew);
   registerMaterial(CardiacTissueMaterial);
+  registerMaterial(AccVelStoringMaterial);
   registerBoundaryCondition(ForceBC);
 }
 
