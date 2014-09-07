@@ -3,6 +3,7 @@
 #include "AppFactory.h"
 #include "ModulesApp.h"
 
+#include "SecondOrderImplicitEulerWithDensity.h"
 
 template<>
 InputParameters validParams<EweApp>()
@@ -39,6 +40,7 @@ void
 EweApp::registerObjects(Factory & factory)
 {
   // Register any custom objects you have built on the MOOSE Framework
+  registerKernel(SecondOrderImplicitEulerWithDensity);
 }
 
 void
