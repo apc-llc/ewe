@@ -33,6 +33,6 @@ KineticEnergyAux::computeValue()
 {
   Point vel = Point(_disp_x[_qp]-_disp_x_old[_qp],
                     _disp_y[_qp]-_disp_y_old[_qp],
-	            _disp_z[_qp]-_disp_z_old[_qp]);
+	            _disp_z[_qp]-_disp_z_old[_qp]) / _dt;
   return _density/2. * (vel*vel);
 }
