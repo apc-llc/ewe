@@ -218,6 +218,10 @@
     order = CONSTANT
     family = MONOMIAL
   [../]
+  [./kinetic_energy]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
 [] # AuxVariables
 
 [AuxKernels]
@@ -290,5 +294,12 @@
     tensor = stress
     variable = thirdinv
     quantity = thirdinvariant
+  [../]
+  [./kinetic_energy]
+    type = KineticEnergyAux
+    variable = kinetic_energy
+    disp_x = disp_x
+    disp_y = disp_y
+    disp_z = disp_z
   [../]
 [] # AuxKernels
