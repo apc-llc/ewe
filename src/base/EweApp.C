@@ -4,7 +4,9 @@
 #include "ModulesApp.h"
 
 #include "SecondOrderImplicitEulerWithDensity.h"
+#include "SecondDerivativeNewmark.h"
 #include "KineticEnergyAux.h"
+#include "NewmarkMaterial.h"
 
 template<>
 InputParameters validParams<EweApp>()
@@ -42,7 +44,9 @@ EweApp::registerObjects(Factory & factory)
 {
   // Register any custom objects you have built on the MOOSE Framework
   registerKernel(SecondOrderImplicitEulerWithDensity);
+  registerKernel(SecondDerivativeNewmark);
   registerAux(KineticEnergyAux);
+  registerMaterial(NewmarkMaterial);
 }
 
 void
