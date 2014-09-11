@@ -26,14 +26,14 @@ protected:
   virtual Real computeQpJacobian();
 
 private:
-  VariableValue & _u_old;
-  VariableValue & _u_older;
   Real _density;
   bool _lumping;
   MooseEnum _c;
   
-  MaterialProperty<Point> & _delta_a;
-  MaterialProperty<Real> & _beta;
+  // FIXME: I assume, it will be much more efficient if material only works with an individual component
+  // instead of computing all three and selecting the appropriate afterwards... 
+  MaterialProperty<Point> & _acc;
+  MaterialProperty<Point> & _jacobian;
 };
 
 #endif //SECONDDERIVATIVENEWMARK_H

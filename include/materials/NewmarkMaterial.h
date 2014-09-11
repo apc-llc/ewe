@@ -25,20 +25,20 @@ public:
 
 protected:
   virtual void computeQpProperties();
+  virtual void initQpStatefulProperties();
 
 private:
 
   MaterialProperty<Point> & _delta_a;
-  MaterialProperty<Point> & _vel;
-  MaterialProperty<Point> & _acc;
-  MaterialProperty<Real>  & _beta;
-  MaterialProperty<Real>  & _gamma;
+  MaterialProperty<Point> & _vel, & _vel_old;
+  MaterialProperty<Point> & _acc, & _acc_old;
+  MaterialProperty<Point> & _jacobian;
 
-  const VariableValue & _disp_x;
-  const VariableValue & _disp_y;
-  const VariableValue & _disp_z;
-  const Real __beta;
-  const Real __gamma;
+  const VariableValue & _disp_x, & _disp_x_old;
+  const VariableValue & _disp_y, & _disp_y_old;
+  const VariableValue & _disp_z, & _disp_z_old;
+  const Real _beta;
+  const Real _gamma;
 };
 
 #endif //NEWMARKMATERIAL_H

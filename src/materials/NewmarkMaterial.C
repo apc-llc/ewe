@@ -24,27 +24,32 @@ NewmarkMaterial::NewmarkMaterial(const std::string & name,
                                  InputParameters parameters) :
     Material(name, parameters),
     _delta_a(declareProperty<Point>("newmark_delta_a")),
-    _vel(declareProperty<Point>("newmark_velocity")),
-    _acc(declareProperty<Point>("newmark_acceleration")),
-    _beta(declareProperty<Real>("newmark_beta")),
-    _gamma(declareProperty<Real>("newmark_gamma")),
-    _disp_x(coupledValue("disp_x")),
-    _disp_y(coupledValue("disp_y")),
-    _disp_z(coupledValue("disp_z")),
-    __beta(getParam<Real>("beta")),
-    __gamma(getParam<Real>("gamma"))
+    _vel(declareProperty<Point>("newmark_velocity")),     _vel_old(declarePropertyOld<Point>("newmark_velocity")),
+    _acc(declareProperty<Point>("newmark_acceleration")), _acc_old(declarePropertyOld<Point>("newmark_acceleration")),
+    _jacobian(declareProperty<Point>("newmark_jacobian")),
+    _disp_x(coupledValue("disp_x")), _disp_x_old(coupledValueOld("disp_x")),
+    _disp_y(coupledValue("disp_y")), _disp_y_old(coupledValueOld("disp_y")),
+    _disp_z(coupledValue("disp_z")), _disp_z_old(coupledValueOld("disp_z")),
+    _beta(getParam<Real>("beta")),
+    _gamma(getParam<Real>("gamma"))
 {}
+
+void
+NewmarkMaterial::initQpStatefulProperties()
+{
+  // init the stateful properties (these will become _bla_old in the first call of computeProperties)
+  _vel[_qp] = 0.;
+  _acc[_qp] = 0.;
+}
 
 void
 NewmarkMaterial::computeQpProperties()
 {
-  // This way of defining a spatially constant material parameter seems to be insane, but this is exactly what GenericConstantMaterial.C does...
-  _beta[_qp]  = __beta;
-  _gamma[_qp] = __gamma;
+  const Point u       = Point(_disp_x[_qp],    _disp_y[_qp],    _disp_z[_qp]);
+  const Point u_old   = Point(_disp_x_old[_qp],_disp_y_old[_qp],_disp_z_old[_qp]);
 
-  Point u       = Point(_disp_x[_qp],_disp_y[_qp],_disp_z[_qp]);
-  Point aold    = _acc[_qp];
-  _acc[_qp]     = u / (_beta[_qp]*_dt) + _delta_a[_qp];
-  _vel[_qp]     = _vel[_qp] + _dt*( (1.-_gamma[_qp])*aold + _gamma[_qp]*_acc[_qp] );
-  _delta_a[_qp] = -( u/(_dt*_dt) + _vel[_qp]/_dt + (0.5-_beta[_qp])*_acc[_qp] ) / _beta[_qp];
+  _acc[_qp] =  1./_beta*( (u-u_old)/(_dt*_dt) - _vel_old[_qp]/_dt - _acc_old[_qp]*(0.5-_beta) );
+  _vel[_qp] = _vel_old[_qp] + _dt*( (1.-_gamma)*_acc_old[_qp] + _gamma*_acc[_qp] );
+  
+  _jacobian[_qp] = 1./(_beta*_dt*_dt);
 }

@@ -19,27 +19,23 @@ InputParameters validParams<SecondDerivativeNewmark>()
 
 SecondDerivativeNewmark::SecondDerivativeNewmark(const std::string & name, InputParameters parameters) :
     TimeKernel(name, parameters),
-    _u_old(valueOld()),
-    _u_older(valueOlder()),
     _density(getParam<Real>("density")),
     _lumping(getParam<bool>("lumping")),
     _c(getParam<MooseEnum>("component")),
-    _delta_a(getMaterialProperty<Point>("newmark_delta_a")),
-    _beta(getMaterialProperty<Real>("newmark_beta"))
+    _acc(getMaterialProperty<Point>("newmark_acceleration")),
+    _jacobian(getMaterialProperty<Point>("newmark_jacobian"))
 {}
 
 Real
 SecondDerivativeNewmark::computeQpResidual()
 {
-  Moose::out << (_u[_qp]/(_beta[_qp]*_dt*_dt) + _delta_a[_qp](_c)) << " "
-             << ((_u[_qp]-2*_u_old[_qp]+_u_older[_qp])/(_dt*_dt))  << std::endl;
-  return _density*_test[_i][_qp]*(_u[_qp]/(_beta[_qp]*_dt*_dt) + _delta_a[_qp](_c));
+  return _density * _test[_i][_qp] * _acc[_qp](_c);
 }
 
 Real
 SecondDerivativeNewmark::computeQpJacobian()
 {
-  return _test[_i][_qp]*(_phi[_j][_qp]/(_beta[_qp]*_dt*_dt));
+  return _test[_i][_qp] * _phi[_j][_qp] * _jacobian[_qp](_c);
 }
 
 void
