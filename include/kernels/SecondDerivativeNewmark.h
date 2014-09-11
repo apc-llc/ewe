@@ -26,6 +26,8 @@ protected:
   virtual Real computeQpJacobian();
 
 private:
+  VariableValue & _u_old;
+  VariableValue & _u_older;
   Real _density;
   bool _lumping;
   MooseEnum _c;

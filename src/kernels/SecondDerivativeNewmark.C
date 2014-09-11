@@ -19,6 +19,8 @@ InputParameters validParams<SecondDerivativeNewmark>()
 
 SecondDerivativeNewmark::SecondDerivativeNewmark(const std::string & name, InputParameters parameters) :
     TimeKernel(name, parameters),
+    _u_old(valueOld()),
+    _u_older(valueOlder()),
     _density(getParam<Real>("density")),
     _lumping(getParam<bool>("lumping")),
     _c(getParam<MooseEnum>("component")),
@@ -29,6 +31,8 @@ SecondDerivativeNewmark::SecondDerivativeNewmark(const std::string & name, Input
 Real
 SecondDerivativeNewmark::computeQpResidual()
 {
+  Moose::out << (_u[_qp]/(_beta[_qp]*_dt*_dt) + _delta_a[_qp](_c)) << " "
+             << ((_u[_qp]-2*_u_old[_qp]+_u_older[_qp])/(_dt*_dt))  << std::endl;
   return _density*_test[_i][_qp]*(_u[_qp]/(_beta[_qp]*_dt*_dt) + _delta_a[_qp](_c));
 }
 
