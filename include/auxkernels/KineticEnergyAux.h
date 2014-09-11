@@ -31,10 +31,7 @@ public:
 protected:
   virtual Real computeValue();
 
-  VariableValue & _disp_x, & _disp_x_old;
-  VariableValue & _disp_y, & _disp_y_old;
-  VariableValue & _disp_z, & _disp_z_old;
-
+  std::vector<std::string> _str_append;
   Real _density;
 };
 

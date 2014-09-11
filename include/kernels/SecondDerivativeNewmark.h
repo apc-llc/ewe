@@ -28,12 +28,9 @@ protected:
 private:
   Real _density;
   bool _lumping;
-  MooseEnum _c;
   
-  // FIXME: I assume, it will be much more efficient if material only works with an individual component
-  // instead of computing all three and selecting the appropriate afterwards... 
-  MaterialProperty<Point> & _acc;
-  MaterialProperty<Point> & _jacobian;
+  MaterialProperty<Real> & _acc;
+  MaterialProperty<Real> & _jacobian;
 };
 
 #endif //SECONDDERIVATIVENEWMARK_H

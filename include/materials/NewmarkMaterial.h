@@ -29,14 +29,11 @@ protected:
 
 private:
 
-  MaterialProperty<Point> & _delta_a;
-  MaterialProperty<Point> & _vel, & _vel_old;
-  MaterialProperty<Point> & _acc, & _acc_old;
-  MaterialProperty<Point> & _jacobian;
+  MaterialProperty<Real> & _vel, & _vel_old;
+  MaterialProperty<Real> & _acc, & _acc_old;
+  MaterialProperty<Real> & _jacobian;
 
-  const VariableValue & _disp_x, & _disp_x_old;
-  const VariableValue & _disp_y, & _disp_y_old;
-  const VariableValue & _disp_z, & _disp_z_old;
+  const VariableValue & _disp, & _disp_old;
   const Real _beta;
   const Real _gamma;
 };

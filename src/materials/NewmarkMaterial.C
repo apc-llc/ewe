@@ -13,9 +13,8 @@ InputParameters validParams<NewmarkMaterial>()
   params.addRequiredParam<Real>("beta","Newmark integration beta parameter (will also be provided as material property for use by other kernels)");
   params.addRequiredParam<Real>("gamma","Newmark integration gamma parameter (will also be provided as material property for use by other kernels)");
 
-  params.addCoupledVar("disp_x", "Displacement in x direction");
-  params.addCoupledVar("disp_y", "Displacement in y direction");
-  params.addCoupledVar("disp_z", "Displacement in z direction");
+  params.addCoupledVar("disp", "Displacement component");
+  params.addRequiredParam<std::string>("str_append", "String to append to output material property names (connection to SecondDerivativeNewmark kernel)");
 
   return params;
 }
@@ -23,13 +22,13 @@ InputParameters validParams<NewmarkMaterial>()
 NewmarkMaterial::NewmarkMaterial(const std::string & name,
                                  InputParameters parameters) :
     Material(name, parameters),
-    _delta_a(declareProperty<Point>("newmark_delta_a")),
-    _vel(declareProperty<Point>("newmark_velocity")),     _vel_old(declarePropertyOld<Point>("newmark_velocity")),
-    _acc(declareProperty<Point>("newmark_acceleration")), _acc_old(declarePropertyOld<Point>("newmark_acceleration")),
-    _jacobian(declareProperty<Point>("newmark_jacobian")),
-    _disp_x(coupledValue("disp_x")), _disp_x_old(coupledValueOld("disp_x")),
-    _disp_y(coupledValue("disp_y")), _disp_y_old(coupledValueOld("disp_y")),
-    _disp_z(coupledValue("disp_z")), _disp_z_old(coupledValueOld("disp_z")),
+    _vel(declareProperty<Real>("newmark_velocity" + getParam<std::string>("str_append"))),
+    _vel_old(declarePropertyOld<Real>("newmark_velocity" + getParam<std::string>("str_append"))),
+    _acc(declareProperty<Real>("newmark_acceleration" + getParam<std::string>("str_append"))),
+    _acc_old(declarePropertyOld<Real>("newmark_acceleration" + getParam<std::string>("str_append"))),
+    _jacobian(declareProperty<Real>("newmark_jacobian" + getParam<std::string>("str_append"))),
+    _disp(coupledValue("disp")),
+    _disp_old(coupledValueOld("disp")),
     _beta(getParam<Real>("beta")),
     _gamma(getParam<Real>("gamma"))
 {}
@@ -45,10 +44,10 @@ NewmarkMaterial::initQpStatefulProperties()
 void
 NewmarkMaterial::computeQpProperties()
 {
-  const Point u       = Point(_disp_x[_qp],    _disp_y[_qp],    _disp_z[_qp]);
-  const Point u_old   = Point(_disp_x_old[_qp],_disp_y_old[_qp],_disp_z_old[_qp]);
+  _acc[_qp] =  1./_beta*( (_disp[_qp]-_disp_old[_qp])/(_dt*_dt) 
+                             - _vel_old[_qp]/_dt
+                             - _acc_old[_qp]*(0.5-_beta) );
 
-  _acc[_qp] =  1./_beta*( (u-u_old)/(_dt*_dt) - _vel_old[_qp]/_dt - _acc_old[_qp]*(0.5-_beta) );
   _vel[_qp] = _vel_old[_qp] + _dt*( (1.-_gamma)*_acc_old[_qp] + _gamma*_acc[_qp] );
   
   _jacobian[_qp] = 1./(_beta*_dt*_dt);
