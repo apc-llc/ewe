@@ -84,21 +84,9 @@
     value = 0.0
   [../]
 
-  [./displacement_x]
-    type = DirichletBC
-    variable = disp_x
-    boundary = 'front'
-    value = 0.0
-  [../]
   [./displacement_y]
     type = DirichletBC
     variable = disp_y
-    boundary = 'front'
-    value = 0.0
-  [../]
-  [./displacement_z]
-    type = DirichletBC
-    variable = disp_z
     boundary = 'front'
     value = 0.0
   [../]
@@ -137,7 +125,7 @@
   l_max_its = 100
 
   start_time = 0
-  end_time   = 3.0
+  end_time   = 30.0
   #num_steps = 10
   dtmax      = 0.1
   dtmin      = 0.01
@@ -146,8 +134,8 @@
 [Functions]
   [./pull]
     type = PiecewiseLinear
-    x = '0.0 0.5 0.51 100.0'
-    y = '0.0 1.0 0.0    0.0'
+    x = '0.0 0.1  1.01 100.0'
+    y = '2.0 2.0  0.0    0.0'
     scale_factor = 1
   [../]
 []
