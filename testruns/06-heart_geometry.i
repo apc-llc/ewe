@@ -85,7 +85,7 @@
     disp_z = disp_z
     # thermal properties
     thermal_expansion = 1.0
-    t_ref = 0.5
+    t_ref = 0.0
     temp = temperature
   [../]
 
@@ -113,7 +113,7 @@
 [Functions]
   [./temptime]
     type = ParsedFunction
-    value = '0.0*sin(2*pi*t/3.0)*exp(-x*x+y*y+z*z)'
+    value = '1.0*sin(2*pi*t/3.0)*exp(-(x*x+y*y+z*z))'
   [../]
 []
 
