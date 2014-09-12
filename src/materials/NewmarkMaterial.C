@@ -37,25 +37,31 @@ void
 NewmarkMaterial::initQpStatefulProperties()
 {
   // init the stateful properties (these will become _bla_old in the first call of computeProperties)
-  _vel[_qp] = 0.;
-  _acc[_qp] = 0.;
+  _vel[_qp] = -1.;
+  _acc[_qp] = -1.;
 }
 
 void
 NewmarkMaterial::timeStepSetup()
 {
-  Moose::out << "NewmarkMaterial::timeStepSetup() - time = " << _t << "; t_step = " << _t_step << std::endl;
+  // this function is being called before every timestep. However, apparently, acessing _vel, _vel_old, etc is not possible here...
+  // (they contain invalid values and values written there do not end up in ComputeQpProperties...)
 }
 
 void
 NewmarkMaterial::computeQpProperties()
 {
-  Moose::out << "NewmarkMaterial::computeQpProperties() - __qp = " << _qp << "; " << _q_point[_qp] << "; _disp = " << _disp[_qp] << std::endl;
-  _acc[_qp] =  1./_beta*( (_disp[_qp]-_disp_old[_qp])/(_dt*_dt) 
-                             - _vel_old[_qp]/_dt
-                             - _acc_old[_qp]*(0.5-_beta) );
+  if (_t_step == 1) {
+    // special treatment in first timestep
+    
+  } else
+  {
+    _acc[_qp] =  1./_beta*( (_disp[_qp]-_disp_old[_qp])/(_dt*_dt) 
+                               - _vel_old[_qp]/_dt
+                               - _acc_old[_qp]*(0.5-_beta) );
 
-  _vel[_qp] = _vel_old[_qp] + _dt*( (1.-_gamma)*_acc_old[_qp] + _gamma*_acc[_qp] );
-  
-  _jacobian[_qp] = 1./(_beta*_dt*_dt);
+    _vel[_qp] = _vel_old[_qp] + _dt*( (1.-_gamma)*_acc_old[_qp] + _gamma*_acc[_qp] );
+
+    _jacobian[_qp] = 1./(_beta*_dt*_dt);
+  }
 }

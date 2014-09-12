@@ -3,9 +3,9 @@
 [Mesh]
       dim           = 3
       distribution  = DEFAULT
-      nx            = 1
-      ny            = 1
-      nz            = 1
+      nx            = 2
+      ny            = 2
+      nz            = 3
       type          = GeneratedMesh
       xmax          =  0.5
       xmin          = -0.5
@@ -54,7 +54,7 @@
     type     = SecondDerivativeNewmark
     str_append = Y
     variable = disp_y
-    density  = 100.0
+    density  = 0.0
     lumping  = false
   [../]
   #[./inertia_z]
@@ -152,10 +152,10 @@
   l_max_its = 100
 
   start_time = 0
-  end_time   = 30.0
+  end_time   = 0.2
   #num_steps = 10
-  dtmax      = 0.02
-  dtmin      = 0.01
+  dtmax      = 0.1
+  dtmin      = 0.1
 []
 
 [Functions]
