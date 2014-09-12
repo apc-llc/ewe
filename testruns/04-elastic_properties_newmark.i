@@ -3,9 +3,9 @@
 [Mesh]
       dim           = 3
       distribution  = DEFAULT
-      nx            = 5
-      ny            = 5
-      nz            = 20
+      nx            = 1
+      ny            = 1
+      nz            = 1
       type          = GeneratedMesh
       xmax          =  0.5
       xmin          = -0.5
@@ -112,14 +112,14 @@
     disp_z = disp_z
   [../]
 
-  [./newmarkx]
-    type = NewmarkMaterial
-    str_append = X
-    block = 0
-    disp  = disp_x
-    gamma = 0.5
-    beta  = 0.25
-  [../]
+  #[./newmarkx]
+  #  type = NewmarkMaterial
+  #  str_append = X
+  #  block = 0
+  #  disp  = disp_x
+  #  gamma = 0.5
+  #  beta  = 0.25
+  #[../]
   [./newmarky]
     type = NewmarkMaterial
     str_append = Y
@@ -128,14 +128,14 @@
     gamma = 0.5
     beta  = 0.25
   [../]
-  [./newmarkz]
-    type = NewmarkMaterial
-    str_append = Z
-    block = 0
-    disp  = disp_z
-    gamma = 0.5
-    beta  = 0.25
-  [../]
+  #[./newmarkz]
+  #  type = NewmarkMaterial
+  #  str_append = Z
+  #  block = 0
+  #  disp  = disp_z
+  #  gamma = 0.5
+  #  beta  = 0.25
+  #[../]
 
 []
 
@@ -233,10 +233,10 @@
     order = CONSTANT
     family = MONOMIAL
   [../]
-  [./kinetic_energy]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
+  #[./kinetic_energy]
+  #  order = CONSTANT
+  #  family = MONOMIAL
+  #[../]
 [] # AuxVariables
 
 [AuxKernels]
@@ -310,9 +310,9 @@
     variable = thirdinv
     quantity = thirdinvariant
   [../]
-  [./kinetic_energy]
-    type = KineticEnergyAux
-    variable = kinetic_energy
-    str_append = 'X Y Z'
-  [../]
+  #[./kinetic_energy]
+  #  type = KineticEnergyAux
+  #  variable = kinetic_energy
+  #  str_append = 'X Y Z'
+  #[../]
 [] # AuxKernels

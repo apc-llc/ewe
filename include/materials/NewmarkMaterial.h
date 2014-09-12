@@ -26,6 +26,7 @@ public:
 protected:
   virtual void computeQpProperties();
   virtual void initQpStatefulProperties();
+  virtual void timeStepSetup();
 
 private:
 

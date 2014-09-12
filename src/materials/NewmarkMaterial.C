@@ -42,8 +42,15 @@ NewmarkMaterial::initQpStatefulProperties()
 }
 
 void
+NewmarkMaterial::timeStepSetup()
+{
+  Moose::out << "NewmarkMaterial::timeStepSetup() - time = " << _t << "; t_step = " << _t_step << std::endl;
+}
+
+void
 NewmarkMaterial::computeQpProperties()
 {
+  Moose::out << "NewmarkMaterial::computeQpProperties() - __qp = " << _qp << "; " << _q_point[_qp] << "; _disp = " << _disp[_qp] << std::endl;
   _acc[_qp] =  1./_beta*( (_disp[_qp]-_disp_old[_qp])/(_dt*_dt) 
                              - _vel_old[_qp]/_dt
                              - _acc_old[_qp]*(0.5-_beta) );
