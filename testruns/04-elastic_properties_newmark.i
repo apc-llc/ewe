@@ -118,10 +118,9 @@
   #[../]
   [./newmarky]
     type = NewmarkMaterial
-    str_append = Y
     block = 0
     disp  = disp_y
-    alpha = 0.5
+    alpha = 0.0
   [../]
   #[./newmarkz]
   #  type = NewmarkMaterial
@@ -178,135 +177,135 @@
 []
 
 
-[AuxVariables]
-  [./stress_xx]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./stress_yy]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./stress_zz]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./stress_xy]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./stress_yz]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./stress_zx]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./elastic_energy]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./vonmises]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./hydrostatic]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./firstinv]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./secondinv]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./thirdinv]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  #[./kinetic_energy]
-  #  order = CONSTANT
-  #  family = MONOMIAL
-  #[../]
-[] # AuxVariables
+#[AuxVariables]
+#  [./stress_xx]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+#  [./stress_yy]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+#  [./stress_zz]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+#  [./stress_xy]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+#  [./stress_yz]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+#  [./stress_zx]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+#  [./elastic_energy]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+#  [./vonmises]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+#  [./hydrostatic]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+#  [./firstinv]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+#  [./secondinv]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+#  [./thirdinv]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+#  #[./kinetic_energy]
+#  #  order = CONSTANT
+#  #  family = MONOMIAL
+#  #[../]
+#[] # AuxVariables
 
-[AuxKernels]
-  [./stress_xx]
-    type = MaterialTensorAux
-    tensor = stress
-    variable = stress_xx
-    index = 0
-  [../]
-  [./stress_yy]
-    type = MaterialTensorAux
-    tensor = stress
-    variable = stress_yy
-    index = 1
-  [../]
-  [./stress_zz]
-    type = MaterialTensorAux
-    tensor = stress
-    variable = stress_zz
-    index = 2
-  [../]
-  [./stress_xy]
-    type = MaterialTensorAux
-    tensor = stress
-    variable = stress_xy
-    index = 3
-  [../]
-  [./stress_yz]
-    type = MaterialTensorAux
-    tensor = stress
-    variable = stress_yz
-    index = 4
-  [../]
-  [./stress_zx]
-    type = MaterialTensorAux
-    tensor = stress
-    variable = stress_zx
-    index = 5
-  [../]
-  [./elastic_energy]
-    type = ElasticEnergyAux
-    variable = elastic_energy
-  [../]
-  [./vonmises]
-    type = MaterialTensorAux
-    tensor = stress
-    variable = vonmises
-    quantity = vonmises
-  [../]
-  [./hydrostatic]
-    type = MaterialTensorAux
-    tensor = stress
-    variable = hydrostatic
-    quantity = hydrostatic
-  [../]
-  [./fi]
-    type = MaterialTensorAux
-    tensor = stress
-    variable = firstinv
-    quantity = firstinvariant
-  [../]
-  [./si]
-    type = MaterialTensorAux
-    tensor = stress
-    variable = secondinv
-    quantity = secondinvariant
-  [../]
-  [./ti]
-    type = MaterialTensorAux
-    tensor = stress
-    variable = thirdinv
-    quantity = thirdinvariant
-  [../]
-  #[./kinetic_energy]
-  #  type = KineticEnergyAux
-  #  variable = kinetic_energy
-  #  str_append = 'X Y Z'
-  #[../]
-[] # AuxKernels
+#[AuxKernels]
+#  [./stress_xx]
+#    type = MaterialTensorAux
+#    tensor = stress
+#    variable = stress_xx
+#    index = 0
+#  [../]
+#  [./stress_yy]
+#    type = MaterialTensorAux
+#    tensor = stress
+#    variable = stress_yy
+#    index = 1
+#  [../]
+#  [./stress_zz]
+#    type = MaterialTensorAux
+#    tensor = stress
+#    variable = stress_zz
+#    index = 2
+#  [../]
+#  [./stress_xy]
+#    type = MaterialTensorAux
+#    tensor = stress
+#    variable = stress_xy
+#    index = 3
+#  [../]
+#  [./stress_yz]
+#    type = MaterialTensorAux
+#    tensor = stress
+#    variable = stress_yz
+#    index = 4
+#  [../]
+#  [./stress_zx]
+#    type = MaterialTensorAux
+#    tensor = stress
+#    variable = stress_zx
+#    index = 5
+#  [../]
+#  [./elastic_energy]
+#    type = ElasticEnergyAux
+#    variable = elastic_energy
+#  [../]
+#  [./vonmises]
+#    type = MaterialTensorAux
+#    tensor = stress
+#    variable = vonmises
+#    quantity = vonmises
+#  [../]
+#  [./hydrostatic]
+#    type = MaterialTensorAux
+#    tensor = stress
+#    variable = hydrostatic
+#    quantity = hydrostatic
+#  [../]
+#  [./fi]
+#    type = MaterialTensorAux
+#    tensor = stress
+#    variable = firstinv
+#    quantity = firstinvariant
+#  [../]
+#  [./si]
+#    type = MaterialTensorAux
+#    tensor = stress
+#    variable = secondinv
+#    quantity = secondinvariant
+#  [../]
+#  [./ti]
+#    type = MaterialTensorAux
+#    tensor = stress
+#    variable = thirdinv
+#    quantity = thirdinvariant
+#  [../]
+#  #[./kinetic_energy]
+#  #  type = KineticEnergyAux
+#  #  variable = kinetic_energy
+#  #  str_append = 'X Y Z'
+#  #[../]
+#[] # AuxKernels

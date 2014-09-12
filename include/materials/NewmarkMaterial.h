@@ -26,17 +26,14 @@ public:
 protected:
   virtual void computeQpProperties();
   virtual void initQpStatefulProperties();
-  virtual void timeStepSetup();
 
 private:
 
   std::string _comp_name;
 
   MaterialProperty<Real> & _acc, & _acc_old;
-  MaterialProperty<Real> & _jac;
 
   const VariableValue & _disp, & _disp_old, & _disp_older;
-  const Real _alpha;
 };
 
 #endif //NEWMARKMATERIAL_H

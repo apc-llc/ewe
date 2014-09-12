@@ -12,6 +12,7 @@ InputParameters validParams<SecondDerivativeNewmark>()
   InputParameters params = validParams<TimeKernel>();
   params.addParam<Real>("density", 1.0, "Mass density");
   params.addParam<bool>("lumping", false, "True for mass matrix lumping, false otherwise");
+  params.addParam<Real>("alpha", 0.5, "Newmark integration alpha parameter (default: 0.5 --> yields 2nd order method, 0. --> fully implicit, 1. --> fully explicit)");
   return params;
 }
 
@@ -20,20 +21,21 @@ SecondDerivativeNewmark::SecondDerivativeNewmark(const std::string & name, Input
     _comp_name(variable().name()),  // we use the name that was supplied as disp parameter to ensure unique naming and finally correctly correspondence to NewmarkMaterial.C
     _density(getParam<Real>("density")),
     _lumping(getParam<bool>("lumping")),
+    _alpha(getParam<Real>("alpha")),
     _acc(getMaterialProperty<Real>("newmark_acceleration-" + _comp_name)),
-    _jac(getMaterialProperty<Real>("newmark_jacobian-"     + _comp_name))
+    _acc_old(getMaterialPropertyOld<Real>("newmark_acceleration-" + _comp_name))
 {}
 
 Real
 SecondDerivativeNewmark::computeQpResidual()
 {
-  return _density * _test[_i][_qp] * _acc[_qp];
+  return _density * _test[_i][_qp] * ( (1.-_alpha)*_acc[_qp] + (_alpha)*_acc_old[_qp]);
 }
 
 Real
 SecondDerivativeNewmark::computeQpJacobian()
 {
-  return _test[_i][_qp] * _phi[_j][_qp] * _jac[_qp];
+  return _density * _test[_i][_qp] * _phi[_j][_qp] * (1.-_alpha)/(_dt*_dt);
 }
 
 void

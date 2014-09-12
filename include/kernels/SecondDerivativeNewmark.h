@@ -31,9 +31,9 @@ private:
 
   Real _density;
   bool _lumping;
+  Real _alpha;
   
-  MaterialProperty<Real> & _acc;
-  MaterialProperty<Real> & _jac;
+  MaterialProperty<Real> & _acc, & _acc_old;
 };
 
 #endif //SECONDDERIVATIVENEWMARK_H
