@@ -3,9 +3,9 @@
 [Mesh]
       dim           = 3
       distribution  = DEFAULT
-      nx            = 2
-      ny            = 2
-      nz            = 3
+      nx            = 5
+      ny            = 5
+      nz            = 20
       type          = GeneratedMesh
       xmax          =  0.5
       xmin          = -0.5

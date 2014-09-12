@@ -35,7 +35,7 @@ private:
   MaterialProperty<Real> & _acc, & _acc_old;
   MaterialProperty<Real> & _jac;
 
-  const VariableValue & _disp, & _disp_old;
+  const VariableValue & _disp, & _disp_old, & _disp_older;
   const Real _alpha;
 };
 

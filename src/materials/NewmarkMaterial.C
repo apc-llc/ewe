@@ -27,6 +27,7 @@ NewmarkMaterial::NewmarkMaterial(const std::string & name,
     _jac(declareProperty<Real>(       "newmark_jacobian-"     + _comp_name)),
     _disp(coupledValue("disp")),
     _disp_old(coupledValueOld("disp")),
+    _disp_older(coupledValueOlder("disp")),
     _alpha(getParam<Real>("alpha"))
 {}
 
@@ -52,7 +53,7 @@ NewmarkMaterial::computeQpProperties()
     
   } else
   {
-    _acc[_qp] =  _disp[_qp]/(_alpha*_dt*_dt)  +  ( (1.-_alpha)*_dt*_acc_old[_qp] - (_dt+_dt_old)*_disp_old[_qp] ) / (_alpha*_dt*_dt*_dt_old);
+    _acc[_qp] =  _disp[_qp]/(_alpha*_dt*_dt)  + ( ( _dt*_disp_older[_qp] - (_dt_old+_dt)*_disp_old[_qp] ) / (_dt*_dt*_dt_old) - (1.-_alpha)*_acc_old[_qp]) / _alpha;
     _jac[_qp] = 1./(_alpha*_dt*_dt);
   }
 }
