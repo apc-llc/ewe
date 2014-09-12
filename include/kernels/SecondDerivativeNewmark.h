@@ -26,11 +26,14 @@ protected:
   virtual Real computeQpJacobian();
 
 private:
+
+  std::string _comp_name;
+
   Real _density;
   bool _lumping;
   
   MaterialProperty<Real> & _acc;
-  MaterialProperty<Real> & _jacobian;
+  MaterialProperty<Real> & _jac;
 };
 
 #endif //SECONDDERIVATIVENEWMARK_H

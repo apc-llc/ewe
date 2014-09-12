@@ -12,16 +12,16 @@ InputParameters validParams<SecondDerivativeNewmark>()
   InputParameters params = validParams<TimeKernel>();
   params.addParam<Real>("density", 1.0, "Mass density");
   params.addParam<bool>("lumping", false, "True for mass matrix lumping, false otherwise");
-  params.addRequiredParam<std::string>("str_append", "String that has been appended to material property names (connection to NewmarkMaterial)");
   return params;
 }
 
 SecondDerivativeNewmark::SecondDerivativeNewmark(const std::string & name, InputParameters parameters) :
     TimeKernel(name, parameters),
+    _comp_name(variable().name()),  // we use the name that was supplied as disp parameter to ensure unique naming and finally correctly correspondence to NewmarkMaterial.C
     _density(getParam<Real>("density")),
     _lumping(getParam<bool>("lumping")),
-    _acc(getMaterialProperty<Real>("newmark_acceleration" + getParam<std::string>("str_append"))),
-    _jacobian(getMaterialProperty<Real>("newmark_jacobian" + getParam<std::string>("str_append")))
+    _acc(getMaterialProperty<Real>("newmark_acceleration-" + _comp_name)),
+    _jac(getMaterialProperty<Real>("newmark_jacobian-"     + _comp_name))
 {}
 
 Real
@@ -33,7 +33,7 @@ SecondDerivativeNewmark::computeQpResidual()
 Real
 SecondDerivativeNewmark::computeQpJacobian()
 {
-  return _test[_i][_qp] * _phi[_j][_qp] * _jacobian[_qp];
+  return _test[_i][_qp] * _phi[_j][_qp] * _jac[_qp];
 }
 
 void

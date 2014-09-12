@@ -30,13 +30,13 @@ protected:
 
 private:
 
-  MaterialProperty<Real> & _vel, & _vel_old;
+  std::string _comp_name;
+
   MaterialProperty<Real> & _acc, & _acc_old;
-  MaterialProperty<Real> & _jacobian;
+  MaterialProperty<Real> & _jac;
 
   const VariableValue & _disp, & _disp_old;
-  const Real _beta;
-  const Real _gamma;
+  const Real _alpha;
 };
 
 #endif //NEWMARKMATERIAL_H

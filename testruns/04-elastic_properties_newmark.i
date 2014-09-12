@@ -45,21 +45,18 @@
 [Kernels]
   #[./inertia_x]
   #  type     = SecondDerivativeNewmark
-  #  str_append = X
   #  variable = disp_x
   #  density  = 100.0
   #  lumping  = false
   #[../]
   [./inertia_y]
     type     = SecondDerivativeNewmark
-    str_append = Y
     variable = disp_y
-    density  = 0.0
+    density  = 100.0
     lumping  = false
   [../]
   #[./inertia_z]
   #  type     = SecondDerivativeNewmark
-  #  str_append = Z
   #  variable = disp_z
   #  density  = 100.0
   #  lumping  = false
@@ -117,24 +114,21 @@
   #  str_append = X
   #  block = 0
   #  disp  = disp_x
-  #  gamma = 0.5
-  #  beta  = 0.25
+  #  alpha = 0.5
   #[../]
   [./newmarky]
     type = NewmarkMaterial
     str_append = Y
     block = 0
     disp  = disp_y
-    gamma = 0.5
-    beta  = 0.25
+    alpha = 0.5
   [../]
   #[./newmarkz]
   #  type = NewmarkMaterial
   #  str_append = Z
   #  block = 0
   #  disp  = disp_z
-  #  gamma = 0.5
-  #  beta  = 0.25
+  #  alpha = 0.5
   #[../]
 
 []
