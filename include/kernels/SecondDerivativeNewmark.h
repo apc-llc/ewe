@@ -33,7 +33,10 @@ private:
   bool _lumping;
   Real _alpha;
   
-  MaterialProperty<Real> & _acc, & _acc_old;
+  MaterialProperty<Real> & _acc;
+  MaterialProperty<Real> & _vel;
+  MaterialProperty<Real> & _gamma;
+  MaterialProperty<Real> & _beta;
 };
 
 #endif //SECONDDERIVATIVENEWMARK_H

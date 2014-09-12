@@ -43,24 +43,24 @@
 []
 
 [Kernels]
-  #[./inertia_x]
-  #  type     = SecondDerivativeNewmark
-  #  variable = disp_x
-  #  density  = 100.0
-  #  lumping  = false
-  #[../]
+  [./inertia_x]
+    type     = SecondDerivativeNewmark
+    variable = disp_x
+    density  = 1.0
+    lumping  = false
+  [../]
   [./inertia_y]
     type     = SecondDerivativeNewmark
     variable = disp_y
-    density  = 100.0
+    density  = 1.0
     lumping  = false
   [../]
-  #[./inertia_z]
-  #  type     = SecondDerivativeNewmark
-  #  variable = disp_z
-  #  density  = 100.0
-  #  lumping  = false
-  #[../]
+  [./inertia_z]
+    type     = SecondDerivativeNewmark
+    variable = disp_z
+    density  = 1.0
+    lumping  = false
+  [../]
 []
 
 
@@ -109,26 +109,21 @@
     disp_z = disp_z
   [../]
 
-  #[./newmarkx]
-  #  type = NewmarkMaterial
-  #  str_append = X
-  #  block = 0
-  #  disp  = disp_x
-  #  alpha = 0.5
-  #[../]
+  [./newmarkx]
+    type = NewmarkMaterial
+    block = 0
+    disp  = disp_x
+  [../]
   [./newmarky]
     type = NewmarkMaterial
     block = 0
     disp  = disp_y
-    alpha = 0.0
   [../]
-  #[./newmarkz]
-  #  type = NewmarkMaterial
-  #  str_append = Z
-  #  block = 0
-  #  disp  = disp_z
-  #  alpha = 0.5
-  #[../]
+  [./newmarkz]
+    type = NewmarkMaterial
+    block = 0
+    disp  = disp_z
+  [../]
 
 []
 
@@ -145,7 +140,7 @@
   l_max_its = 100
 
   start_time = 0
-  end_time   = 0.2
+  end_time   = 30
   #num_steps = 10
   dtmax      = 0.1
   dtmin      = 0.1

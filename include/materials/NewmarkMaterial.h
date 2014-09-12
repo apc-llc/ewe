@@ -32,8 +32,10 @@ private:
   std::string _comp_name;
 
   MaterialProperty<Real> & _acc, & _acc_old;
-
-  const VariableValue & _disp, & _disp_old, & _disp_older;
+  MaterialProperty<Real> & _vel, & _vel_old;
+  MaterialProperty<Real> & _gamma, & _beta;
+  const VariableValue & _disp, & _disp_old;
+  Real __gamma, __beta;
 };
 
 #endif //NEWMARKMATERIAL_H
