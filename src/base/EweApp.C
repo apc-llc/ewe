@@ -5,6 +5,7 @@
 
 #include "SecondOrderImplicitEulerWithDensity.h"
 #include "SecondDerivativeNewmark.h"
+#include "FirstDerivativeNewmark.h"
 #include "KineticEnergyAux.h"
 #include "NewmarkMaterial.h"
 
@@ -45,6 +46,7 @@ EweApp::registerObjects(Factory & factory)
   // Register any custom objects you have built on the MOOSE Framework
   registerKernel(SecondOrderImplicitEulerWithDensity);
   registerKernel(SecondDerivativeNewmark);
+  registerKernel(FirstDerivativeNewmark);
   registerAux(KineticEnergyAux);
   registerMaterial(NewmarkMaterial);
 }
