@@ -43,24 +43,24 @@
 []
 
 [Kernels]
-  [./inertia_x]
-    type     = SecondDerivativeNewmark
-    variable = disp_x
-    density  = 1.0
-    lumping  = false
-  [../]
+ # [./inertia_x]
+ #   type     = SecondDerivativeNewmark
+ #   variable = disp_x
+ #   density  = 0.
+ #   lumping  = false
+ # [../]
   [./inertia_y]
     type     = SecondDerivativeNewmark
     variable = disp_y
-    density  = 1.0
-    lumping  = false
+    density  = 0.1
+    lumping  = true
   [../]
-  [./inertia_z]
-    type     = SecondDerivativeNewmark
-    variable = disp_z
-    density  = 1.0
-    lumping  = false
-  [../]
+ # [./inertia_z]
+ #   type     = SecondDerivativeNewmark
+ #   variable = disp_z
+ #   density  = 0.
+ #   lumping  = false
+ # [../]
 []
 
 
@@ -68,29 +68,42 @@
   [./force_x]
     type = NeumannBC
     variable = disp_x
-    boundary = 'front'
+    boundary = 'front back'
     value = 0.0
   [../]
   [./force_y]
     type = NeumannBC
     variable = disp_y
-    boundary = 'front'
+    boundary = 'front back'
     value = 0.0
   [../]
   [./force_z]
     type = NeumannBC
     variable = disp_z
+    boundary = 'front back'
+    value = 0.0
+  [../]
+
+  [./fixed_x]
+    type = DirichletBC
+    variable = disp_x
+    boundary = 'front'
+    value = 0.0
+  [../]
+  [./fixed_z]
+    type = DirichletBC
+    variable = disp_z
     boundary = 'front'
     value = 0.0
   [../]
 
-  [./displacement_y]
+  [./pull]
     type = DirichletBC
     variable = disp_y
     boundary = 'front'
     value = 0.0
   [../]
-  [./force_back]
+  [./fixed]
     type = FunctionDirichletBC
     variable = disp_y
     boundary = 'back'

@@ -31,8 +31,7 @@ private:
 
   Real _density;
   bool _lumping;
-  Real _alpha;
-  
+
   MaterialProperty<Real> & _acc;
   MaterialProperty<Real> & _vel;
   MaterialProperty<Real> & _gamma;
