@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>C866D67C-9BBB-4759-A5E8-F1F7F9F09801</string>
+	<key>IDESourceControlProjectName</key>
+	<string>ewe</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>F0A67D67-384C-4F35-80A4-4C05E0E4B9DB</key>
+		<string>https://github.com/dasmy/ewe</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>ewe.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>F0A67D67-384C-4F35-80A4-4C05E0E4B9DB</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/dasmy/ewe</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>F0A67D67-384C-4F35-80A4-4C05E0E4B9DB</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F0A67D67-384C-4F35-80A4-4C05E0E4B9DB</string>
+			<key>IDESourceControlWCCName</key>
+			<string>ewe</string>
+		</dict>
+	</array>
+</dict>
+</plist>
