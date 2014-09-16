@@ -3,22 +3,22 @@
 /*                                                              */
 /****************************************************************/
 
-#ifndef KINETICENERGYAUX_H
-#define KINETICENERGYAUX_H
+#ifndef KINETICENERGYNEWMARKAUX_H
+#define KINETICENERGYNEWMARKAUX_H
 
 #include "AuxKernel.h"
 
 
 //Forward Declarations
-class KineticEnergyAux;
+class KineticEnergyNewmarkAux;
 
 template<>
-InputParameters validParams<KineticEnergyAux>();
+InputParameters validParams<KineticEnergyNewmarkAux>();
 
 /**
  * Coupled auxiliary value
  */
-class KineticEnergyAux : public AuxKernel
+class KineticEnergyNewmarkAux : public AuxKernel
 {
 public:
 
@@ -26,13 +26,14 @@ public:
    * Factory constructor, takes parameters so that all derived classes can be built using the same
    * constructor.
    */
-  KineticEnergyAux(const std::string & name, InputParameters parameters);
+  KineticEnergyNewmarkAux(const std::string & name, InputParameters parameters);
 
 protected:
   virtual Real computeValue();
-
-  std::vector<std::string> _str_append;
+  
   Real _density;
+  bool _has_x, _has_y, _has_z;
+  MaterialProperty<Real> *_vel_x, *_vel_y, *_vel_z;
 };
 
-#endif //KINETICENERGYAUX_H
+#endif //KINETICENERGYNEWMARKAUX_H

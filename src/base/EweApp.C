@@ -6,7 +6,7 @@
 #include "SecondOrderImplicitEulerWithDensity.h"
 #include "SecondDerivativeNewmark.h"
 #include "FirstDerivativeNewmark.h"
-#include "KineticEnergyAux.h"
+#include "KineticEnergyNewmarkAux.h"
 #include "NewmarkMaterial.h"
 
 template<>
@@ -47,7 +47,7 @@ EweApp::registerObjects(Factory & factory)
   registerKernel(SecondOrderImplicitEulerWithDensity);
   registerKernel(SecondDerivativeNewmark);
   registerKernel(FirstDerivativeNewmark);
-  registerAux(KineticEnergyAux);
+  registerAux(KineticEnergyNewmarkAux);
   registerMaterial(NewmarkMaterial);
 }
 
