@@ -21,7 +21,7 @@ InputParameters validParams<NewmarkMaterial>()
 NewmarkMaterial::NewmarkMaterial(const std::string & name,
                                  InputParameters parameters) :
     Material(name, parameters),
-    _comp_name((getVar("disp", 0))->name()),  // we use the name that was supplied as disp parameter to ensure unique naming and finally correctly correspondence in SecondDerivativeNewmark.C
+    _comp_name((getVar("disp", 0))->name()),  // we use the name that was supplied as disp parameter to ensure unique naming and finally correct correspondence in SecondDerivativeNewmark.C
     _acc(declareProperty<Real>(       "newmark_acceleration-" + _comp_name)),
     _acc_old(declarePropertyOld<Real>("newmark_acceleration-" + _comp_name)),
     _vel(declareProperty<Real>(       "newmark_velocity-"     + _comp_name)),
