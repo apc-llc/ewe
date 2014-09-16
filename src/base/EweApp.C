@@ -7,6 +7,7 @@
 #include "SecondDerivativeNewmark.h"
 #include "FirstDerivativeNewmark.h"
 #include "KineticEnergyNewmarkAux.h"
+#include "KineticEnergyAux.h"
 #include "NewmarkMaterial.h"
 
 template<>
@@ -48,6 +49,7 @@ EweApp::registerObjects(Factory & factory)
   registerKernel(SecondDerivativeNewmark);
   registerKernel(FirstDerivativeNewmark);
   registerAux(KineticEnergyNewmarkAux);
+  registerAux(KineticEnergyAux);
   registerMaterial(NewmarkMaterial);
 }
 

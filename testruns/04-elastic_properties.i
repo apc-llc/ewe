@@ -46,20 +46,20 @@
   [./inertia_x]
     type     = SecondOrderImplicitEulerWithDensity
     variable = disp_x
-    density  = 100.0
-    lumping  = false
+    density  = 0.1
+    lumping  = true
   [../]
   [./inertia_y]
     type     = SecondOrderImplicitEulerWithDensity
     variable = disp_y
-    density  = 100.0
-    lumping  = false
+    density  = 0.1
+    lumping  = true
   [../]
   [./inertia_z]
     type     = SecondOrderImplicitEulerWithDensity
     variable = disp_z
-    density  = 100.0
-    lumping  = false
+    density  = 0.1
+    lumping  = true
   [../]
 []
 
