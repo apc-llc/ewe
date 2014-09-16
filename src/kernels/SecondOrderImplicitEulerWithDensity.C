@@ -26,13 +26,13 @@ SecondOrderImplicitEulerWithDensity::SecondOrderImplicitEulerWithDensity(const s
 Real
 SecondOrderImplicitEulerWithDensity::computeQpResidual()
 {
-  return _density*SecondDerivativeImplicitEuler::computeQpResidual();
+  return -_density*SecondDerivativeImplicitEuler::computeQpResidual();
 }
 
 Real
 SecondOrderImplicitEulerWithDensity::computeQpJacobian()
 {
-  return _density*SecondDerivativeImplicitEuler::computeQpJacobian();
+  return -_density*SecondDerivativeImplicitEuler::computeQpJacobian();
 }
 
 void
