@@ -35,19 +35,19 @@
   [./inertia_x]
     type     = SecondOrderImplicitEulerWithDensity
     variable = disp_x
-    density  = 100.0
+    density  = 0.1
     lumping  = false
   [../]
   [./inertia_y]
     type     = SecondOrderImplicitEulerWithDensity
     variable = disp_y
-    density  = 100.0
+    density  = 0.1
     lumping  = false
   [../]
   [./inertia_z]
     type     = SecondOrderImplicitEulerWithDensity
     variable = disp_z
-    density  = 100.0
+    density  = 0.1
     lumping  = false
   [../]
 []
@@ -106,8 +106,8 @@
   start_time = 0
   end_time   = 3.0
   #num_steps = 10
-  dtmax      = 0.05
-  dtmin      = 0.01
+  dtmax      = 0.1
+  dtmin      = 0.1
 []
 
 [Functions]
@@ -123,7 +123,7 @@
   [./console]
     type = Console
     perf_log = true
-    linear_residuals = true
+    linear_residuals = false
   [../]
   
   [./exodus_displaced]
