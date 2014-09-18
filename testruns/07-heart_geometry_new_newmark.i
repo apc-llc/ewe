@@ -33,22 +33,22 @@
 
 [Kernels]
   [./inertia_x]
-    type     = SecondOrderImplicitEulerWithDensity
+    type     = SecondDerivativeNewmark
     variable = disp_x
     density  = 0.1
-    lumping  = false
+    lumping  = true
   [../]
   [./inertia_y]
-    type     = SecondOrderImplicitEulerWithDensity
+    type     = SecondDerivativeNewmark
     variable = disp_y
     density  = 0.1
-    lumping  = false
+    lumping  = true
   [../]
   [./inertia_z]
-    type     = SecondOrderImplicitEulerWithDensity
+    type     = SecondDerivativeNewmark
     variable = disp_z
     density  = 0.1
-    lumping  = false
+    lumping  = true
   [../]
 []
 
@@ -113,6 +113,22 @@
     # t_ref = 0.0
     # temp = temperature
   [../]
+
+   [./newmarkx]
+     type = NewmarkMaterial
+     block = 1
+     disp  = disp_x
+   [../]
+   [./newmarky]
+     type = NewmarkMaterial
+     block = 1
+     disp  = disp_y
+   [../]
+   [./newmarkz]
+     type = NewmarkMaterial
+     block = 1
+     disp  = disp_z
+   [../]
 []
 
 [Executioner]
@@ -294,7 +310,7 @@
 #    quantity = thirdinvariant
 #  [../]
   [./kinetic_energy]
-    type = KineticEnergyAux
+    type = KineticEnergyNewmarkAux
     variable = kinetic_energy
     disp_x = disp_x
     disp_y = disp_y
