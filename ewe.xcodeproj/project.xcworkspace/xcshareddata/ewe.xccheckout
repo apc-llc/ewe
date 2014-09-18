@@ -5,36 +5,60 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>C866D67C-9BBB-4759-A5E8-F1F7F9F09801</string>
+	<string>4BF3A6F8-5BFE-4BAF-A59F-000DB249F5A9</string>
 	<key>IDESourceControlProjectName</key>
 	<string>ewe</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>F0A67D67-384C-4F35-80A4-4C05E0E4B9DB</key>
-		<string>https://github.com/dasmy/ewe</string>
+		<key>0B14EB2C-FC18-4554-9715-20F522F041A8</key>
+		<string>https://github.com/dasmy/moose</string>
+		<key>13B7A9EF-D9D0-4B8D-8E7F-2616B7C91EC8</key>
+		<string>https://bitbucket.org/dasmy/ewe.git</string>
+		<key>98BD4E8E-2BA4-4F75-86E7-3D76752DB995</key>
+		<string>https://github.com/libMesh/libmesh.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>ewe.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>F0A67D67-384C-4F35-80A4-4C05E0E4B9DB</key>
+		<key>0B14EB2C-FC18-4554-9715-20F522F041A8</key>
+		<string>../../../moose</string>
+		<key>13B7A9EF-D9D0-4B8D-8E7F-2616B7C91EC8</key>
 		<string>../..</string>
+		<key>98BD4E8E-2BA4-4F75-86E7-3D76752DB995</key>
+		<string>../../../moose/libmesh</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/dasmy/ewe</string>
+	<string>https://bitbucket.org/dasmy/ewe.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>F0A67D67-384C-4F35-80A4-4C05E0E4B9DB</string>
+	<string>13B7A9EF-D9D0-4B8D-8E7F-2616B7C91EC8</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>F0A67D67-384C-4F35-80A4-4C05E0E4B9DB</string>
+			<string>13B7A9EF-D9D0-4B8D-8E7F-2616B7C91EC8</string>
 			<key>IDESourceControlWCCName</key>
 			<string>ewe</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>98BD4E8E-2BA4-4F75-86E7-3D76752DB995</string>
+			<key>IDESourceControlWCCName</key>
+			<string>libmesh</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>0B14EB2C-FC18-4554-9715-20F522F041A8</string>
+			<key>IDESourceControlWCCName</key>
+			<string>moose</string>
 		</dict>
 	</array>
 </dict>
