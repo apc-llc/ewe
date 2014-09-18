@@ -136,7 +136,7 @@
 [Functions]
   [./pressure_time]
     type = ParsedFunction
-    value = '100.*(sin(2*pi*t/3.0)+1.)'
+    value = '2500.*(sin(2*pi*t/3.0)+1.)'
   [../]
 []
 
