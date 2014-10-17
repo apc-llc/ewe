@@ -119,17 +119,17 @@
   l_max_its = 100
 
   start_time = 0
-  end_time   = 1.0
+  end_time   = 3.0
   #num_steps = 10
   dtmax      = 0.1
-  dtmin      = 0.01
+  dtmin      = 0.1
 []
 
 [Functions]
   [./pull]
     type = PiecewiseLinear
-    x = '0.0 1.0 100.0'
-    y = '0.0 3.0   3.0'
+    x = '0.0 1.5 3.0'
+    y = '0.0 5.0 0.0'
     scale_factor = 1
   [../]
 []
