@@ -1,5 +1,5 @@
 [Mesh]
- file = heart.e
+ file = 07-heart_geometry_new.e
  
  block_id = '1'
  block_name = 'all'
