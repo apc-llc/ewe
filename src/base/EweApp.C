@@ -10,6 +10,14 @@
 #include "KineticEnergyAux.h"
 #include "NewmarkMaterial.h"
 
+#include "Electrocardio.h"
+#include "ElectrocardioForcing.h"
+#include "ElectrocardioTimeDerivative.h"
+#include "ElectrocardioDiffusion.h"
+#include "ElectrocardioConductivity.h"
+#include "ElectrocardioIC.h"
+#include "CardiacPropertiesMaterial.h"
+
 template<>
 InputParameters validParams<EweApp>()
 {
@@ -48,6 +56,13 @@ EweApp::registerObjects(Factory & factory)
   registerKernel(SecondOrderImplicitEulerWithDensity);
   registerKernel(SecondDerivativeNewmark);
   registerKernel(FirstDerivativeNewmark);
+  registerKernel(ElectrocardioForcing);
+  registerMaterial(Electrocardio);
+  registerMaterial(ElectrocardioConductivity);
+  registerMaterial(CardiacPropertiesMaterial);
+  registerKernel(ElectrocardioTimeDerivative);
+  registerKernel(ElectrocardioDiffusion);
+  registerInitialCondition(ElectrocardioIC);
   registerAux(KineticEnergyNewmarkAux);
   registerAux(KineticEnergyAux);
   registerMaterial(NewmarkMaterial);

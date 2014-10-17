@@ -1,0 +1,171 @@
+/****************************************************************/
+/*                                                              */
+/*                                                              */
+/****************************************************************/
+
+#include "Electrocardio.h"
+#include "anatomy.h"
+#include "my_stuff.h"
+
+template<>
+InputParameters validParams<Electrocardio>()
+{
+  InputParameters params = validParams<Material>();
+  params.addRequiredCoupledVar("vmem","Membrane potential needed as input for ion channel model");
+  params.addParam<std::string>("PropagParams", "+Default", "Command line parameters given to propag, e.g. '+F Test.par'. These are handed over to the propag parameter parser and can essentially be the same as used for propag. Many of them are ignored, though. Default: '+Default'");
+  // TODO: For ion channel models that need the diffusion current, have to fetch the value of Imem somehow
+  //params.addCoupledVar("Imem",0.,"Diffusion current needed as input for ion channel model");
+  return params;
+}
+
+Electrocardio::Electrocardio(const std::string & name,
+                                 InputParameters parameters) :
+  Material(name, parameters),
+  _Iion(declareProperty<Real>("Iion")),
+  _dtime(declareProperty<Real>("dtime")),
+  _dtime_old(declarePropertyOld<Real>("dtime")),
+  _yyy(declareProperty<std::vector<Real> >("yyy")),
+  _yyy_old(declarePropertyOld<std::vector<Real> >("yyy")),
+  _cell_info(getMaterialProperty<Membrane_cell_info>("cell_info")),
+  // coupled variables
+  _vmem(coupledValue("vmem")),
+  //_Imem(coupledValue("Imem")),
+  // parameters
+  _PropagParams(getParam<std::string>("PropagParams"))
+
+{
+  // TODO: Moose creates three material objects: volume, neighbor and boundary for every thread
+  // to only initialize propag once (see lines 1580ff in FEProblem.C)
+  // we call the init routines only for the volume part of the very first thread.
+  // NOTE: This assumes that volume is ALWAYS created first...
+  // TODO: I would really not assume that any propag-routines are thread-safe.
+  if (_tid == 0 && !_bnd && !_neighbor) {
+    
+    std::string paramstring = reduce("execname " + _PropagParams, " ");
+    std::vector<char> paramchars(paramstring.begin(), paramstring.end());
+    std::vector<char*> argv = make_argv(paramchars);
+    int argc = argv.size();
+    
+    int s;
+    do{
+      s= param(PARAMETERS,&argc, &argv[0]);
+      if(s==PrMERROR||s==PrMFATAL)
+      {
+        Error(1,"Error reading parameters");
+      }
+      else if(s==PrMQUIT)
+      {
+        fprintf(stderr,"\n*** Quitting by user's request\n\n");
+        exit(0);
+      }
+    }while(s==PrMERROR);
+    
+    ion_info();
+    // create ionic mapping (colors to ion models)
+    ion_setup_nmap();
+    // creates substances/materials, each with different connectivity G
+    setup_substances();
+    
+    ion_init(_dt); // this simply initializes all loaded ion models - we do not check wether they are actually used
+  }
+  
+  std::cout << "Constructing Material Electrocardio..." << std::endl;
+}
+
+void
+Electrocardio::initQpStatefulProperties()
+{
+  Membrane_cell_info cell_info;  // TODO: this should just be a pointer to CardiacPropertiesMaterial::_cell_info[_qp]; unfortunately, currently CardiacPropertiesMaterial::ComputeQpValue() is only evaluated much later than Electrocardio::InitStatefulProperties
+  cell_info.mcode = 1;           // membrane model code -- BERNUS
+  cell_info.ccode = BERNUS_EPIC; // membrane model-specific cell type code --> BERNUS_EPIC
+  cell_info.param = NULL;        // invalid to avoid accidential use
+  
+  // Sets _yyy
+  ion_init_qp(0.0, cell_info, _yyy[_qp] );
+
+  // init the stateful properties (these will become _bla_old before/in the first call of computeProperties)
+  _dtime[_qp] = 0.0;
+  _Iion[_qp]  = 0.0; // it seems these are not initialized by propag?
+}
+
+void
+Electrocardio::computeProperties()
+{
+  _ndep = 0;
+  _nnd  = 0;
+  Material::computeProperties();
+  _all_dep = (_nnd==0);
+}
+
+/**
+ * TODO: Meh, big problem here... this routine is called in EVERY iteration of the linear and nonlinear solve... and performs an update of the membrane states EVERY time. This is clearly not what we want.....
+ * MW: I am not sure if this is a problem (ignoring runtime considerations for now): the routine always uses yyy_old and computes some yyy using the iteration's current membrane potential. I would strongly assume that yyy is only copied to yyy_old automagically after a timestep has converged successfully.
+ */
+void
+Electrocardio::computeQpProperties()
+{
+  
+  int mcode= 1; // for Bernus model; can probably be different for different points/elements
+  
+  if(mcode!=MCODE_NONE)
+  {
+    int N = ion_mi[mcode].Nsvar;
+    
+    /**
+     * Need local copies to be passed to the step function, because it is not build for std:array objects.
+     */
+    yyy_t _yyy_local[N];
+    for (int i=0; i<N; i++) {
+      _yyy_local[i] = (_yyy_old[_qp])[i];
+    }
+    double _Imem_local = 0.0; // TODO: This has to be set to the diffusion current, which needs to be retrieved somehow from the diffusion kernel
+    float _dtime_local = _dtime_old[_qp];
+    
+    /**
+     * Call the step function of the used model
+     */
+    // TODO: I would really not assume that any propag-routines are thread-safe.
+    // _yyy = status variables of the membrane model; subject to the ODE.
+    // _Imem_local = diffusion current = Nabla*( G * Nabla(V) ); TODO: This is to be somehow fetched from the corresponding moose kernel!
+    _Iion[_qp] = (*(ion_mi[mcode].step))(_vmem[_qp], _yyy_local, & _cell_info[_qp], -(_Imem_local), _dt, & _dtime_local, _t, _current_elem->id());
+    
+    /**
+     * Put back the values from the local copies into the arrays.
+     * ... THIS SHOULD ONLY HAPPEN AT THE VERY END OF A TIMESTEP..., TODO: see above
+     */
+    for (int i=0; i<N; i++) {
+      _yyy[_qp][i] = _yyy_local[i];
+    }
+        
+    _dtime[_qp] = _dtime_local;
+    
+    if (_Iion[_qp] < -0.1) _ndep++;
+    if (_dtime[_qp] < 0)   _nnd++;
+  }
+  else
+  {
+      _Iion[_qp]= 0.0;
+  }
+  
+  /**
+   * The mono domain equations reads
+   *
+   * V_t + div( G grad(V)) = I_ion(V)
+   *
+   * where G is a conductivity tensor, I_ion the current [unit Ampere] generated by the membrane potential V [unit Volt].
+   * The ODE for the membrane states S reads
+   *
+   * S_t = Z(V,S)
+   *
+   * with V being the membrane potential. 
+   * The dependance of I_ion on V and the evolution of the state variables S is given by some membrane model, e.g. Bernus.
+   *
+   * In propag, the following names are used
+   *
+   * Vmem = V = membrane potential = variable in reaction-diffusion PDE
+   * Iion = I_ion(V) = ion current = reaction term in PDE
+   * Imem = diffusion current = div( G grad(V))
+   * yyy  = S = cell states = variable in the ODE
+   */
+  
+}

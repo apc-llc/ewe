@@ -1,8 +1,8 @@
 *.xcodeproj
+*.d
 .libs
 *.la
 *.lo
-*.d
 *.o
 *.a
 *-opt
