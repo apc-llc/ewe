@@ -22,27 +22,44 @@
   [../]
 []
 
-[SolidMechanics]
-  # for every variable given, this sets up a StressDivergence kernel (see SolidMechanicsAction.C)  
-  [./solid]
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
-  [../]
-[]
-
 [Kernels]
+  [./stressdiv_x]
+    type      = StressDivergence
+    variable  = disp_x
+    component = 0
+    disp_x    = disp_x
+    disp_y    = disp_y
+    disp_z    = disp_z
+  [../]
   [./inertia_x]
     type     = SecondDerivativeNewmark
     variable = disp_x
     density  = 0.1
     lumping  = true
   [../]
+
+  [./stressdiv_y]
+    type      = StressDivergence
+    variable  = disp_y
+    component = 1
+    disp_x    = disp_x
+    disp_y    = disp_y
+    disp_z    = disp_z
+  [../]
   [./inertia_y]
     type     = SecondDerivativeNewmark
     variable = disp_y
     density  = 0.1
     lumping  = true
+  [../]
+
+  [./stressdiv_z]
+    type      = StressDivergence
+    variable  = disp_z
+    component = 2
+    disp_x    = disp_x
+    disp_y    = disp_y
+    disp_z    = disp_z
   [../]
   [./inertia_z]
     type     = SecondDerivativeNewmark
