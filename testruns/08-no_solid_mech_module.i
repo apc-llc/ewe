@@ -24,7 +24,7 @@
 
 [Kernels]
   [./stressdiv_x]
-    type      = StressDivergence
+    type      = CardiacStressDivergence
     variable  = disp_x
     component = 0
     disp_x    = disp_x
@@ -39,7 +39,7 @@
   [../]
 
   [./stressdiv_y]
-    type      = StressDivergence
+    type      = CardiacStressDivergence
     variable  = disp_y
     component = 1
     disp_x    = disp_x
@@ -54,7 +54,7 @@
   [../]
 
   [./stressdiv_z]
-    type      = StressDivergence
+    type      = CardiacStressDivergence
     variable  = disp_z
     component = 2
     disp_x    = disp_x
