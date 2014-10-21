@@ -31,7 +31,6 @@ protected:
 
   MaterialProperty<SymmTensor> & _stress;
   MaterialProperty<SymmElasticityTensor> & _Jacobian_mult;
-  MaterialProperty<SymmTensor> & _d_stress_dT;
 
 private:
   const unsigned int _component;

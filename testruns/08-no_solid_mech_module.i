@@ -118,17 +118,13 @@
 
 [Materials]
   [./linear_isotropic]
-    type = LinearIsotropicMaterial
+    type = CardiacLinearIsotropicMaterial
     block = 1
     youngs_modulus = 1.e5
     poissons_ratio = 0.3
     disp_x = disp_x
     disp_y = disp_y
     disp_z = disp_z
-    # thermal properties
-    # thermal_expansion = 1.0
-    # t_ref = 0.0
-    # temp = temperature
   [../]
 
    [./newmarkx]

@@ -10,6 +10,7 @@
 #include "KineticEnergyAux.h"
 #include "NewmarkMaterial.h"
 #include "CardiacStressDivergence.h"
+#include "CardiacLinearIsotropicMaterial.h"
 
 #include "Electrocardio.h"
 #include "ElectrocardioForcing.h"
@@ -64,6 +65,7 @@ EweApp::registerObjects(Factory & factory)
   registerMaterial(Electrocardio);
   registerMaterial(ElectrocardioConductivity);
   registerMaterial(CardiacPropertiesMaterial);
+  registerMaterial(CardiacLinearIsotropicMaterial);
 
   registerKernel(ElectrocardioTimeDerivative);
   registerKernel(ElectrocardioDiffusion);
