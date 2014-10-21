@@ -9,6 +9,8 @@
 #include "KineticEnergyNewmarkAux.h"
 #include "KineticEnergyAux.h"
 #include "NewmarkMaterial.h"
+#include "CardiacStressDivergence.h"
+#include "CardiacLinearIsotropicMaterial.h"
 
 #include "Electrocardio.h"
 #include "ElectrocardioForcing.h"
@@ -56,16 +58,22 @@ EweApp::registerObjects(Factory & factory)
   registerKernel(SecondOrderImplicitEulerWithDensity);
   registerKernel(SecondDerivativeNewmark);
   registerKernel(FirstDerivativeNewmark);
+  registerKernel(CardiacStressDivergence);
   registerKernel(ElectrocardioForcing);
+
+  registerMaterial(NewmarkMaterial);
   registerMaterial(Electrocardio);
   registerMaterial(ElectrocardioConductivity);
   registerMaterial(CardiacPropertiesMaterial);
+  registerMaterial(CardiacLinearIsotropicMaterial);
+
   registerKernel(ElectrocardioTimeDerivative);
   registerKernel(ElectrocardioDiffusion);
+
   registerInitialCondition(ElectrocardioIC);
+  
   registerAux(KineticEnergyNewmarkAux);
   registerAux(KineticEnergyAux);
-  registerMaterial(NewmarkMaterial);
 }
 
 void
