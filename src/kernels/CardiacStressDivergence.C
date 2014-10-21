@@ -15,7 +15,6 @@ InputParameters validParams<CardiacStressDivergence>()
   params.addCoupledVar("disp_x", "The x displacement");
   params.addCoupledVar("disp_y", "The y displacement");
   params.addCoupledVar("disp_z", "The z displacement");
-  params.addParam<std::string>("appended_property_name", "", "Name appended to material properties to make them unique");
 
   params.set<bool>("use_displaced_mesh") = true;
 
@@ -25,8 +24,8 @@ InputParameters validParams<CardiacStressDivergence>()
 
 CardiacStressDivergence::CardiacStressDivergence(const std::string & name, InputParameters parameters)
   :Kernel(name, parameters),
-   _stress(getMaterialProperty<SymmTensor>("stress" + getParam<std::string>("appended_property_name"))),
-   _Jacobian_mult(getMaterialProperty<SymmElasticityTensor>("Jacobian_mult" + getParam<std::string>("appended_property_name"))),
+   _stress(getMaterialProperty<SymmTensor>("stress")),
+   _Jacobian_mult(getMaterialProperty<SymmElasticityTensor>("Jacobian_mult")),
    _component(getParam<unsigned int>("component")),
    _xdisp_coupled(isCoupled("disp_x")),
    _ydisp_coupled(isCoupled("disp_y")),
