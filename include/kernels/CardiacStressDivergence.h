@@ -35,10 +35,6 @@ protected:
 private:
   const unsigned int _component;
 
-  const bool _xdisp_coupled;
-  const bool _ydisp_coupled;
-  const bool _zdisp_coupled;
-
   const unsigned int _xdisp_var;
   const unsigned int _ydisp_var;
   const unsigned int _zdisp_var;

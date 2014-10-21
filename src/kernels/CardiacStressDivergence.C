@@ -12,9 +12,9 @@ InputParameters validParams<CardiacStressDivergence>()
 {
   InputParameters params = validParams<Kernel>();
   params.addRequiredParam<unsigned int>("component", "An integer corresponding to the direction the variable this kernel acts in. (0 for x, 1 for y, 2 for z)");
-  params.addCoupledVar("disp_x", "The x displacement");
-  params.addCoupledVar("disp_y", "The y displacement");
-  params.addCoupledVar("disp_z", "The z displacement");
+  params.addRequiredCoupledVar("disp_x", "The x displacement");
+  params.addRequiredCoupledVar("disp_y", "The y displacement");
+  params.addRequiredCoupledVar("disp_z", "The z displacement");
 
   params.set<bool>("use_displaced_mesh") = true;
 
@@ -27,12 +27,9 @@ CardiacStressDivergence::CardiacStressDivergence(const std::string & name, Input
    _stress(getMaterialProperty<SymmTensor>("stress")),
    _Jacobian_mult(getMaterialProperty<SymmElasticityTensor>("Jacobian_mult")),
    _component(getParam<unsigned int>("component")),
-   _xdisp_coupled(isCoupled("disp_x")),
-   _ydisp_coupled(isCoupled("disp_y")),
-   _zdisp_coupled(isCoupled("disp_z")),
-   _xdisp_var(_xdisp_coupled ? coupled("disp_x") : 0),
-   _ydisp_var(_ydisp_coupled ? coupled("disp_y") : 0),
-   _zdisp_var(_zdisp_coupled ? coupled("disp_z") : 0)
+   _xdisp_var(coupled("disp_x")),
+   _ydisp_var(coupled("disp_y")),
+   _zdisp_var(coupled("disp_z"))
 {}
 
 Real
@@ -54,17 +51,17 @@ CardiacStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
 
   bool active(false);
 
-  if ( _xdisp_coupled && jvar == _xdisp_var )
+  if (jvar == _xdisp_var )
   {
     coupled_component = 0;
     active = true;
   }
-  else if ( _ydisp_coupled && jvar == _ydisp_var )
+  else if (jvar == _ydisp_var )
   {
     coupled_component = 1;
     active = true;
   }
-  else if ( _zdisp_coupled && jvar == _zdisp_var )
+  else if (jvar == _zdisp_var )
   {
     coupled_component = 2;
     active = true;

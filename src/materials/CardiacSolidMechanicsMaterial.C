@@ -13,8 +13,7 @@ InputParameters validParams<CardiacSolidMechanicsMaterial>()
   InputParameters params = validParams<Material>();
   params.addRequiredCoupledVar("disp_x", "The x displacement");
   params.addRequiredCoupledVar("disp_y", "The y displacement");
-  params.addCoupledVar("disp_z", "The z displacement");
-  params.addCoupledVar("temp", "The temperature if you want thermal expansion.");
+  params.addRequiredCoupledVar("disp_z", "The z displacement");
   params.addCoupledVar("c","variable that zeros out the stiffness");
 
   return params;
@@ -24,7 +23,7 @@ CardiacSolidMechanicsMaterial::CardiacSolidMechanicsMaterial(const std::string &
   :Material(name, parameters),
    _grad_disp_x(coupledGradient("disp_x")),
    _grad_disp_y(coupledGradient("disp_y")),
-   _grad_disp_z(_mesh.dimension() == 3 ? coupledGradient("disp_z") : _grad_zero),
+   _grad_disp_z(coupledGradient("disp_z")),
    _has_c(isCoupled("c")),
    _c( _has_c ? coupledValue("c") : _zero),
    _stress(declareProperty<SymmTensor>("stress")),
