@@ -28,11 +28,9 @@ public:
 protected:
   virtual void computeProperties();
 
-  virtual void computeStress(const SymmTensor & strain,
-                             SymmTensor & stress);
-
-  Real _youngs_modulus;
-  Real _poissons_ratio;
+  std::vector<Real> _youngs_moduli;
+  std::vector<Real> _poissons_ratios;
+  std::vector<Real> _shear_moduli;
 
   SymmElasticityTensor * _local_elasticity_tensor;
 

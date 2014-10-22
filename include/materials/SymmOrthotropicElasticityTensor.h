@@ -2,23 +2,19 @@
  * Template for this file came from moose/modules/solid_mechanics/include/materials/SymmIsotropicElasticityTensor.h
  *************************************/
 
-#ifndef SYMMOrthotropICELASTICITYTENSOR_H
-#define SYMMOrthotropICELASTICITYTENSOR_H
+#ifndef SYMMORTHOTROPICELASTICITYTENSOR_H
+#define SYMMORTHOTROPICELASTICITYTENSOR_H
 
 #include "SymmElasticityTensor.h"
 
 /**
  * Defines an Orthotropic Elasticity Tensor.
  *
- * The input is any two of the following:
+ * The input parameters must be the following:
  *
- * Youngs Modulus
- * Poissons Ration
- * First and Second Lame Coefficients (lambda and mu)
- * Bulk Modulus
- *
- * Internally this class uses the Lame Coefficients.
- * Everything is is transformed to these coefficients.
+ * Youngs Moduli   E_i   ( i  = 1,2,3    )
+ * Poissons Ratios nu_ij ( ij = 21,31,32 )
+ * Shear Moduli    G_ij  ( ij = 21,31,32 )
  *
  * Note that by default this tensor is _constant_... meaning
  * that it never changes after the first time it is computed.
@@ -33,51 +29,20 @@ public:
 
   virtual ~SymmOrthotropicElasticityTensor() {}
 
-  void unsetConstants()
-  {
-    _lambda_set = _mu_set = _E_set = _nu_set = _k_set = false;
-  }
+  /**
+   * Set the Young's Moduli
+   */
+  void setYoungsModuli(const Real E_1, const Real E_2, const Real E_3);
 
   /**
-   * Set the first Lame Coefficient.
+   * Set Poissons Ratios
    */
-  void setLambda(const Real lambda);
+  void setPoissonsRatios(const Real nu_12, const Real nu_13, const Real nu_23);
 
   /**
-   * Set the second Lame Coefficient.
+   * Set the Shear Moduli
    */
-  void setMu(const Real mu);
-
-  /**
-   * Set the Young's Modulus
-   */
-  void setYoungsModulus(const Real E);
-
-  /**
-   * Set Poissons Ratio
-   */
-  void setPoissonsRatio(const Real nu);
-
-  /**
-   * Set the Bulk Modulus
-   */
-  void setBulkModulus(const Real k);
-
-  /**
-   * Set the shear modulus... same thing as Mu
-   */
-  void setShearModulus(const Real k);
-
-  /**
-   * Return Mu
-   */
-  Real mu() const;
-
-  /**
-   * Return the shear modulus... same thing as Mu
-   */
-  Real shearModulus() const;
-
+  void setShearModuli(const Real G_12, const Real G_13, const Real G_23);
 
   virtual Real stiffness( const unsigned i, const unsigned j,
                           const RealGradient & test,
@@ -85,27 +50,14 @@ public:
 
   virtual void multiply( const SymmTensor & x, SymmTensor & b ) const;
 
-  virtual void adjustForCracking( const RealVectorValue & crack_flags );
-
 protected:
 
-  bool _lambda_set, _mu_set, _E_set, _nu_set, _k_set;
-
-  Real _lambda, _mu, _E, _nu, _k;
+  Real _E1, _E2, _E3, _nu12, _nu13, _nu23, _G12, _G13, _G23;
 
   /**
    * Fill in the matrix.
    */
   virtual void calculateEntries(unsigned int qp);
-  void setEntries(Real C11, Real C12, Real C44);
-
-  /**
-   * Calculates lambda and mu based on what has been set.
-   *
-   * These are based on Michael Tonks's's notes
-   */
-  void calculateLameCoefficients();
-
 };
 
-#endif //OrthotropICELASTICITYTENSOR_H
+#endif //SYMMORTHOTROPICELASTICITYTENSOR_H

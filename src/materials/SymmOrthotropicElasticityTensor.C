@@ -6,140 +6,76 @@
 
 SymmOrthotropicElasticityTensor::SymmOrthotropicElasticityTensor(const bool constant)
   : SymmElasticityTensor(constant),
-    _lambda_set(false),
-    _mu_set(false),
-    _E_set(false),
-    _nu_set(false),
-    _k_set(false),
-    _lambda(0),
-    _mu(0),
-    _E(0),
-    _nu(0),
-    _k(0)
+    _E1(-1), _E2(-1), _E3(-1),
+    _nu12(-1), _nu13(-1), _nu23(-1),
+    _G12(-1), _G13(-1), _G23(-1)
 {}
 
 void
-SymmOrthotropicElasticityTensor::setLambda(const Real lambda)
+SymmOrthotropicElasticityTensor::setYoungsModuli(const Real E_1, const Real E_2, const Real E_3)
 {
-  _lambda = lambda;
-  _lambda_set = true;
+  _E1 = E_1;
+  _E2 = E_2;
+  _E3 = E_3;
 }
 
 void
-SymmOrthotropicElasticityTensor::setMu(const Real mu)
+SymmOrthotropicElasticityTensor::setPoissonsRatios(const Real nu_12, const Real nu_13, const Real nu_23)
 {
-  _mu = mu;
-  _mu_set = true;
+  _nu12 = nu_12;
+  _nu13 = nu_13;
+  _nu23 = nu_23;
 }
 
 void
-SymmOrthotropicElasticityTensor::setYoungsModulus(const Real E)
+SymmOrthotropicElasticityTensor::setShearModuli(const Real G_12, const Real G_13, const Real G_23)
 {
-  _E = E;
-  _E_set = true;
-}
-
-void
-SymmOrthotropicElasticityTensor::setPoissonsRatio(const Real nu)
-{
-  _nu = nu;
-  _nu_set = true;
-}
-
-void
-SymmOrthotropicElasticityTensor::setBulkModulus(const Real k)
-{
-  _k = k;
-  _k_set = true;
-}
-
-void
-SymmOrthotropicElasticityTensor::setShearModulus(const Real k)
-{
-  setMu(k);
-}
-
-Real
-SymmOrthotropicElasticityTensor::shearModulus() const
-{
-  return mu();
-}
-
-Real
-SymmOrthotropicElasticityTensor::mu() const
-{
-  if (!_mu_set)
-  {
-    mooseError("mu not set");
-  }
-  return _mu;
-}
-
-void
-SymmOrthotropicElasticityTensor::calculateLameCoefficients()
-{
-  if (_lambda_set && _mu_set) // First and second Lame
-    return;
-  else if (_lambda_set && _nu_set)
-    _mu = (_lambda * (1.0 - 2.0 * _nu)) / (2.0 * _nu);
-  else if (_lambda_set && _k_set)
-    _mu = ( 3.0 * (_k - _lambda) ) / 2.0;
-  else if (_lambda_set && _E_set)
-    _mu = ( (_E - 3.0*_lambda) / 4.0 ) + ( std::sqrt( (_E-3.0*_lambda)*(_E-3.0*_lambda) + 8.0*_lambda*_E ) / 4.0 );
-  else if (_mu_set && _nu_set)
-    _lambda = ( 2.0 * _mu * _nu ) / (1.0 - 2.0*_nu);
-  else if (_mu_set && _k_set)
-    _lambda = ( 3.0 * _k - 2.0 * _mu ) / 3.0;
-  else if (_mu_set && _E_set)
-    _lambda = ((2.0*_mu - _E) * _mu) / (_E - 3.0*_mu);
-  else if (_nu_set && _k_set)
-  {
-    _lambda = (3.0 * _k * _nu) / (1.0 + _nu);
-    _mu = (3.0 * _k * (1.0 - 2.0*_nu)) / (2.0 * (1.0 + _nu));
-  }
-  else if (_E_set && _nu_set) // Young's Modulus and Poisson's Ratio
-  {
-    _lambda = (_nu * _E) / ( (1.0+_nu) * (1-2.0*_nu) );
-    _mu = _E / ( 2.0 * (1.0+_nu));
-  }
-  else if (_E_set && _k_set)
-  {
-    _lambda = (3.0 * _k * (3.0 * _k - _E)) / (9.0 * _k - _E);
-    _mu = (3.0 * _E * _k) / (9.0 * _k - _E);
-  }
-  _lambda_set = true;
-  _mu_set = true;
+  _G12 = G_12;
+  _G13 = G_13;
+  _G23 = G_23;
 }
 
 void
 SymmOrthotropicElasticityTensor::calculateEntries(unsigned int /*qp*/)
 {
-  calculateLameCoefficients();
+  // see http://de.wikipedia.org/wiki/Orthotropie#Elastizit.C3.A4tsgesetz_f.C3.BCr_3D
+  // ATTENTION: exy is in the very final position there, but in the fourth here (as in SymmElasticityTensor.h)
+  const Real _nu21 = _E2/_E1*_nu12;
+  const Real _nu31 = _E3/_E1*_nu13;
+  const Real _nu32 = _E3/_E2*_nu23;
+  const Real D = 1. - _nu12*_nu21 - _nu13*_nu31 - _nu23*_nu32 - 2*_nu12*_nu23*_nu31;
+  
+  const Real C11( (         1. - _nu23*_nu32)/D * _E1 );
+  const Real C12( (_nu13*_nu32 + _nu12      )/D * _E2 );
+  const Real C13( (_nu12*_nu23 + _nu13      )/D * _E3 );
+  const Real C22( (         1. - _nu13*_nu31)/D * _E2 );
+  const Real C23( (_nu21*_nu13 + _nu23      )/D * _E3 );
+  const Real C33( (         1. - _nu12*_nu21)/D * _E3 );
+  const Real C44( _G12 );
+  const Real C55( _G23 );
+  const Real C66( _G13 );
 
-  const Real C12(_lambda);
-  const Real C44(_mu);
-  const Real C11(2*C44+C12);
-
-  setEntries( C11, C12, C44 );
-}
-
-void
-SymmOrthotropicElasticityTensor::setEntries( Real C11, Real C12, Real C44 )
-{
-  _val[ 0] = _val[ 6] = _val[11] = C11;
-  _val[ 1] = _val[ 2] = _val[ 7] = C12;
-  _val[15] = _val[18] = _val[20] = C44;
-  _val[ 3] = _val[ 4] = _val[ 5] = 0;
-  _val[ 8] = _val[ 9] = _val[10] = 0;
-  _val[12] = _val[13] = _val[14] = 0;
-  _val[16] = _val[17] = 0;
-  _val[19] = 0;
+  /* see SymmElasticityTensor.h:
+   *   Entries:                  Indices:
+   *   C11 C12 C13 C14 C15 C16     0  1  2  3  4  5
+   *       C22 C23 C24 C25 C26        6  7  8  9 10
+   *           C33 C34 C35 C36          11 12 13 14
+   *               C44 C45 C46             15 16 17
+   *                   C55 C56                18 19
+   *                       C66                   20
+   */
+  _val[ 0] = C11;  _val[ 1] = C12;  _val[ 2] = C13;  _val[ 3] =       _val[ 4] =       _val[ 5] = 0;
+                   _val[ 6] = C22;  _val[ 7] = C23;  _val[ 8] =       _val[ 9] =       _val[10] = 0;
+                                    _val[11] = C33;  _val[12] =       _val[13] =       _val[14] = 0;
+                                                     _val[15] = C44;  _val[16] =       _val[17] = 0;
+                                                                      _val[18] = C55;  _val[19] = 0;
+                                                                                       _val[20] = C66;
 }
 
 Real
 SymmOrthotropicElasticityTensor::stiffness( const unsigned int i, const unsigned int j,
-                                          const RealGradient & test,
-                                          const RealGradient & phi )
+                                            const RealGradient & test,
+                                            const RealGradient & phi )
 {
   RealGradient b;
   if (0 == i && 0 == j)
@@ -219,53 +155,4 @@ SymmOrthotropicElasticityTensor::multiply( const SymmTensor & x, SymmTensor & b 
   b.xy() = 2*_val[15]*xy;
   b.yz() = 2*_val[18]*yz;
   b.zx() = 2*_val[20]*zx;
-}
-
-void
-SymmOrthotropicElasticityTensor::adjustForCracking( const RealVectorValue & crack_flags )
-{
-  const RealVectorValue & c( crack_flags );
-  const Real c0(c(0));
-  const Real c0_coupled( c0 < 1 ? 0 : 1 );
-  const Real c1(c(1));
-  const Real c1_coupled( c1 < 1 ? 0 : 1 );
-  const Real c2(c(2));
-  const Real c2_coupled( c2 < 1 ? 0 : 1 );
-
-
-  const Real c01( c0_coupled * c1_coupled );
-  const Real c02( c0_coupled * c2_coupled );
-  const Real c12( c1_coupled * c2_coupled );
-  const Real c012( c0_coupled * c12 );
-
-  const Real ym = _mu*(3*_lambda+2*_mu)/(_lambda+_mu);
-
-  // Assume Poisson's ratio goes to zero for the cracked direction.
-
-  _val[ 0] = (c0 < 1 ? c0*ym : _val[ 0]);
-  _val[ 1] *= c01;
-  _val[ 2] *= c02;
-  _val[ 3] *= c01;
-  _val[ 4] *= c012;
-  _val[ 5] *= c02;
-
-  _val[ 6] = (c1 < 1 ? c1*ym : _val[ 6]);
-  _val[ 7] *= c12;
-  _val[ 8] *= c01;
-  _val[ 9] *= c12;
-  _val[10] *= c012;
-
-  _val[11] = (c2 < 1 ? c2*ym : _val[11]);
-  _val[12] *= c012;
-  _val[13] *= c12;
-  _val[14] *= c02;
-
-  _val[15] *= c01;
-  _val[16] *= c012;
-  _val[17] *= c012;
-
-  _val[18] *= c12;
-  _val[19] *= c012;
-
-  _val[20] *= c02;
 }
