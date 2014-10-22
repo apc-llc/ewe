@@ -31,6 +31,8 @@ protected:
   std::vector<Real> _youngs_moduli;
   std::vector<Real> _poissons_ratios;
   std::vector<Real> _shear_moduli;
+  
+  MaterialProperty<RealTensorValue> & _Rf;
 
   SymmElasticityTensor * _local_elasticity_tensor;
 

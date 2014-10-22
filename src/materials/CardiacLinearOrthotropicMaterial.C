@@ -24,6 +24,7 @@ CardiacLinearOrthotropicMaterial::CardiacLinearOrthotropicMaterial(const std::st
    _youngs_moduli(getParam<std::vector<Real> >("youngs_moduli")),
    _poissons_ratios(getParam<std::vector<Real> >("poissons_ratios")),
    _shear_moduli(getParam<std::vector<Real> >("shear_moduli")),
+   _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
    _local_elasticity_tensor(NULL)
 {
   if (_youngs_moduli.size()   != 3) mooseError("CardiacLinearOrthotropicMaterial: youngs_moduli must contain exactly 3 entries.");
@@ -60,19 +61,13 @@ CardiacLinearOrthotropicMaterial::computeProperties()
     // it is only recomputed once, any subsequent calls reduce to a no-operation
     _local_elasticity_tensor->calculate(_qp);
   
-    // TODO: have to rotate this tensor appropriately somewhere here...
-    // two options:
-    // 1. _elasticity_tensor[_qp] = R* (*_local_elasticity_tensor); rotate back upon stress computation
-    // 2. rotate explicitly upon every use of elasticity_tensor[_qp]
-    //
-    // To decide, we have to know:
-    // A. where is _elasticity_tensor[_qp] used
-    // B. where is _Jacobian_mult[_qp] used
-    //
-    // NO: we have to rotate stress and strain explicitly, since these are the 3x3-matrices while the elasticity tensor is 6x6
-
-    // store elasticity tensor as material property
+    // store elasticity tensor as material property...
     _elasticity_tensor[_qp] = *_local_elasticity_tensor;
+    // ...and rotate it to the outer coordinate system
+    const ColumnMajorMatrix R_f_3x3( _Rf[_qp] );
+    ColumnMajorMatrix R_f_9x9(9,9);
+    _elasticity_tensor[_qp].form9x9Rotation( R_f_3x3, R_f_9x9 );
+    _elasticity_tensor[_qp].rotateFromGlobalToLocal( R_f_9x9);
 
     SymmTensor strain( _grad_disp_x[_qp](0),
                        _grad_disp_y[_qp](1),
@@ -83,8 +78,8 @@ CardiacLinearOrthotropicMaterial::computeProperties()
 
     /* compute the stress */
     //Jacobian multiplier of the stress
-    _Jacobian_mult[_qp] = *_local_elasticity_tensor*h;
-    // Save that off as the elastic strain
+    _Jacobian_mult[_qp] = _elasticity_tensor[_qp]*h;
+    // Save off the elastic strain
     _elastic_strain[_qp] = strain;
     // Create column vector C*e
     _stress[_qp] = (*_local_elasticity_tensor)*h*strain;
