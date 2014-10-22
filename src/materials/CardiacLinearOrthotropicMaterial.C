@@ -34,6 +34,7 @@ CardiacLinearOrthotropicMaterial::CardiacLinearOrthotropicMaterial(const std::st
   SymmOrthotropicElasticityTensor * ortho_elasticity_tensor = new SymmOrthotropicElasticityTensor;
   ortho_elasticity_tensor->setYoungsModuli(_youngs_moduli[0], _youngs_moduli[1], _youngs_moduli[2]);
   ortho_elasticity_tensor->setPoissonsRatios(_poissons_ratios[0], _poissons_ratios[1], _poissons_ratios[2]);
+  ortho_elasticity_tensor->setShearModuli(_shear_moduli[0], _shear_moduli[1], _shear_moduli[2]);
 
   // This is the elasticity tensor expressed in the fibre coordinate system.
   // Thus, it is spatially constant and will have to be rotated appropriately to yield the correct relation between local stresses and strains.
@@ -51,10 +52,6 @@ CardiacLinearOrthotropicMaterial::~CardiacLinearOrthotropicMaterial()
 void
 CardiacLinearOrthotropicMaterial::computeProperties()
 {
-  // Multiplier that zeros out stiffness
-  Real h = (1.0 + std::cos(_pi*_c[_qp]))/2.0;
-  if (h < _tol)  h = _tol;
-  
   for (_qp=0; _qp < _qrule->n_points(); ++_qp)
   {
     // since for the elasticity tensor _constant=true (default) and is independent of _qp,
@@ -63,6 +60,7 @@ CardiacLinearOrthotropicMaterial::computeProperties()
   
     // store elasticity tensor as material property...
     _elasticity_tensor[_qp] = *_local_elasticity_tensor;
+
     // ...and rotate it to the outer coordinate system
     const ColumnMajorMatrix R_f_3x3( _Rf[_qp] );
     ColumnMajorMatrix R_f_9x9(9,9);
@@ -77,6 +75,9 @@ CardiacLinearOrthotropicMaterial::computeProperties()
                        0.5*(_grad_disp_z[_qp](0)+_grad_disp_x[_qp](2)) );
 
     /* compute the stress */
+    // Multiplier that zeros out stiffness
+    Real h = (1.0 + std::cos(_pi*_c[_qp]))/2.0;
+    if (h < _tol)  h = _tol;
     //Jacobian multiplier of the stress
     _Jacobian_mult[_qp] = _elasticity_tensor[_qp]*h;
     // Save off the elastic strain

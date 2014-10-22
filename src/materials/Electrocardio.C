@@ -11,7 +11,7 @@ template<>
 InputParameters validParams<Electrocardio>()
 {
   InputParameters params = validParams<Material>();
-  params.addRequiredCoupledVar("vmem","Membrane potential needed as input for ion channel model");
+  params.addCoupledVar("vmem", -90.272, "Membrane potential needed as input for ion channel model");
   params.addParam<std::string>("PropagParams", "+Default", "Command line parameters given to propag, e.g. '+F Test.par'. These are handed over to the propag parameter parser and can essentially be the same as used for propag. Many of them are ignored, though. Default: '+Default'");
   // TODO: For ion channel models that need the diffusion current, have to fetch the value of Imem somehow
   //params.addCoupledVar("Imem",0.,"Diffusion current needed as input for ion channel model");
