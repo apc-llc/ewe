@@ -68,7 +68,6 @@ surface_to_volume = 800.0
   vmem = 'potential'
   block = all
   outputs = all
-  #PropagParams = '+F Test.par'
   [../]
  
   [./conductivity]

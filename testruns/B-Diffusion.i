@@ -67,6 +67,7 @@ surface_to_volume = 800.0
    type = CardiacPropertiesMaterial
    block = all
    outputs = all
+   #PropagParams = '+F Test.par'
   [../]
   
   [./electrocardio]
@@ -74,7 +75,6 @@ surface_to_volume = 800.0
    vmem = 'potential'
    block = all
    outputs = all
-   #PropagParams = '+F Test.par'
   [../]
  
   [./conductivity]

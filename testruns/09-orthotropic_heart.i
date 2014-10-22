@@ -134,14 +134,6 @@
     disp_z = disp_z
   [../]
 
-  [./electrocardio]
-   type = Electrocardio
-   #vmem = 'potential'
-   block = 1
-   outputs = all
-   #PropagParams = '+F Test.par'
-  [../]
-
    [./newmarkx]
      type = NewmarkMaterial
      block = 1
