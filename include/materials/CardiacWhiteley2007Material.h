@@ -31,6 +31,8 @@ protected:
   SymmTensor _k, _a, _b;
   
   MaterialProperty<RealTensorValue> & _Rf;
+  bool _has_Ta;
+  VariableValue & _Ta;
 
   SymmTensor _id;
 };

@@ -19,7 +19,7 @@ InputParameters validParams<CardiacWhiteley2007Material>()
   params.addRequiredParam<std::vector<Real> >("a_MN", "Material parameters a_MN in following order: a_11, a_22, a_33, a_12, a_23, a_13");
   params.addRequiredParam<std::vector<Real> >("b_MN", "Material parameters b_MN in following order: b_11, b_22, b_33, b_12, b_23, b_13");
 
-  //TODO: params.addCoupledVar("Ta", 0, "The (position dependent) active strain that will finally drive contraction. Default is Ta=0, i.e. no active strain anywhere.");
+  params.addCoupledVar("Ta", 0, "The (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley 2007]. Default is Ta=0, i.e. no active tension anywhere.");
   return params;
 }
 
@@ -30,6 +30,8 @@ CardiacWhiteley2007Material::CardiacWhiteley2007Material(const std::string  & na
     _a(SymmTensor(getParam<std::vector<Real> >("a_MN"))),
     _b(SymmTensor(getParam<std::vector<Real> >("b_MN"))),
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
+   _has_Ta(isCoupled("Ta")),
+   _Ta(coupledValue("Ta")),
    _id(1, 1, 1, 0, 0, 0)
 {}
 
@@ -86,6 +88,12 @@ CardiacWhiteley2007Material::computeQpProperties()
 
   const Real p = 0; // TODO: p is the hydrostatic pressure / Lagrange multiplier to guarantee incompressibility
   _stress[_qp] = _id*(-p) + symmProd(F.transpose(), dWdE);
+  
+  // compute active tension in fibre direction, rotate into outer coordinates and add to stress if necessary
+  if (_has_Ta) {
+    SymmTensor Ta( symmProd( _Rf[_qp], SymmTensor(_Ta[_qp], 0, 0, 0, 0, 0) ) );
+    _stress[_qp] += Ta;
+  }
 
   /* TODO: currently, though being possibly required (e.g. by the StressDivergence kernel), we do not set the following
      // store elasticity tensor as material property...
