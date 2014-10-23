@@ -1,6 +1,9 @@
-/*************************************
- * Template for this file came from moose/modules/solid_mechanics/include/materials/total_strain/LinearIsotropicMaterial.h
- *************************************/
+/****************************************************************/
+/*                                                              */
+/*  Implementation of Cardiac Tissue elasticity as given in     */
+/*  [Whiteley2007]                                              */
+/*                                                              */
+/****************************************************************/
 
 #ifndef CardiacWhiteley2007Material_H
 #define CardiacWhiteley2007Material_H
@@ -14,31 +17,22 @@ class SymmElasticityTensor;
 template<>
 InputParameters validParams<CardiacWhiteley2007Material>();
 
-/**
- * LinearOrthotropic material for use in simple applications that don't need material properties.
- */
 class CardiacWhiteley2007Material : public CardiacSolidMechanicsMaterial
 {
 public:
   CardiacWhiteley2007Material(const std::string & name,
                           InputParameters parameters);
 
-  virtual ~CardiacWhiteley2007Material();
-
 protected:
-  virtual void computeProperties();
+  virtual void computeQpProperties();
+  const RealTensorValue fromSymm(const SymmTensor & A);
+  const SymmTensor symmProd(const RealTensorValue & outer, const SymmTensor & inner);
 
-  std::vector<Real> _youngs_moduli;
-  std::vector<Real> _poissons_ratios;
-  std::vector<Real> _shear_moduli;
+  SymmTensor _k, _a, _b;
   
   MaterialProperty<RealTensorValue> & _Rf;
 
-  SymmElasticityTensor * _local_elasticity_tensor;
-
-  Real _pi;
-  Real _tol;
-
+  SymmTensor _id;
 };
 
 #endif //CardiacWhiteley2007Material_H
