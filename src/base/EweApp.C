@@ -11,6 +11,7 @@
 #include "NewmarkMaterial.h"
 #include "CardiacStressDivergence.h"
 #include "CardiacLinearIsotropicMaterial.h"
+#include "CardiacLinearOrthotropicMaterial.h"
 
 #include "Electrocardio.h"
 #include "ElectrocardioForcing.h"
@@ -66,6 +67,7 @@ EweApp::registerObjects(Factory & factory)
   registerMaterial(ElectrocardioConductivity);
   registerMaterial(CardiacPropertiesMaterial);
   registerMaterial(CardiacLinearIsotropicMaterial);
+  registerMaterial(CardiacLinearOrthotropicMaterial);
 
   registerKernel(ElectrocardioTimeDerivative);
   registerKernel(ElectrocardioDiffusion);

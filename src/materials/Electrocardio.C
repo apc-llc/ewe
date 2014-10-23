@@ -11,8 +11,7 @@ template<>
 InputParameters validParams<Electrocardio>()
 {
   InputParameters params = validParams<Material>();
-  params.addRequiredCoupledVar("vmem","Membrane potential needed as input for ion channel model");
-  params.addParam<std::string>("PropagParams", "+Default", "Command line parameters given to propag, e.g. '+F Test.par'. These are handed over to the propag parameter parser and can essentially be the same as used for propag. Many of them are ignored, though. Default: '+Default'");
+  params.addRequiredCoupledVar("vmem", "Membrane potential needed as input for ion channel model");
   // TODO: For ion channel models that need the diffusion current, have to fetch the value of Imem somehow
   //params.addCoupledVar("Imem",0.,"Diffusion current needed as input for ion channel model");
   return params;
@@ -28,49 +27,9 @@ Electrocardio::Electrocardio(const std::string & name,
   _yyy_old(declarePropertyOld<std::vector<Real> >("yyy")),
   _cell_info(getMaterialProperty<Membrane_cell_info>("cell_info")),
   // coupled variables
-  _vmem(coupledValue("vmem")),
-  //_Imem(coupledValue("Imem")),
-  // parameters
-  _PropagParams(getParam<std::string>("PropagParams"))
-
-{
-  // TODO: Moose creates three material objects: volume, neighbor and boundary for every thread
-  // to only initialize propag once (see lines 1580ff in FEProblem.C)
-  // we call the init routines only for the volume part of the very first thread.
-  // NOTE: This assumes that volume is ALWAYS created first...
-  // TODO: I would really not assume that any propag-routines are thread-safe.
-  if (_tid == 0 && !_bnd && !_neighbor) {
-    
-    std::string paramstring = reduce("execname " + _PropagParams, " ");
-    std::vector<char> paramchars(paramstring.begin(), paramstring.end());
-    std::vector<char*> argv = make_argv(paramchars);
-    int argc = argv.size();
-    
-    int s;
-    do{
-      s= param(PARAMETERS,&argc, &argv[0]);
-      if(s==PrMERROR||s==PrMFATAL)
-      {
-        Error(1,"Error reading parameters");
-      }
-      else if(s==PrMQUIT)
-      {
-        fprintf(stderr,"\n*** Quitting by user's request\n\n");
-        exit(0);
-      }
-    }while(s==PrMERROR);
-    
-    ion_info();
-    // create ionic mapping (colors to ion models)
-    ion_setup_nmap();
-    // creates substances/materials, each with different connectivity G
-    setup_substances();
-    
-    ion_init(_dt); // this simply initializes all loaded ion models - we do not check wether they are actually used
-  }
-  
-  std::cout << "Constructing Material Electrocardio..." << std::endl;
-}
+  _vmem(coupledValue("vmem"))
+  //_Imem(coupledValue("Imem"))
+{}
 
 void
 Electrocardio::initQpStatefulProperties()
