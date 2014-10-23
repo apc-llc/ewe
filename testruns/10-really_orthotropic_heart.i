@@ -126,10 +126,10 @@
   [./linear_orthotropic]
     type = CardiacLinearOrthotropicMaterial
     block = 1
-    youngs_moduli   = '1.e5 1.e5 1.e5'
+    youngs_moduli   = '1.e5 1.e4 1.e4'
     poissons_ratios = '0.3 0.3 0.3'
     # linear isotropic: shear_modulus = youngs_modulus / (2 * (1+poissons_ratio) )
-    shear_moduli    = '38461.538462 38461.538462 38461.538462'
+    shear_moduli    = '38461.538462 3846.1538462 3846.1538462'
     disp_x = disp_x
     disp_y = disp_y
     disp_z = disp_z
