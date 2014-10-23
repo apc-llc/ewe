@@ -39,18 +39,18 @@ ElectrocardioIC::value(const Point & p)
   
   // The value -90.272 is the resting potential of the bernus model for all except one case...
   
-  /**
   const double x_c = 0.5, y_c = 0.5, z_c = 0.5, sig = 0.15;
   
   double arg   = ((p(0) - x_c)/sig)*((p(0) - x_c)/sig) + ((p(1) - y_c)/sig)*((p(1) - y_c)/sig); // + ((p(2) - z_c)/sig)*((p(2) - z_c)/sig);
   double coeff = exp(0.0);
   //return (1/coeff)*exp(-0.5*arg);
-  return -90.272 + 60.0*(1/coeff)*exp(-0.5*arg);
-
-  //return sin(M_PI*p(0))*sin(M_PI*p(1));
-  */
+  //return -90.272 + 60.0*(1/coeff)*exp(-0.5*arg);
+  return -60.0;
   
-
+  //return sin(M_PI*p(0))*sin(M_PI*p(1));
+  
+  
+  /**
   const double x_c = 2.23380e6 , y_c = 8.48238e6 , z_c = 5.89848e6;
   const double dx = 1.078e7, dy = 1.443e7, dz = 1.43e7;
   
@@ -75,6 +75,6 @@ ElectrocardioIC::value(const Point & p)
     ion_init_potential_qp(0.0, cell_info, &vmem);
     return vmem;
   }
-   
+   */
 
 }
