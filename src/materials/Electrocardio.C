@@ -33,9 +33,8 @@ Electrocardio::Electrocardio(const std::string & name,
 void
 Electrocardio::initQpStatefulProperties()
 {
-  _gates[_qp].resize(1);
-  _gates_old[_qp].resize(1);
-  _gates[_qp][0] = 0.0;
+  _gates[_qp].resize(_ionmodel->get_ngates());
+  _gates_old[_qp].resize(_ionmodel->get_ngates());
 }
 
 void
@@ -51,7 +50,7 @@ void
 Electrocardio::computeQpProperties()
 {
   
-  _Iion[_qp] = 0.0;
+  _Iion[_qp] = _ionmodel->ionforcing(_vmem[_qp]);
   
   /**
    * The mono domain equations reads
