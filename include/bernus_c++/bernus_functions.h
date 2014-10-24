@@ -214,19 +214,20 @@ class bernus_functions
   /**  Note: In SI units it is \\( \\textrm{Fa}=9.6485 \\times 10^4~\\textrm{C}~\\textrm{mol}^{-1} \\), but parameters for Bernus model are in \\( \\textrm{mM} \\), i.e. \\( 10^{-3} \\times \\textrm{mol} \\), therefore use scaled value.*/
   double static constexpr Fa = 96.485;
   
-  //! Equilibrium potential \\( E_{\\textrm Na} \\), pp. H2306 in Bernus et al.
-  double static constexpr e_na = (R*T/Fa)*log(na_e/na_i);
-
-  //! Equilibrium potential \\( E_{\\textrm Ca} \\), pp. H2306 in Bernus et al.
-  double static constexpr e_ca = R*T/(2.0*Fa)*log(ca_e/ca_i);
-
-  //! Equilibrium potential \\( E_{to} \\), pp. H2306 in Bernus et al.
-  double static constexpr e_to = (R*T/Fa)*log( (0.043*na_e + k_e)/(0.043*na_i + k_i) );
+  //! Equilibrium potential \\( E_{\\textrm Na} \\), pp. H2306 in Bernus et al. @todo Would be nicer with constexpr, but use of log in constexpr is not yet supported by clang++
+  double static const e_na;
   
-  //! Equilibrium potential \\( E_{\\textrm K} \\), pp. H2306 in Bernus et al.
-  double static constexpr e_k  = (R*T/Fa)*log(k_e/k_i);
+  //! Equilibrium potential \\( E_{\\textrm Ca} \\), pp. H2306 in Bernus et al. @todo Would be nicer with constexpr, but use of log in constexpr is not yet supported by clang++
+  double static const e_ca;
+
+  //! Equilibrium potential \\( E_{to} \\), pp. H2306 in Bernus et al. @todo Would be nicer with constexpr, but use of log in constexpr is not yet supported by clang++
+  double static const e_to;
+  
+  //! Equilibrium potential \\( E_{\\textrm K} \\), pp. H2306 in Bernus et al. @todo Would be nicer with constexpr, but use of log in constexpr is not yet supported by clang++
+  double static const e_k;
   
 };
+
 
 /*
  * Implementation of class functions; kept in header for easier inlining.

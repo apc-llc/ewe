@@ -1,4 +1,4 @@
-#include "bernus.hpp"
+#include "bernus.h"
 #include <vector>
 
 // default constructor: initializes all gates to their steady-state value for V = -90.272 mV

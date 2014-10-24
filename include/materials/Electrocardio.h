@@ -7,7 +7,8 @@
 #define ELECTROCARDIO_H
 
 #include "Material.h"
-#include "Iionmodel.hpp"
+#include "Iionmodel.h"
+#include "IionmodelFactory.h"
 
 //Forward Declarations
 class Electrocardio;

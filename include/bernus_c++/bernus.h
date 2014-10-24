@@ -1,12 +1,10 @@
 #ifndef BERNUS_HPP
 #define BERNUS_HPP
-//Define NDEBUG to activate runtime asserts
-//#define NDEBUG
 #include <algorithm>
 #include <vector>
 #include <assert.h>
-#include "Iionmodel.hpp"
-#include "bernus_functions.hpp"
+#include "Iionmodel.h"
+#include "bernus_functions.h"
 
 /**
  * Class implementing the Bernus et al. model for ventricular cells:
@@ -179,14 +177,7 @@ inline int bernus::get_ngates() {
   return bernus::ngates;
 }
 
-void bernus::update_gates_dt(double V) {
-
-#ifndef NDEBUG
-  // If NDEBUG is defined, make sure that all values in gates are between 0.0 and 1.0
-  auto maxelem = std::max_element(std::begin(gates), std::end(gates));
-  auto minelem = std::min_element(std::begin(gates), std::end(gates));
-  assert( (0.0 <= *minelem) && (*maxelem <= 1.0) );
-#endif
+inline void bernus::update_gates_dt(double V) {
   
   // See e.g. https://models.physiomeproject.org/e/5/bernus_wilders_zemlin_verschelde_panfilov_2002.cellml/view
   // for the ODEs for the gating variables; see also Bernus et al.
