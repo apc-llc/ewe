@@ -33,6 +33,8 @@ CardiacWhiteley2007Material::CardiacWhiteley2007Material(const std::string  & na
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
    _has_Ta(isCoupled("Ta")),
    _Ta(coupledValue("Ta")),
+   _has_p(isCoupled("p")),
+   _p(coupledScalarValue("p")),
    _id(1, 1, 1, 0, 0, 0)
 {}
 
@@ -83,11 +85,11 @@ CardiacWhiteley2007Material::computeQpProperties()
   // TODO: verify that all rotations are done in the correct direction, i.e. where do you have to use _Rf or _Rf.transpose() ?
   const RealTensorValue R(_Rf[_qp]);
 
-  // local deformation gradient tensor: insert displacement gradient row-wise
+  // local deformation gradient tensor: insert displacement gradient row-wise...
   const RealTensorValue F(_grad_disp_x[_qp],
                           _grad_disp_y[_qp],
                           _grad_disp_z[_qp]);
-  // its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
+  // ...its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
   _J[_qp] = F.det();
   // Cauchy-Green deformation tensor C = F^T F
   const SymmTensor C(symmProd(F));
@@ -125,25 +127,23 @@ CardiacWhiteley2007Material::computeQpProperties()
   _Jacobian_mult[_qp] = STtoSET( symmProd( (F*R).transpose(), ddWdEdE) );
 
   // add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
-  const Real p = 0; // = p[_qp] TODO: make a coupled variable, see moose/test/src/kernels/ScalarLagrangeMultiplier.C for an example kernel (should be completely transferable)
-  _stress[_qp] -= _id*p;
-  // TODO: pressure component is missing in ddWdEdE
-  // rDTdE(M,N,P,Q) = 2 * pressure * invC_transformed(M,P) * invC_transformed(Q,N);
-  
-  // compute active tension in fibre direction, rotate into outer coordinates and add to stress if necessary
-  // TODO: how does this go into the Jacobian ?
+  if (_has_p) {
+    _stress[_qp] -= _id*_p[0];
+    // TODO: pressure component is missing in ddWdEdE
+    // rDTdE(M,N,P,Q) += 2 * _p[0] * invC_transformed(M,P) * invC_transformed(Q,N);
+  }
+
+  // add active tension in fibre direction, rotate into outer coordinates and add to stress if necessary
   if (_has_Ta) {
     SymmTensor Ta( symmProd( R, SymmTensor(_Ta[_qp], 0, 0, 0, 0, 0) ) );
     _stress[_qp] += Ta;
+    // TODO: how does this go into the Jacobian or ddWdEdE?
+    // _Jacobian_mult[_qp] += ...
   }
-  // TODO: active stress is missing in ddWdEdE
-  // ??
 
-
-  /* TODO: To the best of my knowledge, the following are currently only needed for output purposes
-     // store elasticity tensor as material property...
-     _elasticity_tensor[_qp] =
-  */
+  // To the best of my knowledge, the following are currently only needed for output purposes
+  // TODO: store elasticity tensor as material property...
+  // _elasticity_tensor[_qp] =
   // Save off the elastic strain
   _elastic_strain[_qp] =   SymmTensor( _grad_disp_x[_qp](0),
                                        _grad_disp_y[_qp](1),

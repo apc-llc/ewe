@@ -36,7 +36,10 @@ protected:
   MaterialProperty<RealTensorValue> & _Rf;
   bool _has_Ta;
   VariableValue & _Ta;
+  bool _has_p;
+  VariableValue & _p;
 
+  // identity matrix for convenience
   const SymmTensor _id;
 };
 
