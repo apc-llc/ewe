@@ -34,7 +34,7 @@
   [./inertia_x]
     type     = SecondDerivativeNewmark
     variable = disp_x
-    density  = 0.1
+    density  = 0.0001
     lumping  = true
   [../]
 
@@ -49,7 +49,7 @@
   [./inertia_y]
     type     = SecondDerivativeNewmark
     variable = disp_y
-    density  = 0.1
+    density  = 0.0001
     lumping  = true
   [../]
 
@@ -64,7 +64,7 @@
   [./inertia_z]
     type     = SecondDerivativeNewmark
     variable = disp_z
-    density  = 0.1
+    density  = 0.0001
     lumping  = true
   [../]
 []

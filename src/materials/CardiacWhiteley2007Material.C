@@ -55,11 +55,21 @@ const SymmElasticityTensor CardiacWhiteley2007Material::STtoSET(const SymmTensor
 
 /*
  * computes outer.transpose() * inner * outer
- * TODO: this should be possible in a much more efficient way
+ * TODO: this should be possible in a more efficient way as the resulting matrix is symmetric
  */
 const SymmTensor CardiacWhiteley2007Material::symmProd(const RealTensorValue & outer, const SymmTensor & inner)
 {
   RealTensorValue r(outer.transpose() * STtoRTV(inner) * outer);
+  return SymmTensor(r(0,0), r(1,1), r(2,2), r(0,1), r(1,2), r(0,2) );
+}
+
+/*
+ * computes outer.transpose() * outer
+ * TODO: this should be possible in a more efficient way as the resulting matrix is symmetric
+ */
+const SymmTensor CardiacWhiteley2007Material::symmProd(const RealTensorValue & outer)
+{
+  RealTensorValue r(outer.transpose() * outer);
   return SymmTensor(r(0,0), r(1,1), r(2,2), r(0,1), r(1,2), r(0,2) );
 }
 
@@ -73,25 +83,23 @@ CardiacWhiteley2007Material::computeQpProperties()
   const RealTensorValue F(_grad_disp_x[_qp],
                           _grad_disp_y[_qp],
                           _grad_disp_z[_qp]);
-  // Cauchy-Green deformation tensor
-  const SymmTensor C(symmProd(F, _id));
-  // Lagrange-Green strain tensor
-  const SymmTensor E( (C - _id) * 0.5 );
+  // Cauchy-Green deformation tensor C = F^T F
+  const SymmTensor C(symmProd(F));
   // Lagrange-Green strain tensor in fibre coordinates
-  const SymmTensor Estar(symmProd(R, E));
+  const SymmTensor E(symmProd(R, (C - _id) * 0.5 ));
   
-  // Derivative of strain energy density W wrt Estar
+  // Derivative of strain energy density W wrt E
   SymmTensor dWdE(0);
   SymmTensor ddWdEdE(0);
 
   for (int M=0;M<3;M++)
     for (int N=M;N<3;N++)
-      if (Estar(M,N) > 0)
+      if (E(M,N) > 0)
       {
         const Real a(_a(M,N));
         const Real b(_b(M,N));
         const Real k(_k(M,N));
-        const Real e(Estar(M,N));
+        const Real e(E(M,N));
         const Real d( a - e );
         if (d <= 0) mooseError("CardiacWhiteley2007Material: E_{MN} >= a_{MN} - the strain is too large for this model");
         const Real f( b*e/d );
@@ -105,15 +113,19 @@ CardiacWhiteley2007Material::computeQpProperties()
         ddWdEdE(M,N) = 0.;
       }
 
-  // rotate back into outer coordinate system
-  dWdE = symmProd(R.transpose(), dWdE);
+  // rotate back into outer coordinate system and convert from 2nd Piola-Kirchhoff stress to Cauchy stress: sigma = (F R) T (F R)^T
+  _stress[_qp] = symmProd( (F*R).transpose(), dWdE);
+  //Jacobian multiplier of the stress
+  _Jacobian_mult[_qp] = STtoSET( symmProd( (F*R).transpose(), ddWdEdE) );
 
-  const Real p = 0; // TODO: p is the hydrostatic pressure / Lagrange multiplier to guarantee incompressibility
-  _stress[_qp] = _id*(-p) + symmProd(F.transpose(), dWdE);
+  // add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
+  const Real p = 0; // = p[_qp] TODO: make a coupled variable
+  _stress[_qp] -= _id*p;
   // TODO: pressure component is missing in ddWdEdE
   // rDTdE(M,N,P,Q) = 2 * pressure * invC_transformed(M,P) * invC_transformed(Q,N);
   
   // compute active tension in fibre direction, rotate into outer coordinates and add to stress if necessary
+  // TODO: how does this go into the Jacobian ?
   if (_has_Ta) {
     SymmTensor Ta( symmProd( R, SymmTensor(_Ta[_qp], 0, 0, 0, 0, 0) ) );
     _stress[_qp] += Ta;
@@ -121,8 +133,6 @@ CardiacWhiteley2007Material::computeQpProperties()
   // TODO: active stress is missing in ddWdEdE
   // ??
 
-  //Jacobian multiplier of the stress
-  _Jacobian_mult[_qp] = STtoSET(ddWdEdE);
 
   /* TODO: To the best of my knowledge, the following are currently only needed for output purposes
      // store elasticity tensor as material property...

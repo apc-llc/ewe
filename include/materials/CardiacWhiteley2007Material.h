@@ -28,6 +28,7 @@ protected:
   const RealTensorValue STtoRTV(const SymmTensor & A);
   const SymmElasticityTensor STtoSET(const SymmTensor & A);
   const SymmTensor symmProd(const RealTensorValue & outer, const SymmTensor & inner);
+  const SymmTensor symmProd(const RealTensorValue & outer);
 
   SymmTensor _k, _a, _b;
   
@@ -35,7 +36,7 @@ protected:
   bool _has_Ta;
   VariableValue & _Ta;
 
-  SymmTensor _id;
+  const SymmTensor _id;
 };
 
 #endif //CardiacWhiteley2007Material_H
