@@ -35,7 +35,7 @@ CardiacWhiteley2007Material::CardiacWhiteley2007Material(const std::string  & na
    _id(1, 1, 1, 0, 0, 0)
 {}
 
-const RealTensorValue CardiacWhiteley2007Material::fromSymm(const SymmTensor & A)
+const RealTensorValue CardiacWhiteley2007Material::STtoRTV(const SymmTensor & A)
 {
   RealTensorValue B;
   B(0,0) = A(0,0);
@@ -47,14 +47,19 @@ const RealTensorValue CardiacWhiteley2007Material::fromSymm(const SymmTensor & A
   return B;
 }
 
+const SymmElasticityTensor CardiacWhiteley2007Material::STtoSET(const SymmTensor & A)
+{
+  SymmElasticityTensor B;
+  return B;
+}
+
 /*
  * computes outer.transpose() * inner * outer
  * TODO: this should be possible in a much more efficient way
  */
 const SymmTensor CardiacWhiteley2007Material::symmProd(const RealTensorValue & outer, const SymmTensor & inner)
 {
-  RealTensorValue in(fromSymm(inner));
-  RealTensorValue r(outer.transpose() * in * outer);
+  RealTensorValue r(outer.transpose() * STtoRTV(inner) * outer);
   return SymmTensor(r(0,0), r(1,1), r(2,2), r(0,1), r(1,2), r(0,2) );
 }
 
@@ -62,6 +67,7 @@ void
 CardiacWhiteley2007Material::computeQpProperties()
 {
   // TODO: verify that all rotations are done in the correct direction, i.e. where do you have to use _Rf or _Rf.transpose() ?
+  const RealTensorValue R(_Rf[_qp]);
 
   // local deformation gradient tensor: insert displacement gradient row-wise
   const RealTensorValue F(_grad_disp_x[_qp],
@@ -72,41 +78,62 @@ CardiacWhiteley2007Material::computeQpProperties()
   // Lagrange-Green strain tensor
   const SymmTensor E( (C - _id) * 0.5 );
   // Lagrange-Green strain tensor in fibre coordinates
-  const SymmTensor Estar(symmProd(_Rf[_qp], E));
+  const SymmTensor Estar(symmProd(R, E));
   
   // Derivative of strain energy density W wrt Estar
-  SymmTensor dWdE;
-  for (int i=0;i<3;i++)
-    for (int j=i;j<3;j++)
-      if (Estar(i,j) > 0) {
-        const Real d(abs(_a(i,j) - Estar(i,j)));
-        dWdE(i,j) = _k(i, j) * Estar(i,j) / pow(d, _b(i,j))  *  ( 2 + _b(i,j)*Estar(i,j)/d );
-      } else
-        dWdE(i,j) = 0.;
+  SymmTensor dWdE(0);
+  SymmTensor ddWdEdE(0);
+
+  for (int M=0;M<3;M++)
+    for (int N=M;N<3;N++)
+      if (Estar(M,N) > 0)
+      {
+        const Real a(_a(M,N));
+        const Real b(_b(M,N));
+        const Real k(_k(M,N));
+        const Real e(Estar(M,N));
+        const Real d( a - e );
+        if (d <= 0) mooseError("CardiacWhiteley2007Material: E_{MN} >= a_{MN} - the strain is too large for this model");
+        const Real f( b*e/d );
+        const Real g( k/pow(d,b) );
+
+        dWdE(M,N)    = g * e * ( 2+f );
+        ddWdEdE(M,N) = g * ( 2 + (4+e/d+f)*f );
+
+      } else {
+        dWdE(M,N) = 0.;
+        ddWdEdE(M,N) = 0.;
+      }
+
   // rotate back into outer coordinate system
-  dWdE = symmProd(_Rf[_qp].transpose(), dWdE);
+  dWdE = symmProd(R.transpose(), dWdE);
 
   const Real p = 0; // TODO: p is the hydrostatic pressure / Lagrange multiplier to guarantee incompressibility
   _stress[_qp] = _id*(-p) + symmProd(F.transpose(), dWdE);
+  // TODO: pressure component is missing in ddWdEdE
+  // rDTdE(M,N,P,Q) = 2 * pressure * invC_transformed(M,P) * invC_transformed(Q,N);
   
   // compute active tension in fibre direction, rotate into outer coordinates and add to stress if necessary
   if (_has_Ta) {
-    SymmTensor Ta( symmProd( _Rf[_qp], SymmTensor(_Ta[_qp], 0, 0, 0, 0, 0) ) );
+    SymmTensor Ta( symmProd( R, SymmTensor(_Ta[_qp], 0, 0, 0, 0, 0) ) );
     _stress[_qp] += Ta;
   }
+  // TODO: active stress is missing in ddWdEdE
+  // ??
 
-  /* TODO: currently, though being possibly required (e.g. by the StressDivergence kernel), we do not set the following
+  //Jacobian multiplier of the stress
+  _Jacobian_mult[_qp] = STtoSET(ddWdEdE);
+
+  /* TODO: To the best of my knowledge, the following are currently only needed for output purposes
      // store elasticity tensor as material property...
      _elasticity_tensor[_qp] =
-     //Jacobian multiplier of the stress
-     _Jacobian_mult[_qp] =
-  // Save off the elastic strain
-     _elastic_strain[_qp] =   SymmTensor( _grad_disp_x[_qp](0),
-                                          _grad_disp_y[_qp](1),
-                                          _grad_disp_z[_qp](2),
-                                          0.5*(_grad_disp_x[_qp](1)+_grad_disp_y[_qp](0)),
-                                          0.5*(_grad_disp_y[_qp](2)+_grad_disp_z[_qp](1)),
-                                          0.5*(_grad_disp_z[_qp](0)+_grad_disp_x[_qp](2)) );;
   */
+  // Save off the elastic strain
+  _elastic_strain[_qp] =   SymmTensor( _grad_disp_x[_qp](0),
+                                       _grad_disp_y[_qp](1),
+                                       _grad_disp_z[_qp](2),
+                                       0.5*(_grad_disp_x[_qp](1)+_grad_disp_y[_qp](0)),
+                                       0.5*(_grad_disp_y[_qp](2)+_grad_disp_z[_qp](1)),
+                                       0.5*(_grad_disp_z[_qp](0)+_grad_disp_x[_qp](2)) );;
 }
 
