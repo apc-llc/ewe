@@ -4,7 +4,6 @@
 
 #include "ElectrocardioIC.h"
 #include <math.h>
-#include "ion.h"
 
 template<>
 InputParameters validParams<ElectrocardioIC>()
