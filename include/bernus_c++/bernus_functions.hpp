@@ -196,10 +196,10 @@ class bernus_functions
   double static constexpr na_i = 10.0;
   
   //! Extracellular sodium concentration \\( [\\textrm{Na}^{+}]_e \\) from Table 1 in Bernus et al
-  double static constexpr na_e = 138;
+  double static constexpr na_e = 138.0;
   
   //! Intracellular potassium concentration \\( [\\textrm{K}^{+}]_i \\) from Table 1 in Bernus et al
-  double static constexpr k_i  = 140;
+  double static constexpr k_i  = 140.0;
 
   //! Extracellular potassium concentration \\( [\\textrm{K}^{+}]_e \\) from Table 1 in Bernus et al
   double static constexpr k_e  = 4.0;
@@ -268,10 +268,10 @@ inline double bernus_functions::beta_d(double V)
 
 // f-gate
 inline double bernus_functions::alpha_f(double V)
-{ return 6.87*1e-3/(1.0 + exp( -(6.1546-V)/6.12) ); }
+{ return 6.87e-3/(1.0 + exp( -(6.1546-V)/6.12) ); }
 
 inline double bernus_functions::beta_f(double V)
-{ return 5.75*1e-4 + (0.069*exp(-0.11*(V+9.825))+0.011)/(1.0 + exp(-0.278*(V+9.825))); }
+{ return (0.069*exp(-0.11*(V+9.825))+0.011)/(1.0 + exp(-0.278*(V+9.825))) + 5.75e-4; }
 
 // f_Ca-gate
 inline double bernus_functions::f_ca(double V)
@@ -289,11 +289,11 @@ inline double bernus_functions::alpha_r(double V)
 { return 0.5266*exp(-0.0166*(V-42.2912))/(1.0 + exp(-0.0943*(V-42.2912))); }
 
 inline double bernus_functions::beta_r(double V)
-{ return (5.186e-5*V+0.5149*exp(-0.1344*(V-5.0027)))/(1.0 + exp(-0.1348*(V-5.186*1e-5))); }
+{ return (5.186e-5*V+0.5149*exp(-0.1344*(V-5.0027)))/(1.0 + exp(-0.1348*(V-5.186e-5))); }
 
 // to-gate
 inline double bernus_functions::alpha_to(double V)
-{ return (5.612e-5*V+0.0721*exp(-0.173*(V+34.2531)))/(1.0 + exp(-0.1732*(V+34.2531))); }
+{ return (5.612e-5*V+0.0721*exp(-0.173*(V+34.2531)))/(1.0 + exp(-0.173*(V+34.2531))); }
 
 inline double bernus_functions::beta_to(double V)
 { return (1.215e-4*V + 0.0767*exp(-1.66e-9*(V+34.0235)))/(1.0 + exp(-0.1604*(V+34.0235))); }

@@ -61,24 +61,12 @@ public:
   //! Destructor
   ~bernus();
   
-  //! Evaluates all nine ion currents, sums them up and returns \\( I_{\rm ion} \\).
-  //! @param[in] V Membrane potential in mV
   double ionforcing(double);
   
-  //! Computes the time-derivative \\( f(v, w) \\) of the gating variables for
-  //! the current values of \\( w \\) and a given membrane potential \\( v \\).
-  //! New values are stored in #gates_dt.
-  //! @param[in] v Membrane potential in mV
   void update_gates_dt(double);
   
   //! Number of gating variables in the Bernus model described by an ODE.
   size_t static const ngates = 5;
-  
-  //! Gating variables \\( w \\).
-  std::vector<double> gates;
-  
-  //! Time derivative \\( f(v,w) \\) of gating variables.
-  std::vector<double> gates_dt;
   
   //! Index of gating variable \\( m \\) in #gates
   static const int m_gate  = 0;
