@@ -31,7 +31,8 @@ protected:
   const SymmTensor symmProd(const RealTensorValue & outer);
 
   SymmTensor _k, _a, _b;
-  
+
+  MaterialProperty<Real> & _J;
   MaterialProperty<RealTensorValue> & _Rf;
   bool _has_Ta;
   VariableValue & _Ta;

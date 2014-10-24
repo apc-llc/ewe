@@ -29,6 +29,7 @@ CardiacWhiteley2007Material::CardiacWhiteley2007Material(const std::string  & na
     _k(SymmTensor(getParam<std::vector<Real> >("k_MN"))),
     _a(SymmTensor(getParam<std::vector<Real> >("a_MN"))),
     _b(SymmTensor(getParam<std::vector<Real> >("b_MN"))),
+   _J(declareProperty<Real>("det_displacement_gradient")),
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
    _has_Ta(isCoupled("Ta")),
    _Ta(coupledValue("Ta")),
@@ -50,6 +51,9 @@ const RealTensorValue CardiacWhiteley2007Material::STtoRTV(const SymmTensor & A)
 const SymmElasticityTensor CardiacWhiteley2007Material::STtoSET(const SymmTensor & A)
 {
   SymmElasticityTensor B;
+  // the function expects  C1111,  C1122, C1133, C2222,  C2233, C3333,  C2323,      C1313,      C1212
+  const Real elements[] = {A(0,0), 0.,    0.,    A(1,1), 0.,    A(2,2), 0.5*A(1,2), 0.5*A(0,2), 0.5*A(0,1)};
+  B.fillFromInputVector(std::vector<Real>(elements, elements + sizeof elements / sizeof elements[0]), false);
   return B;
 }
 
@@ -83,6 +87,8 @@ CardiacWhiteley2007Material::computeQpProperties()
   const RealTensorValue F(_grad_disp_x[_qp],
                           _grad_disp_y[_qp],
                           _grad_disp_z[_qp]);
+  // its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
+  _J[_qp] = F.det();
   // Cauchy-Green deformation tensor C = F^T F
   const SymmTensor C(symmProd(F));
   // Lagrange-Green strain tensor in fibre coordinates
@@ -119,7 +125,7 @@ CardiacWhiteley2007Material::computeQpProperties()
   _Jacobian_mult[_qp] = STtoSET( symmProd( (F*R).transpose(), ddWdEdE) );
 
   // add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
-  const Real p = 0; // = p[_qp] TODO: make a coupled variable
+  const Real p = 0; // = p[_qp] TODO: make a coupled variable, see moose/test/src/kernels/ScalarLagrangeMultiplier.C for an example kernel (should be completely transferable)
   _stress[_qp] -= _id*p;
   // TODO: pressure component is missing in ddWdEdE
   // rDTdE(M,N,P,Q) = 2 * pressure * invC_transformed(M,P) * invC_transformed(Q,N);
