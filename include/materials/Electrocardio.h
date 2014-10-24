@@ -7,6 +7,7 @@
 #define ELECTROCARDIO_H
 
 #include "Material.h"
+#include "Iionmodel.hpp"
 
 //Forward Declarations
 class Electrocardio;
@@ -33,6 +34,8 @@ private:
   MaterialProperty<Real> & _Iion; // ionic currents
   MaterialProperty<std::vector<Real> > & _gates, & _gates_old; // gating variables
   VariableValue & _vmem; // membrane potential
+  
+  Iionmodel * _ionmodel;
     
 };
 
