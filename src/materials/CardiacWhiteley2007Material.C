@@ -20,6 +20,7 @@ InputParameters validParams<CardiacWhiteley2007Material>()
   params.addRequiredParam<std::vector<Real> >("b_MN", "Material parameters b_MN in following order: b_11, b_22, b_33, b_12, b_23, b_13");
 
   params.addCoupledVar("Ta", 0, "The (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley 2007]. Default is Ta=0, i.e. no active tension anywhere.");
+  params.addCoupledVar("p", 0, "Hydrostatic pressure that acts as a Lagrange multiplier to ensure incompressibility. Works best with PressureLagrangeMultiplier kernel.");
   return params;
 }
 
@@ -32,13 +33,13 @@ CardiacWhiteley2007Material::CardiacWhiteley2007Material(const std::string  & na
    _J(declareProperty<Real>("det_displacement_gradient")),
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
    _has_Ta(isCoupled("Ta")),
-   _Ta(coupledValue("Ta")),
+   _Ta(_has_Ta ? coupledValue("Ta") : _zero),
    _has_p(isCoupled("p")),
-   _p(coupledScalarValue("p")),
+   _p(_has_p ? coupledScalarValue("p") : _zero),
    _id(1, 1, 1, 0, 0, 0)
 {}
 
-const RealTensorValue CardiacWhiteley2007Material::STtoRTV(const SymmTensor & A)
+const RealTensorValue CardiacWhiteley2007Material::STtoRTV(const SymmTensor & A) const
 {
   RealTensorValue B;
   B(0,0) = A(0,0);
@@ -50,7 +51,7 @@ const RealTensorValue CardiacWhiteley2007Material::STtoRTV(const SymmTensor & A)
   return B;
 }
 
-const SymmElasticityTensor CardiacWhiteley2007Material::STtoSET(const SymmTensor & A)
+const SymmElasticityTensor CardiacWhiteley2007Material::STtoSET(const SymmTensor & A) const
 {
   SymmElasticityTensor B;
   // the function expects  C1111,  C1122, C1133, C2222,  C2233, C3333,  C2323,      C1313,      C1212
@@ -63,7 +64,7 @@ const SymmElasticityTensor CardiacWhiteley2007Material::STtoSET(const SymmTensor
  * computes outer.transpose() * inner * outer
  * TODO: this should be possible in a more efficient way as the resulting matrix is symmetric
  */
-const SymmTensor CardiacWhiteley2007Material::symmProd(const RealTensorValue & outer, const SymmTensor & inner)
+const SymmTensor CardiacWhiteley2007Material::symmProd(const RealTensorValue & outer, const SymmTensor & inner) const
 {
   RealTensorValue r(outer.transpose() * STtoRTV(inner) * outer);
   return SymmTensor(r(0,0), r(1,1), r(2,2), r(0,1), r(1,2), r(0,2) );
@@ -73,7 +74,7 @@ const SymmTensor CardiacWhiteley2007Material::symmProd(const RealTensorValue & o
  * computes outer.transpose() * outer
  * TODO: this should be possible in a more efficient way as the resulting matrix is symmetric
  */
-const SymmTensor CardiacWhiteley2007Material::symmProd(const RealTensorValue & outer)
+const SymmTensor CardiacWhiteley2007Material::symmProd(const RealTensorValue & outer) const
 {
   RealTensorValue r(outer.transpose() * outer);
   return SymmTensor(r(0,0), r(1,1), r(2,2), r(0,1), r(1,2), r(0,2) );
@@ -85,10 +86,14 @@ CardiacWhiteley2007Material::computeQpProperties()
   // TODO: verify that all rotations are done in the correct direction, i.e. where do you have to use _Rf or _Rf.transpose() ?
   const RealTensorValue R(_Rf[_qp]);
 
-  // local deformation gradient tensor: insert displacement gradient row-wise...
-  const RealTensorValue F(_grad_disp_x[_qp],
-                          _grad_disp_y[_qp],
-                          _grad_disp_z[_qp]);
+  // local deformation gradient tensor F(ij) = dx(i)/dX(j)
+  // Attention: This is not the displacement gradient:
+  //               du(i)/dX(j) = d[x(i)-X(i)]/dX(j) = F(ij) - delta(ij)
+  // Thus, as we are working on displacements, we have to add unity to the diagonal
+  // (every more elegant way I could think of was also less efficient than this one..)
+  const RealTensorValue F(_grad_disp_x[_qp](0) + 1, _grad_disp_x[_qp](1),     _grad_disp_x[_qp](2),
+                          _grad_disp_y[_qp](0),     _grad_disp_y[_qp](1) + 1, _grad_disp_y[_qp](2),
+                          _grad_disp_z[_qp](0),     _grad_disp_z[_qp](1),     _grad_disp_z[_qp](2) + 1);
   // ...its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
   _J[_qp] = F.det();
   // Cauchy-Green deformation tensor C = F^T F

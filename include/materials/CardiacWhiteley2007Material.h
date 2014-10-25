@@ -25,10 +25,10 @@ public:
 
 protected:
   virtual void computeQpProperties();
-  const RealTensorValue STtoRTV(const SymmTensor & A);
-  const SymmElasticityTensor STtoSET(const SymmTensor & A);
-  const SymmTensor symmProd(const RealTensorValue & outer, const SymmTensor & inner);
-  const SymmTensor symmProd(const RealTensorValue & outer);
+  const RealTensorValue STtoRTV(const SymmTensor & A) const;
+  const SymmElasticityTensor STtoSET(const SymmTensor & A) const;
+  const SymmTensor symmProd(const RealTensorValue & outer, const SymmTensor & inner) const;
+  const SymmTensor symmProd(const RealTensorValue & outer) const;
 
   SymmTensor _k, _a, _b;
 
