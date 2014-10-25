@@ -14,7 +14,11 @@
 template<>
 InputParameters validParams<CardiacWhiteley2007Material>()
 {
-  InputParameters params = validParams<CardiacSolidMechanicsMaterial>();
+  InputParameters params = validParams<Material>();
+  params.addRequiredCoupledVar("disp_x", "The x displacement");
+  params.addRequiredCoupledVar("disp_y", "The y displacement");
+  params.addRequiredCoupledVar("disp_z", "The z displacement");
+
   params.addRequiredParam<std::vector<Real> >("k_MN", "Material parameters k_MN in following order: k_11, k_22, k_33, k_12, k_23, k_13");
   params.addRequiredParam<std::vector<Real> >("a_MN", "Material parameters a_MN in following order: a_11, a_22, a_33, a_12, a_23, a_13");
   params.addRequiredParam<std::vector<Real> >("b_MN", "Material parameters b_MN in following order: b_11, b_22, b_33, b_12, b_23, b_13");
@@ -26,10 +30,15 @@ InputParameters validParams<CardiacWhiteley2007Material>()
 
 CardiacWhiteley2007Material::CardiacWhiteley2007Material(const std::string  & name,
                                                  InputParameters parameters)
-  :CardiacSolidMechanicsMaterial(name, parameters),
-    _k(SymmTensor(getParam<std::vector<Real> >("k_MN"))),
-    _a(SymmTensor(getParam<std::vector<Real> >("a_MN"))),
-    _b(SymmTensor(getParam<std::vector<Real> >("b_MN"))),
+  :Material(name, parameters),
+   _grad_disp_x(coupledGradient("disp_x")),
+   _grad_disp_y(coupledGradient("disp_y")),
+   _grad_disp_z(coupledGradient("disp_z")),
+   _k(SymmTensor(getParam<std::vector<Real> >("k_MN"))),
+   _a(SymmTensor(getParam<std::vector<Real> >("a_MN"))),
+   _b(SymmTensor(getParam<std::vector<Real> >("b_MN"))),
+   _stress(declareProperty<RealTensorValue>("stress")),
+   _stress_derivative(declareProperty<SymmElasticityTensor>("stress_derivative")),
    _J(declareProperty<Real>("det_displacement_gradient")),
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
    _has_Ta(isCoupled("Ta")),
@@ -80,13 +89,27 @@ const SymmTensor CardiacWhiteley2007Material::symmProd(const RealTensorValue & o
   return SymmTensor(r(0,0), r(1,1), r(2,2), r(0,1), r(1,2), r(0,2) );
 }
 
+/*
+ * computes C^-1 using the already known det(C)
+ */
+const SymmTensor CardiacWhiteley2007Material::symmInv(const SymmTensor & C, const Real det) const
+{
+  SymmTensor Cinv(/* 00 */ C(0,0)*C(1,1)-C(1,2)*C(1,2),
+                  /* 11 */ C(0,0)*C(0,0)-C(0,2)*C(0,2),
+                  /* 22 */ C(0,0)*C(1,1)-C(0,1)*C(0,1),
+                  /* 01 */ C(0,2)*C(1,2)-C(0,0)*C(0,1),
+                  /* 12 */ C(0,1)*C(0,2)-C(0,0)*C(1,2),
+                  /* 02 */ C(0,1)*C(1,2)-C(0,2)*C(1,1));
+  return Cinv * (1./det);
+}
+
 void
 CardiacWhiteley2007Material::computeQpProperties()
 {
   // TODO: verify that all rotations are done in the correct direction, i.e. where do you have to use _Rf or _Rf.transpose() ?
   const RealTensorValue R(_Rf[_qp]);
 
-  // local deformation gradient tensor F(ij) = dx(i)/dX(j)
+  // local deformation gradient tensor: F(ij) = dx(i)/dX(j)
   // Attention: This is not the displacement gradient:
   //               du(i)/dX(j) = d[x(i)-X(i)]/dX(j) = F(ij) - delta(ij)
   // Thus, as we are working on displacements, we have to add unity to the diagonal
@@ -96,14 +119,21 @@ CardiacWhiteley2007Material::computeQpProperties()
                           _grad_disp_z[_qp](0),     _grad_disp_z[_qp](1),     _grad_disp_z[_qp](2) + 1);
   // ...its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
   _J[_qp] = F.det();
-  // Cauchy-Green deformation tensor C = F^T F
-  const SymmTensor C(symmProd(F));
-  // Lagrange-Green strain tensor in fibre coordinates
-  const SymmTensor E(symmProd(R, (C - _id) * 0.5 ));
+  // From here on, we go over to fibre coordinates, i.e. for C, Cinv, E, T
+  // Cauchy-Green deformation tensor in fibre coordinates: C = R^T F^T F R
+  const SymmTensor C(symmProd(R, symmProd(F)));
+  // .. and its inverse (note that det(C_fibre) = det(C) = det(F^T)*det(F) = det(F)^2, since det(R)==1
+  const SymmTensor Cinv(symmInv(C, _J[_qp]*_J[_qp]));
+  // Lagrange-Green strain tensor
+  const SymmTensor E( (C - _id) * 0.5 );
   
-  // Derivative of strain energy density W wrt E
-  SymmTensor dWdE(0);
-  SymmTensor ddWdEdE(0);
+  // 2nd Piola-Kirchhoff stress tensor: T(MN) = 1/2[dW/dE(MN) + dW/dE(NM)] + [- p + Ta delta(M1) delta(N1) ] Cinv(MN)
+  // We make use of dW/dE(MN) == dW/dE(NM) and will add active tension and pressure terms later
+  SymmTensor T;
+  // Derivative of T: D(MNPQ) = dT(MN)/dE(PQ)
+  // We make use of the symmetry of T and the fact that for our W, dT(MN)/dE(PQ) \propto delta(MP)delta(PQ) if p and Ta are omitted.
+  // Thus, a symmetric second-order tensor is sufficient here. Ta and p will be added later, again.
+  SymmTensor D;
 
   for (int M=0;M<3;M++)
     for (int N=M;N<3;N++)
@@ -118,43 +148,34 @@ CardiacWhiteley2007Material::computeQpProperties()
         const Real f( b*e/d );
         const Real g( k/pow(d,b) );
 
-        dWdE(M,N)    = g * e * ( 2+f );
-        ddWdEdE(M,N) = g * ( 2 + (4+e/d+f)*f );
+        T(M,N)    = g * e * ( 2+f );
+        D(M,N) = g * ( 2 + (4+e/d+f)*f );
 
       } else {
-        dWdE(M,N) = 0.;
-        ddWdEdE(M,N) = 0.;
+        T(M,N) = 0.;
+        D(M,N) = 0.;
       }
 
-  // rotate back into outer coordinate system and convert from 2nd Piola-Kirchhoff stress to Cauchy stress: sigma = (F R) T (F R)^T
-  _stress[_qp] = symmProd( (F*R).transpose(), dWdE);
-  //Jacobian multiplier of the stress
-  _Jacobian_mult[_qp] = STtoSET( symmProd( (F*R).transpose(), ddWdEdE) );
-
-  // add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
+  // The following renders D asymmetric, i.e. we need the full fourth order tensor here.
+  _stress_derivative[_qp] = STtoSET(D);
+  // Add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
   if (_has_p) {
-    _stress[_qp] -= _id*_p[0];
-    // TODO: pressure component is missing in ddWdEdE
-    // rDTdE(M,N,P,Q) += 2 * _p[0] * invC_transformed(M,P) * invC_transformed(Q,N);
+    T -= Cinv*_p[0]; // TODO: is [0] correct for scalar variables?
+    // for the derivative of T, things do become slightly complicated as we have to do
+    // TODO: _stress_derivative[_qp] += 2 * _p[0] * invC(M,P) * invC(Q,N);
   }
 
-  // add active tension in fibre direction, rotate into outer coordinates and add to stress if necessary
+  // Te following renders T asymmetric.
+  _stress[_qp] = STtoRTV(T);
+  // Add active tension in fibre direction
   if (_has_Ta) {
-    SymmTensor Ta( symmProd( R, SymmTensor(_Ta[_qp], 0, 0, 0, 0, 0) ) );
-    _stress[_qp] += Ta;
-    // TODO: how does this go into the Jacobian or ddWdEdE?
-    // _Jacobian_mult[_qp] += ...
+    _stress[_qp] += RealTensorValue(_Ta[_qp]*Cinv(0,0), _Ta[_qp]*Cinv(0,1), _Ta[_qp]*Cinv(0,2), 0, 0, 0, 0, 0, 0);
+    // TODO: _stress_derivative[_qp] -= 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
   }
 
-  // To the best of my knowledge, the following are currently only needed for output purposes
-  // TODO: store elasticity tensor as material property...
-  // _elasticity_tensor[_qp] =
-  // Save off the elastic strain
-  _elastic_strain[_qp] =   SymmTensor( _grad_disp_x[_qp](0),
-                                       _grad_disp_y[_qp](1),
-                                       _grad_disp_z[_qp](2),
-                                       0.5*(_grad_disp_x[_qp](1)+_grad_disp_y[_qp](0)),
-                                       0.5*(_grad_disp_y[_qp](2)+_grad_disp_z[_qp](1)),
-                                       0.5*(_grad_disp_z[_qp](0)+_grad_disp_x[_qp](2)) );;
+  // rotate everything back into outer coordinate system
+  _stress[_qp] = R * _stress[_qp] * R.transpose();
+  // TODO: dito for _stress_derivative[_qp]
+
 }
 
