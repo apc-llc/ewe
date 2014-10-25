@@ -10,7 +10,7 @@
 
 #include "Material.h"
 #include "SymmTensor.h"
-#include "SymmElasticityTensor.h"
+#include "SymmGenericElasticityTensor.h"
 
 //Forward Declarations
 class CardiacWhiteley2007Material;
@@ -29,7 +29,7 @@ protected:
   virtual void computeQpProperties();
   
   const RealTensorValue STtoRTV(const SymmTensor & A) const;
-  const SymmElasticityTensor STtoSET(const SymmTensor & A) const;
+  const SymmGenericElasticityTensor STtoSGET(const SymmTensor & A) const;
   const SymmTensor symmProd(const RealTensorValue & outer, const SymmTensor & inner) const;
   const SymmTensor symmProd(const RealTensorValue & outer) const;
   const SymmTensor symmInv(const SymmTensor & C, const Real det) const;
@@ -41,7 +41,7 @@ protected:
   SymmTensor _k, _a, _b;
 
   MaterialProperty<RealTensorValue> & _stress;
-  MaterialProperty<SymmElasticityTensor> & _stress_derivative; // TODO: get rid of SymmElasticityTensor - it offerst too many features we do not need and makes things complicated
+  MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative;
 
   MaterialProperty<Real> & _J;
   MaterialProperty<RealTensorValue> & _Rf;

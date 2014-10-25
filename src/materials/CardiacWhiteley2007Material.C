@@ -38,7 +38,7 @@ CardiacWhiteley2007Material::CardiacWhiteley2007Material(const std::string  & na
    _a(SymmTensor(getParam<std::vector<Real> >("a_MN"))),
    _b(SymmTensor(getParam<std::vector<Real> >("b_MN"))),
    _stress(declareProperty<RealTensorValue>("stress")),
-   _stress_derivative(declareProperty<SymmElasticityTensor>("stress_derivative")),
+   _stress_derivative(declareProperty<SymmGenericElasticityTensor>("stress_derivative")),
    _J(declareProperty<Real>("det_displacement_gradient")),
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
    _has_Ta(isCoupled("Ta")),
@@ -60,12 +60,15 @@ const RealTensorValue CardiacWhiteley2007Material::STtoRTV(const SymmTensor & A)
   return B;
 }
 
-const SymmElasticityTensor CardiacWhiteley2007Material::STtoSET(const SymmTensor & A) const
+const SymmGenericElasticityTensor CardiacWhiteley2007Material::STtoSGET(const SymmTensor & A) const
 {
-  SymmElasticityTensor B;
-  // the function expects  C1111,  C1122, C1133, C2222,  C2233, C3333,  C2323,      C1313,      C1212
-  const Real elements[] = {A(0,0), 0.,    0.,    A(1,1), 0.,    A(2,2), 0.5*A(1,2), 0.5*A(0,2), 0.5*A(0,1)};
-  B.fillFromInputVector(std::vector<Real>(elements, elements + sizeof elements / sizeof elements[0]), false);
+  SymmGenericElasticityTensor B;
+  B(0,0,0,0) = A(0,0);
+  B(1,1,1,1) = A(1,1);
+  B(2,2,2,2) = A(3,3);
+  B(2,3,2,3) = A(1,2);
+  B(1,3,1,3) = A(0,2);
+  B(1,2,1,2) = A(0,1);
   return B;
 }
 
@@ -137,8 +140,7 @@ CardiacWhiteley2007Material::computeQpProperties()
 
   for (int M=0;M<3;M++)
     for (int N=M;N<3;N++)
-      if (E(M,N) > 0)
-      {
+      if (E(M,N) > 0) {
         const Real a(_a(M,N));
         const Real b(_b(M,N));
         const Real k(_k(M,N));
@@ -148,21 +150,21 @@ CardiacWhiteley2007Material::computeQpProperties()
         const Real f( b*e/d );
         const Real g( k/pow(d,b) );
 
-        T(M,N)    = g * e * ( 2+f );
+        T(M,N) = g * e * ( 2+f );
         D(M,N) = g * ( 2 + (4+e/d+f)*f );
-
       } else {
         T(M,N) = 0.;
         D(M,N) = 0.;
       }
 
-  // The following renders D asymmetric, i.e. we need the full fourth order tensor here.
-  _stress_derivative[_qp] = STtoSET(D);
+  // The following renders D asymmetric wrt. (MN)<->(PQ), i.e. we need the full fourth order tensor here.
+  _stress_derivative[_qp] = STtoSGET(D);
   // Add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
   if (_has_p) {
     T -= Cinv*_p[0]; // TODO: is [0] correct for scalar variables?
     // for the derivative of T, things do become slightly complicated as we have to do
-    // TODO: _stress_derivative[_qp] += 2 * _p[0] * invC(M,P) * invC(Q,N);
+    // TODO: _stress_derivative[_qp](MNPQ) += 2 * _p[0] * invC(M,P) * invC(Q,N);
+    // the pressure term is symmetric in Q<->N and in M<->P, i.e.   C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of invC
   }
 
   // Te following renders T asymmetric.
@@ -170,12 +172,12 @@ CardiacWhiteley2007Material::computeQpProperties()
   // Add active tension in fibre direction
   if (_has_Ta) {
     _stress[_qp] += RealTensorValue(_Ta[_qp]*Cinv(0,0), _Ta[_qp]*Cinv(0,1), _Ta[_qp]*Cinv(0,2), 0, 0, 0, 0, 0, 0);
-    // TODO: _stress_derivative[_qp] -= 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
+    // TODO: _stress_derivative[_qp](MNPQ) -= 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
   }
 
   // rotate everything back into outer coordinate system
   _stress[_qp] = R * _stress[_qp] * R.transpose();
-  // TODO: dito for _stress_derivative[_qp]
+  // TODO: dito for _stress_derivative[_qp](MNPQ) = R(Mm)R(Nn)R(Pp)R(Qq)_stress_derivative[_qp](mnpq)
 
 }
 
