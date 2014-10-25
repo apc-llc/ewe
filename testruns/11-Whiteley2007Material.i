@@ -20,9 +20,19 @@
     order = FIRST
     family = LAGRANGE
   [../]
+
+  #[./pressure]
+  #  order = FIRST
+  #  family = SCALAR
+  #[../]
 []
 
 [Kernels]
+  #[./incompressibility]
+  #  type = PressureLagrangeMultiplier
+  #  variable = pressure
+  #[../]
+
   [./stressdiv_x]
     type      = CardiacStressDivergence
     variable  = disp_x
@@ -134,7 +144,7 @@
     disp_y = disp_y
     disp_z = disp_z
     #TODO: Ta = Ta                          # .. active strain, i.e. strain that results from electrophysiology, default (if unset) = 0
-    #TODO: p = p                            # .. p (pressure / Lagrange multiplier for incompressibility)
+    #TODO: p = pressure                     # .. p (pressure / Lagrange multiplier for incompressibility)
   [../]
 
    [./newmarkx]
