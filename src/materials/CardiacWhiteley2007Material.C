@@ -66,9 +66,9 @@ const SymmGenericElasticityTensor CardiacWhiteley2007Material::STtoSGET(const Sy
   B(0,0,0,0) = A(0,0);
   B(1,1,1,1) = A(1,1);
   B(2,2,2,2) = A(2,2);
-  B(2,3,2,3) = A(1,2);
-  B(1,3,1,3) = A(0,2);
-  B(1,2,1,2) = A(0,1);
+  B(1,2,1,2) = A(1,2);
+  B(0,2,0,2) = A(0,2);
+  B(0,1,0,1) = A(0,1);
   return B;
 }
 
@@ -125,7 +125,7 @@ CardiacWhiteley2007Material::computeQpProperties()
   // From here on, we go over to fibre coordinates, i.e. for C, Cinv, E, T
   // Cauchy-Green deformation tensor in fibre coordinates: C = R^T F^T F R
   const SymmTensor C(symmProd(R, symmProd(F)));
-  // .. and its inverse (note that det(C_fibre) = det(C) = det(F^T)*det(F) = det(F)^2, since det(R)==1
+  // .. and its inverse (note that det(C_fibre) = det(C) = det(F^T)*det(F) = det(F)^2, since det(R)==1 )
   const SymmTensor Cinv(symmInv(C, _J[_qp]*_J[_qp]));
   // Lagrange-Green strain tensor
   const SymmTensor E( (C - _id) * 0.5 );
@@ -146,7 +146,9 @@ CardiacWhiteley2007Material::computeQpProperties()
         const Real k(_k(M,N));
         const Real e(E(M,N));
         const Real d( a - e );
-        if (d <= 0) mooseError("CardiacWhiteley2007Material: E_{MN} >= a_{MN} - the strain is too large for this model");
+        if (d <= 0) {
+          mooseError("CardiacWhiteley2007Material: E_{MN} >= a_{MN} - the strain is too large for this model");
+        }
         const Real f( b*e/d );
         const Real g( k/pow(d,b) );
 
@@ -157,27 +159,32 @@ CardiacWhiteley2007Material::computeQpProperties()
         D(M,N) = 0.;
       }
 
-  // The following renders D asymmetric wrt. (MN)<->(PQ), i.e. we need the full fourth order tensor here.
+  // For convenicence, we rotate back into the outer coordinate system here before adding pressure and active tension
+  // This is done because adding them destroys symmetries which would force us to rotate a fourth order tensor in
+  // the case of the stress derivative instead of the second order tensor D
+  T = symmProd(R.transpose(), T);
+  D = symmProd(R.transpose(), D);
+  const RealTensorValue Cinv_outer( R * STtoRTV(Cinv) * R.transpose() ); // Cinv_outer is still symmetric, but we need it as RealTensorValue anyway since we only compose asymmetric products with it
+
+  // The following steps render
+  //    T asymmetric
+  //    D asymmetric wrt. (MN)<->(PQ), i.e. we need the full fourth order tensor here.
+  _stress[_qp] = STtoRTV(T);
   _stress_derivative[_qp] = STtoSGET(D);
+
   // Add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
   if (_has_p) {
-    T -= Cinv*_p[0]; // TODO: is [0] correct for scalar variables?
+    _stress[_qp] -= Cinv_outer*_p[0]; // TODO: is [0] correct for scalar variables?
     // for the derivative of T, things do become slightly complicated as we have to do
-    // TODO: _stress_derivative[_qp](MNPQ) += 2 * _p[0] * invC(M,P) * invC(Q,N);
-    // the pressure term is symmetric in Q<->N and in M<->P, i.e.   C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of invC
+    // _stress_derivative[_qp](MNPQ) += 2 * _p[0] * Cinv_outer(M,P) * Cinv_outer(Q,N)
+    // note that the pressure term is symmetric in Q<->N and in M<->P, i.e. C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of Cinv_outer
   }
-
-  // Te following renders T asymmetric.
-  _stress[_qp] = STtoRTV(T);
   // Add active tension in fibre direction
   if (_has_Ta) {
-    _stress[_qp] += RealTensorValue(_Ta[_qp]*Cinv(0,0), _Ta[_qp]*Cinv(0,1), _Ta[_qp]*Cinv(0,2), 0, 0, 0, 0, 0, 0);
+    // reprenstation of active tension in fibre direction in outer coordinate system
+    const RealTensorValue Ta_outer( R * RealTensorValue(_Ta[_qp], 0, 0, 0, 0, 0, 0, 0, 0) * R.transpose() );
+    _stress[_qp] += Ta_outer*Cinv_outer;
     // TODO: _stress_derivative[_qp](MNPQ) -= 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
   }
-
-  // rotate everything back into outer coordinate system
-  _stress[_qp] = R * _stress[_qp] * R.transpose();
-  // TODO: dito for _stress_derivative[_qp](MNPQ) = R(Mm)R(Nn)R(Pp)R(Qq)_stress_derivative[_qp](mnpq)
-
 }
 

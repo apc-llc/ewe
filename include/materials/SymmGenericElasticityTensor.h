@@ -41,12 +41,12 @@ public:
       case 00: return 0;
       case 11: return 1;
       case 22: return 2;
+      case 01:
+      case 10: return 3;
       case 12:
-      case 21: return 3;
-      case 23:
-      case 32: return 4;
-      case 31:
-      case 13: return 5;
+      case 21: return 4;
+      case 20:
+      case 02: return 5;
     }
     mooseError("convert_indices: invalid index");
   }
@@ -89,7 +89,7 @@ public:
 
 protected:
 
-  virtual void calculateEntries(unsigned int qp);
+  virtual void calculateEntries(unsigned int qp) {};
 };
 
 #endif //SymmGenericElasticityTensor_H

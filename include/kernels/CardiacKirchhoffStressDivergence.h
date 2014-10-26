@@ -21,13 +21,13 @@ public:
 
 protected:
   virtual Real computeQpResidual();
-/* TODO
   virtual Real computeQpJacobian();
-
   virtual Real computeQpOffDiagJacobian(unsigned int jvar);
-*/
   MaterialProperty<RealTensorValue> & _stress;
   MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative;
+
+  RealVectorValue prod(const RealTensorValue & t, const RealVectorValue & v) const;
+  RealTensorValue doubleContraction(const SymmGenericElasticityTensor & t, const RealVectorValue & v1, const RealVectorValue & v2) const;
 
 private:
   const unsigned int _component;
