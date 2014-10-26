@@ -50,7 +50,20 @@ void
 Electrocardio::computeQpProperties()
 {
   
+  //! @todo make bernus use external arrays and remove need to copy
+  for (int i=0; i<_ionmodel->get_ngates(); ++i) {
+      _ionmodel->gates[i] = _gates_old[_qp][i];
+  }
+  
   _Iion[_qp] = _ionmodel->ionforcing(_vmem[_qp]);
+  
+  // Forward Euler step for gates
+  _ionmodel->update_gates_dt(_vmem[_qp]);
+  
+  for (int i=0; i<_ionmodel->get_ngates(); ++i) {
+    _ionmodel->gates[i] += _dt*_ionmodel->gates_dt[i];
+    _gates[_qp][i] = _ionmodel->gates[i];
+  }
   
   /**
    * The mono domain equations reads
