@@ -37,8 +37,8 @@ CardiacWhiteley2007Material::CardiacWhiteley2007Material(const std::string  & na
    _k(SymmTensor(getParam<std::vector<Real> >("k_MN"))),
    _a(SymmTensor(getParam<std::vector<Real> >("a_MN"))),
    _b(SymmTensor(getParam<std::vector<Real> >("b_MN"))),
-   _stress(declareProperty<RealTensorValue>("stress")),
-   _stress_derivative(declareProperty<SymmGenericElasticityTensor>("stress_derivative")),
+   _stress(declareProperty<RealTensorValue>("Kirchhoff_stress")),
+   _stress_derivative(declareProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
    _J(declareProperty<Real>("det_displacement_gradient")),
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
    _has_Ta(isCoupled("Ta")),
@@ -65,7 +65,7 @@ const SymmGenericElasticityTensor CardiacWhiteley2007Material::STtoSGET(const Sy
   SymmGenericElasticityTensor B;
   B(0,0,0,0) = A(0,0);
   B(1,1,1,1) = A(1,1);
-  B(2,2,2,2) = A(3,3);
+  B(2,2,2,2) = A(2,2);
   B(2,3,2,3) = A(1,2);
   B(1,3,1,3) = A(0,2);
   B(1,2,1,2) = A(0,1);

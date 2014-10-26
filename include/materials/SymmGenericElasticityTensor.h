@@ -10,10 +10,6 @@ public:
 
   virtual ~SymmGenericElasticityTensor() {}
 
-  virtual Real stiffness( const unsigned i, const unsigned j,
-                          const RealGradient & test,
-                          const RealGradient & phi );
-
   inline const Real & operator () (const unsigned int i,
                                    const unsigned int j) const
   {
@@ -93,7 +89,7 @@ public:
 
 protected:
 
-  virtual void calculateEntries(unsigned int qp) {};
+  virtual void calculateEntries(unsigned int qp);
 };
 
 #endif //SymmGenericElasticityTensor_H

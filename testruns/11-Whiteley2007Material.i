@@ -34,49 +34,49 @@
   #[../]
 
   [./stressdiv_x]
-    type      = CardiacStressDivergence
+    type      = CardiacKirchhoffStressDivergence
     variable  = disp_x
     component = 0
     disp_x    = disp_x
     disp_y    = disp_y
     disp_z    = disp_z
   [../]
-  [./inertia_x]
-    type     = SecondDerivativeNewmark
-    variable = disp_x
-    density  = 0.0001
-    lumping  = true
-  [../]
+#  [./inertia_x]
+#    type     = SecondDerivativeNewmark
+#    variable = disp_x
+#    density  = 0.0001
+#    lumping  = true
+#  [../]
 
   [./stressdiv_y]
-    type      = CardiacStressDivergence
+    type      = CardiacKirchhoffStressDivergence
     variable  = disp_y
     component = 1
     disp_x    = disp_x
     disp_y    = disp_y
     disp_z    = disp_z
   [../]
-  [./inertia_y]
-    type     = SecondDerivativeNewmark
-    variable = disp_y
-    density  = 0.0001
-    lumping  = true
-  [../]
+#  [./inertia_y]
+#    type     = SecondDerivativeNewmark
+#    variable = disp_y
+#    density  = 0.0001
+#    lumping  = true
+#  [../]
 
   [./stressdiv_z]
-    type      = CardiacStressDivergence
+    type      = CardiacKirchhoffStressDivergence
     variable  = disp_z
     component = 2
     disp_x    = disp_x
     disp_y    = disp_y
     disp_z    = disp_z
   [../]
-  [./inertia_z]
-    type     = SecondDerivativeNewmark
-    variable = disp_z
-    density  = 0.0001
-    lumping  = true
-  [../]
+#  [./inertia_z]
+#    type     = SecondDerivativeNewmark
+#    variable = disp_z
+#    density  = 0.0001
+#    lumping  = true
+#  [../]
 []
 
 
@@ -147,21 +147,21 @@
     #TODO: p = pressure                     # .. p (pressure / Lagrange multiplier for incompressibility)
   [../]
 
-   [./newmarkx]
-     type = NewmarkMaterial
-     block = 1
-     disp  = disp_x
-   [../]
-   [./newmarky]
-     type = NewmarkMaterial
-     block = 1
-     disp  = disp_y
-   [../]
-   [./newmarkz]
-     type = NewmarkMaterial
-     block = 1
-     disp  = disp_z
-   [../]
+#   [./newmarkx]
+#     type = NewmarkMaterial
+#     block = 1
+#     disp  = disp_x
+#   [../]
+#   [./newmarky]
+#     type = NewmarkMaterial
+#     block = 1
+#     disp  = disp_y
+#   [../]
+#   [./newmarkz]
+#     type = NewmarkMaterial
+#     block = 1
+#     disp  = disp_z
+#   [../]
 []
 
 [Executioner]
@@ -185,7 +185,7 @@
 [Functions]
   [./pressure_time]
     type = ParsedFunction
-    value = '2500.*(sin(2*pi*t/3.0)+1.)'
+    value = 'sin(2*pi*t/3.0)+1.'
   [../]
 []
 
@@ -207,146 +207,26 @@
 
 
 [AuxVariables]
-#  [./temperature]
+##  [./elastic_energy]
+##    order = CONSTANT
+##    family = MONOMIAL
+##  [../]
+#  [./kinetic_energy]
 #    order = CONSTANT
 #    family = MONOMIAL
 #  [../]
-#  [./stress_xx]
-#    order = CONSTANT
-#    family = MONOMIAL
-#  [../]
-#  [./stress_yy]
-#    order = CONSTANT
-#    family = MONOMIAL
-#  [../]
-#  [./stress_zz]
-#    order = CONSTANT
-#    family = MONOMIAL
-#  [../]
-#  [./stress_xy]
-#    order = CONSTANT
-#    family = MONOMIAL
-#  [../]
-#  [./stress_yz]
-#    order = CONSTANT
-#    family = MONOMIAL
-#  [../]
-#  [./stress_zx]
-#    order = CONSTANT
-#    family = MONOMIAL
-#  [../]
-  [./elastic_energy]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-#  [./vonmises]
-#    order = CONSTANT
-#    family = MONOMIAL
-#  [../]
-#  [./hydrostatic]
-#    order = CONSTANT
-#    family = MONOMIAL
-#  [../]
-#  [./firstinv]
-#    order = CONSTANT
-#    family = MONOMIAL
-#  [../]
-#  [./secondinv]
-#    order = CONSTANT
-#    family = MONOMIAL
-#  [../]
-#  [./thirdinv]
-#    order = CONSTANT
-#    family = MONOMIAL
-#  [../]
-  [./kinetic_energy]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
 [] # AuxVariables
 
 [AuxKernels]
-#  [./temperature_time]
-#    type = FunctionAux
-#    variable = temperature
-#    function = temptime
+##  [./elastic_energy]
+##    type = ElasticEnergyAux
+##    variable = elastic_energy
+##  [../]
+#  [./kinetic_energy]
+#    type = KineticEnergyNewmarkAux
+#    variable = kinetic_energy
+#    disp_x = disp_x
+#    disp_y = disp_y
+#    disp_z = disp_z
 #  [../]
-#
-#  [./stress_xx]
-#    type = MaterialTensorAux
-#    tensor = stress
-#    variable = stress_xx
-#    index = 0
-#  [../]
-#  [./stress_yy]
-#    type = MaterialTensorAux
-#    tensor = stress
-#    variable = stress_yy
-#    index = 1
-#  [../]
-#  [./stress_zz]
-#    type = MaterialTensorAux
-#    tensor = stress
-#    variable = stress_zz
-#    index = 2
-#  [../]
-#  [./stress_xy]
-#    type = MaterialTensorAux
-#    tensor = stress
-#    variable = stress_xy
-#    index = 3
-#  [../]
-#  [./stress_yz]
-#    type = MaterialTensorAux
-#    tensor = stress
-#    variable = stress_yz
-#    index = 4
-#  [../]
-#  [./stress_zx]
-#    type = MaterialTensorAux
-#    tensor = stress
-#    variable = stress_zx
-#    index = 5
-#  [../]
-  [./elastic_energy]
-    type = ElasticEnergyAux
-    variable = elastic_energy
-  [../]
-#  [./vonmises]
-#    type = MaterialTensorAux
-#    tensor = stress
-#    variable = vonmises
-#    quantity = vonmises
-#  [../]
-#  [./hydrostatic]
-#    type = MaterialTensorAux
-#    tensor = stress
-#    variable = hydrostatic
-#    quantity = hydrostatic
-#  [../]
-#  [./fi]
-#    type = MaterialTensorAux
-#    tensor = stress
-#    variable = firstinv
-#    quantity = firstinvariant
-#  [../]
-#  [./si]
-#    type = MaterialTensorAux
-#    tensor = stress
-#    variable = secondinv
-#    quantity = secondinvariant
-#  [../]
-#  [./ti]
-#    type = MaterialTensorAux
-#    tensor = stress
-#    variable = thirdinv
-#    quantity = thirdinvariant
-#  [../]
-  [./kinetic_energy]
-    type = KineticEnergyNewmarkAux
-    variable = kinetic_energy
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
-  [../]
 [] # AuxKernels
