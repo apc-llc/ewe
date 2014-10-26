@@ -26,8 +26,14 @@ protected:
   MaterialProperty<RealTensorValue> & _stress;
   MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative;
 
-  RealVectorValue prod(const RealTensorValue & t, const RealVectorValue & v) const;
-  RealTensorValue doubleContraction(const SymmGenericElasticityTensor & t, const RealVectorValue & v1, const RealVectorValue & v2) const;
+  Real fullContraction(const RealTensorValue & t,
+                       const RealVectorValue & v1,
+                       const RealVectorValue & v2) const;
+  Real fullContraction(const SymmGenericElasticityTensor & t,
+                       const RealVectorValue & v1,
+                       const RealVectorValue & v2,
+                       const RealVectorValue & v3,
+                       const RealVectorValue & v4) const;
 
 private:
   const unsigned int _component;

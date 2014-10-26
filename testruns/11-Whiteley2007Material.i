@@ -81,41 +81,41 @@
 
 
 [BCs]
-  [./ring_x]
-    type = DirichletBC
-    variable = disp_x
-    boundary = ns_LV_opening
-    value    = 0.
-  [../]
-  [./ring_y]
-    type = DirichletBC
-    variable = disp_y
-    boundary = ns_LV_opening
-    value    = 0.
-  [../]
-  [./ring_z]
-    type = DirichletBC
-    variable = disp_z
-    boundary = ns_LV_opening
-    value    = 0.
-  [../]
+#  [./ring_x]
+#    type = DirichletBC
+#    variable = disp_x
+#    boundary = ns_LV_opening
+#    value    = 0.
+#  [../]
+#  [./ring_y]
+#    type = DirichletBC
+#    variable = disp_y
+#    boundary = ns_LV_opening
+#    value    = 0.
+#  [../]
+#  [./ring_z]
+#    type = DirichletBC
+#    variable = disp_z
+#    boundary = ns_LV_opening
+#    value    = 0.
+#  [../]
 
-  [./Pressure_LV_x]
-    type = Pressure
-    boundary  = ss_LV_inner
-    variable  = disp_x
-    component = 0
-    factor    = 1.0
-    function  = pressure_time
-  [../]
-  [./Pressure_LV_y]
-    type = Pressure
-    boundary  = ss_LV_inner
-    variable  = disp_y
-    component = 1
-    factor    = 1.0
-    function  = pressure_time
-  [../]
+#  [./Pressure_LV_x]
+#    type = Pressure
+#    boundary  = ss_LV_inner
+#    variable  = disp_x
+#    component = 0
+#    factor    = 1.0
+#    function  = pressure_time
+#  [../]
+#  [./Pressure_LV_y]
+#    type = Pressure
+#    boundary  = ss_LV_inner
+#    variable  = disp_y
+#    component = 1
+#    factor    = 1.0
+#    function  = pressure_time
+#  [../]
   [./Pressure_LV_z]
     type = Pressure
     boundary  = ss_LV_inner
@@ -168,12 +168,12 @@
   type = Transient
 
   solve_type = PJFNK
-  petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  petsc_options_value = '201                 hypre    boomeramg      4'
+  #petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
+  #petsc_options_value = '201                 hypre    boomeramg      4'
   line_search = 'none'
 
   nl_rel_step_tol = 1.e-8
-  l_max_its = 100
+  l_max_its = 10
 
   start_time = 0
   end_time   = 3.0
@@ -185,7 +185,7 @@
 [Functions]
   [./pressure_time]
     type = ParsedFunction
-    value = 'sin(2*pi*t/3.0)+1.'
+    value = '0*sin(2*pi*t/3.0)+1.'
   [../]
 []
 
