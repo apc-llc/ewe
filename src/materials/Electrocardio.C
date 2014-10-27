@@ -20,12 +20,13 @@ Electrocardio::Electrocardio(const std::string & name,
   _Iion(declareProperty<Real>("Iion")),
   _gates(declareProperty<std::vector<Real> >("gates")),
   _gates_old(declarePropertyOld<std::vector<Real> >("gates")),
+  _gates_dt(declareProperty<std::vector<Real> >("gates_dt")),
   // coupled variables
   _vmem(coupledValue("vmem"))
 {
   
   // Create pointer to a Bernus model object using the factory class
-  _ionmodel = IionmodelFactory::factory(IionmodelFactory::bernus);
+  _ionmodel = IionmodelFactory::factory(IionmodelFactory::bernus, & gates_qp, & gates_dt_qp);
   
   std::cout << "Constructing Material Electrocardio..." << std::endl;
 }
@@ -50,20 +51,26 @@ void
 Electrocardio::computeQpProperties()
 {
   
-  //! @todo make bernus use external arrays and remove need to copy
+  // Copy old gates values into local gates vector
   for (int i=0; i<_ionmodel->get_ngates(); ++i) {
-      _ionmodel->gates[i] = _gates_old[_qp][i];
+    gates_qp[i] = _gates_old[_qp][i];
   }
   
+  // Compute ionforcing
   _Iion[_qp] = _ionmodel->ionforcing(_vmem[_qp]);
   
-  // Forward Euler step for gates
+  // Compute time derivative of gating variables
   _ionmodel->update_gates_dt(_vmem[_qp]);
   
+  // Forward Euler update step
   for (int i=0; i<_ionmodel->get_ngates(); ++i) {
-    _ionmodel->gates[i] += _dt*_ionmodel->gates_dt[i];
-    _gates[_qp][i] = _ionmodel->gates[i];
+    gates_qp[i] += _dt*gates_dt_qp[i];
+    
+    // put updated local values back into global vector
+    _gates[_qp][i] = gates_qp[i];
   }
+  
+  
   
   /**
    * The mono domain equations reads
