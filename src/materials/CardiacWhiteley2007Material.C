@@ -191,11 +191,16 @@ CardiacWhiteley2007Material::computeQpProperties()
       Ta = _Ta[_qp];
     else
       Ta = _Ta_function->value(_t, _q_point[_qp]);
-
     // representation of active tension in fibre direction in outer coordinate system
     const RealTensorValue Ta_outer( R * RealTensorValue(Ta, 0, 0, 0, 0, 0, 0, 0, 0) * R.transpose() );
     _stress[_qp] += Ta_outer*Cinv_outer;
-    // TODO: _stress_derivative[_qp](MNPQ) -= 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
+    // _stress_derivative[_qp](MNPQ) -= 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
+    // Ta_outer is stull a diagonal matrix, i.e. there is a delta(MN) involved
+    // furthermore, Cinv_outer is symmetric
+    for (int M=0;M<3;M++)
+      for (int P=0;P<3;P++)
+        for (int Q=0;Q<3;Q++)
+          _stress_derivative[_qp](M,M,P,Q) += 2 * Ta_outer(M,M) * Cinv_outer(M,P) * Cinv_outer(Q,M);
   }
 }
 
