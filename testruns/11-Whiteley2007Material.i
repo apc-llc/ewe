@@ -35,6 +35,7 @@
 
   [./stressdiv_x]
     type      = CardiacKirchhoffStressDivergence
+    use_displaced_mesh = false
     variable  = disp_x
     component = 0
     disp_x    = disp_x
@@ -50,6 +51,7 @@
 
   [./stressdiv_y]
     type      = CardiacKirchhoffStressDivergence
+    use_displaced_mesh = false
     variable  = disp_y
     component = 1
     disp_x    = disp_x
@@ -65,6 +67,7 @@
 
   [./stressdiv_z]
     type      = CardiacKirchhoffStressDivergence
+    use_displaced_mesh = false
     variable  = disp_z
     component = 2
     disp_x    = disp_x
@@ -136,6 +139,7 @@
   [./linear_orthotropic]
     type = CardiacWhiteley2007Material
     block = 1
+    use_displaced_mesh = false
     # material parameters in the order 11 22 33 12 23 31 (symmetric), taken from [Nash & Hunter, 2000], Table I
     k_MN = '1.937 0.028 0.310 1.000 1.000 1.000'
     a_MN = '0.523 0.681 1.037 0.731 0.886 0.731'

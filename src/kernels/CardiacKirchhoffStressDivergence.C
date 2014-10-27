@@ -16,8 +16,6 @@ InputParameters validParams<CardiacKirchhoffStressDivergence>()
   params.addRequiredCoupledVar("disp_y", "The y displacement");
   params.addRequiredCoupledVar("disp_z", "The z displacement");
 
-  params.set<bool>("use_displaced_mesh") = true;
-
   return params;
 }
 
