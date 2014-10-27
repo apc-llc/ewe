@@ -34,7 +34,7 @@ ElectrocardioForcing::~ElectrocardioForcing()
 Real
 ElectrocardioForcing::computeQpResidual()
 {
-  return -_ion_coeff*_Iion[_qp]*_test[_i][_qp];
+  return _ion_coeff*_Iion[_qp]*_test[_i][_qp];
 }
 
 Real

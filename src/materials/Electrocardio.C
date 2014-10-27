@@ -35,6 +35,11 @@ Electrocardio::initQpStatefulProperties()
 {
   _gates[_qp].resize(_ionmodel->get_ngates());
   _gates_old[_qp].resize(_ionmodel->get_ngates());
+  for (int i=0; i<_ionmodel->get_ngates(); ++i) {
+    // Initialize with steady-state gate variables
+    _gates[_qp][i] = (Real) (*_ionmodel->gates)[i];
+    _gates_old[_qp][i] = (Real) (*_ionmodel->gates)[i];
+  }
 }
 
 void

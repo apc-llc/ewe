@@ -38,7 +38,6 @@ private:
   
   std::vector<double> gates_qp, gates_dt_qp;
   
-  //! @todo: this has to be a MaterialProperty as well with one object per point
   Iionmodel * _ionmodel;
     
 };
