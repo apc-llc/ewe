@@ -183,7 +183,17 @@ CardiacWhiteley2007Material::computeQpProperties()
     // for the derivative of T, things do become slightly complicated as we have to do
     // _stress_derivative[_qp](MNPQ) += 2 * _p[0] * Cinv_outer(M,P) * Cinv_outer(Q,N)
     // note that the pressure term is symmetric in Q<->N and in M<->P, i.e. C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of Cinv_outer
-  }
+    for (int M=0;M<3;M++)
+      for (int N=0;N<3;N++)
+        for (int P=M;P<3;P++)
+          for (int Q=N;Q<3;Q++) {
+            const Real Tp(2 * _p[0] * Cinv_outer(M,P) * Cinv_outer(Q,N));
+            _stress_derivative[_qp](M,N,P,Q) += Tp;
+            _stress_derivative[_qp](N,M,P,Q) += Tp;
+            _stress_derivative[_qp](M,N,Q,P) += Tp;
+            _stress_derivative[_qp](N,M,Q,P) += Tp;
+          }
+ }
   // Add active tension in fibre direction
   if (_has_Ta || _has_Ta_function) {
     Real Ta;
