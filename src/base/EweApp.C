@@ -15,6 +15,7 @@
 #include "CardiacLinearOrthotropicMaterial.h"
 #include "CardiacWhiteley2007Material.h"
 #include "PressureLagrangeMultiplier.h"
+#include "DisplacementAux.h"
 
 #include "Electrocardio.h"
 #include "ElectrocardioForcing.h"
@@ -82,6 +83,7 @@ EweApp::registerObjects(Factory & factory)
   
   registerAux(KineticEnergyNewmarkAux);
   registerAux(KineticEnergyAux);
+  registerAux(DisplacementAux);
 }
 
 void
