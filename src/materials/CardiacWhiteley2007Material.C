@@ -24,6 +24,7 @@ InputParameters validParams<CardiacWhiteley2007Material>()
   params.addRequiredParam<std::vector<Real> >("b_MN", "Material parameters b_MN in following order: b_11, b_22, b_33, b_12, b_23, b_13");
 
   params.addCoupledVar("Ta", 0, "The (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley 2007]. Default is Ta=0, i.e. no active tension anywhere.");
+  params.addParam<FunctionName>("Ta_function", "A function that describes the (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley 2007].");
   params.addCoupledVar("p", 0, "Hydrostatic pressure that acts as a Lagrange multiplier to ensure incompressibility. Works best with PressureLagrangeMultiplier kernel.");
   return params;
 }
@@ -43,10 +44,15 @@ CardiacWhiteley2007Material::CardiacWhiteley2007Material(const std::string  & na
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
    _has_Ta(isCoupled("Ta")),
    _Ta(_has_Ta ? coupledValue("Ta") : _zero),
+   _has_Ta_function(isParamValid("Ta_function")),
+   _Ta_function( _has_Ta_function ? &getFunction("Ta_function") : NULL ),
    _has_p(isCoupled("p")),
    _p(_has_p ? coupledScalarValue("p") : _zero),
    _id(1, 1, 1, 0, 0, 0)
-{}
+{
+  if (_has_Ta && _has_Ta_function)
+    mooseError("CardiacWhiteley2007Material: Only Ta or Ta_function may be given, not both of them.");
+}
 
 const RealTensorValue CardiacWhiteley2007Material::STtoRTV(const SymmTensor & A) const
 {
@@ -110,7 +116,7 @@ void
 CardiacWhiteley2007Material::computeQpProperties()
 {
   // TODO: verify that all rotations are done in the correct direction, i.e. where do you have to use _Rf or _Rf.transpose() ?
-  const RealTensorValue R(_Rf[_qp]);
+  const RealTensorValue R(1,0,0,0,1,0,0,0,1);//TODO: add rotation again (_Rf[_qp]);
 
   // local deformation gradient tensor: F(ij) = dx(i)/dX(j)
   // Attention: This is not the displacement gradient:
@@ -146,9 +152,8 @@ CardiacWhiteley2007Material::computeQpProperties()
         const Real k(_k(M,N));
         const Real e(E(M,N));
         const Real d( a - e );
-        if (d <= 0) {
+        if (d <= 0)
           mooseError("CardiacWhiteley2007Material: E_{MN} >= a_{MN} - the strain is too large for this model");
-        }
         const Real f( b*e/d );
         const Real g( k/pow(d,b) );
 
@@ -180,9 +185,15 @@ CardiacWhiteley2007Material::computeQpProperties()
     // note that the pressure term is symmetric in Q<->N and in M<->P, i.e. C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of Cinv_outer
   }
   // Add active tension in fibre direction
-  if (_has_Ta) {
-    // reprenstation of active tension in fibre direction in outer coordinate system
-    const RealTensorValue Ta_outer( R * RealTensorValue(_Ta[_qp], 0, 0, 0, 0, 0, 0, 0, 0) * R.transpose() );
+  if (_has_Ta || _has_Ta_function) {
+    Real Ta;
+    if (_has_Ta)
+      Ta = _Ta[_qp];
+    else
+      Ta = _Ta_function->value(_t, _q_point[_qp]);
+
+    // representation of active tension in fibre direction in outer coordinate system
+    const RealTensorValue Ta_outer( R * RealTensorValue(Ta, 0, 0, 0, 0, 0, 0, 0, 0) * R.transpose() );
     _stress[_qp] += Ta_outer*Cinv_outer;
     // TODO: _stress_derivative[_qp](MNPQ) -= 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
   }

@@ -47,6 +47,8 @@ protected:
   MaterialProperty<RealTensorValue> & _Rf;
   bool _has_Ta;
   VariableValue & _Ta;
+  bool _has_Ta_function;
+  Function * const _Ta_function;
   bool _has_p;
   VariableValue & _p;
 

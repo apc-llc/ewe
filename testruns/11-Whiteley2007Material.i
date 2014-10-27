@@ -116,14 +116,14 @@
 #    factor    = 1.0
 #    function  = pressure_time
 #  [../]
-  [./Pressure_LV_z]
-    type = Pressure
-    boundary  = ss_LV_inner
-    variable  = disp_z
-    component = 2
-    factor    = 1.0
-    function  = pressure_time
-  [../]
+#  [./Pressure_LV_z]
+#    type = Pressure
+#    boundary  = ss_LV_inner
+#    variable  = disp_z
+#    component = 2
+#    factor    = 1.0
+#    function  = pressure_time
+#  [../]
 []
 
 [Materials]
@@ -144,6 +144,7 @@
     disp_y = disp_y
     disp_z = disp_z
     #TODO: Ta = Ta                          # .. active strain, i.e. strain that results from electrophysiology, default (if unset) = 0
+    Ta_function = active_tension_function
     #TODO: p = pressure                     # .. p (pressure / Lagrange multiplier for incompressibility)
   [../]
 
@@ -168,8 +169,8 @@
   type = Transient
 
   solve_type = PJFNK
-  #petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  #petsc_options_value = '201                 hypre    boomeramg      4'
+  petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
+  petsc_options_value = '201                 hypre    boomeramg      4'
   line_search = 'none'
 
   nl_rel_step_tol = 1.e-8
@@ -183,9 +184,9 @@
 []
 
 [Functions]
-  [./pressure_time]
+  [./active_tension_function]
     type = ParsedFunction
-    value = '0*sin(2*pi*t/3.0)+1.'
+    value = '0.01*sin(2*pi*t/3.0)+1.'
   [../]
 []
 
