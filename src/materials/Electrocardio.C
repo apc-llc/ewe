@@ -20,7 +20,6 @@ Electrocardio::Electrocardio(const std::string & name,
   _Iion(declareProperty<Real>("Iion")),
   _gates(declareProperty<std::vector<Real> >("gates")),
   _gates_old(declarePropertyOld<std::vector<Real> >("gates")),
-  _gates_dt(declareProperty<std::vector<Real> >("gates_dt")),
   // coupled variables
   _vmem(coupledValue("vmem"))
 {
@@ -62,8 +61,9 @@ Electrocardio::computeQpProperties()
   // Compute time derivative of gating variables
   _ionmodel->update_gates_dt(_vmem[_qp]);
   
-  // Forward Euler update step
   for (int i=0; i<_ionmodel->get_ngates(); ++i) {
+
+    // Forward Euler update step
     gates_qp[i] += _dt*gates_dt_qp[i];
     
     // put updated local values back into global vector
