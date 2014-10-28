@@ -178,7 +178,7 @@ CardiacWhiteley2007Material::computeQpProperties()
   //    D asymmetric wrt. (MN)<->(PQ), i.e. we need the full fourth order tensor here.
   _stress[_qp] = STtoRTV(T);
   _stress_derivative[_qp] = STtoSGET(D);
-
+  /*
   if (_has_p || _has_Ta || _has_Ta_function) {
     // Inverse of the Cauchy Green deformation tensor (note that det(C_fibre) = det(C) = det(F^T)*det(F) = det(F)^2, since det(R)==1 )
     const SymmTensor Cinv(symmInv(C, _J[_qp]*_J[_qp]));
@@ -220,5 +220,6 @@ CardiacWhiteley2007Material::computeQpProperties()
             _stress_derivative[_qp](M,M,P,Q) += 2 * Ta_outer(M,M) * Cinv_outer(M,P) * Cinv_outer(Q,M);
     }
   }
+  */
 }
 

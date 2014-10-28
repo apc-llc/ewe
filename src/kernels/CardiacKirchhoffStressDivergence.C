@@ -56,6 +56,21 @@ Real CardiacKirchhoffStressDivergence::fullContraction(const SymmGenericElastici
   return res;
 }
 
+Real CardiacKirchhoffStressDivergence::doubleLeftSymmDoubleRightContraction(const SymmGenericElasticityTensor & t,
+                                                                            const RealVectorValue & v1,
+                                                                            const RealVectorValue & v2,
+                                                                            const RealVectorValue & v3,
+                                                                            const RealVectorValue & v4) const
+{
+  Real res(0);
+  for (unsigned int M=0;M<3;M++)
+    for (unsigned int N=0;N<3;N++)
+      for (unsigned int P=0;P<3;P++)
+        for (unsigned int Q=0;Q<3;Q++)
+          res += t(M,N,P,Q) * v1(M) * v2(N) * 0.5*(v3(P)*v4(Q)+v3(Q)*v4(P));
+  return res;
+}
+
 Real
 CardiacKirchhoffStressDivergence::computeQpResidual()
 {
@@ -71,19 +86,35 @@ CardiacKirchhoffStressDivergence::computeQpResidual()
 Real
 CardiacKirchhoffStressDivergence::computeQpJacobian()
 {
-  return fullContraction(_stress[_qp], _grad_test[_i][_qp], _grad_phi[_j][_qp]);
-    //+ fullContraction(_stress_derivative[_qp], _grad_test[_i][_qp], _grad_phi[_j][_qp], _grad_phi[_j][_qp], _grad_phi[_j][_qp]);
+  // nonlinear variables are displacements u(i)=x(i)-X(i)
+  // However, we do need the deformation gradient here: dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
+  RealVectorValue grad_xi(_grad_u[_qp]);
+  grad_xi(_component) += 1;
+
+  return fullContraction(_stress[_qp], _grad_test[_i][_qp], _grad_phi[_j][_qp])
+    + doubleLeftSymmDoubleRightContraction(_stress_derivative[_qp],
+                                           _grad_test[_i][_qp],
+                                           grad_xi,
+                                           _grad_phi[_j][_qp], grad_xi );
 }
 
-/*
 Real
 CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
 {
-  return 0;
-  // all displacements enter into the thing in more or less identical form...
-  if (jvar == _xdisp_var || jvar == _ydisp_var || jvar == _zdisp_var)
-    return computeQpJacobian();
-  else
+  mooseAssert( ~( jvar == _xdisp_var && _component==0
+               || jvar == _ydisp_var && _component==1
+               || jvar == _zdisp_var && _component==2), "computeQpOffDiagJacobian called for a diagonal element. Presumably, _component is wrong here.");
+
+  if (jvar == _xdisp_var || jvar == _ydisp_var || jvar == _zdisp_var) {
+    // nonlinear variables are displacements u(i)=x(i)-X(i)
+    // However, we do need the deformation gradient here: dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
+    RealVectorValue grad_xi(_grad_u[_qp]);
+    grad_xi(_component) += 1;
+
+    return doubleLeftSymmDoubleRightContraction(_stress_derivative[_qp],
+                                                _grad_test[_i][_qp],
+                                                grad_xi,
+                                                _grad_phi[_j][_qp], grad_xi );
+  } else
     return 0;
 }
-*/

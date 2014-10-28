@@ -22,19 +22,26 @@ public:
 protected:
   virtual Real computeQpResidual();
   virtual Real computeQpJacobian();
-  //virtual Real computeQpOffDiagJacobian(unsigned int jvar);
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar);
   MaterialProperty<RealTensorValue> & _stress;
   MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative;
 
+  /// computes   SUM(M,N) [ t(M,N) v1(M) v2(N) ]
   Real fullContraction(const RealTensorValue & t,
                        const RealVectorValue & v1,
                        const RealVectorValue & v2) const;
+  /// computes   SUM(M,N,P,Q) [ t(M,N,P,Q) v1(M) v2(N) v3(P) v4(Q) ]
   Real fullContraction(const SymmGenericElasticityTensor & t,
                        const RealVectorValue & v1,
                        const RealVectorValue & v2,
                        const RealVectorValue & v3,
                        const RealVectorValue & v4) const;
-
+  /// computes   SUM(M,N,P,Q) [ t(M,N,P,Q) v1(M) v2(N)  0.5{ v3(P)v4(Q) + v3(Q)v4(P) } ]
+  Real doubleLeftSymmDoubleRightContraction(const SymmGenericElasticityTensor & t,
+                                            const RealVectorValue & v1,
+                                            const RealVectorValue & v2,
+                                            const RealVectorValue & v3,
+                                            const RealVectorValue & v4) const;
 private:
   const unsigned int _component;
 
