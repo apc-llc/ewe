@@ -13,101 +13,101 @@
 []
 
 [Variables]
-  [./x]
+  [./dispx]
     order = FIRST
     family = LAGRANGE
   [../]
 
-  [./y]
+  [./dispy]
     order = FIRST
     family = LAGRANGE
   [../]
 
-  [./z]
+  [./dispz]
     order = FIRST
     family = LAGRANGE
   [../]
 []
 
 [Kernels]
-  [./force_x]
+  [./force_dispx]
     type      = UserForcingFunction
-    variable  = x
-    function  = force_func_x
+    variable  = dispx
+    function  = force_func_dispx
   [../]
-  [./diffusion_x]
+  [./diffusion_dispx]
     type      = Diffusion
-    variable  = x
+    variable  = dispx
   [../]
-  [./shift_x]
+  [./shift_dispx]
     type      = AnisotropicGradientShift
-    variable  = x
+    variable  = dispx
     component = 0
   [../]
 
-  [./force_y]
+  [./force_dispy]
     type      = UserForcingFunction
-    variable  = y
-    function  = force_func_y
+    variable  = dispy
+    function  = force_func_dispy
   [../]
-  [./diffusion_y]
+  [./diffusion_dispy]
     type      = Diffusion
-    variable  = y
+    variable  = dispy
   [../]
-  [./shift_y]
+  [./shift_dispy]
     type      = AnisotropicGradientShift
-    variable  = y
+    variable  = dispy
     component = 1
   [../]
 
-  [./force_z]
+  [./force_dispz]
     type      = UserForcingFunction
-    variable  = z
-    function  = force_func_z
+    variable  = dispz
+    function  = force_func_dispz
   [../]
-  [./diffusion_z]
+  [./diffusion_dispz]
     type      = Diffusion
-    variable  = z
+    variable  = dispz
   [../]
-  [./shift_z]
+  [./shift_dispz]
     type      = AnisotropicGradientShift
-    variable  = z
+    variable  = dispz
     component = 2
   [../]
 []
 
 [Functions]
-  [./force_func_x]
+  [./force_func_dispx]
     type = ParsedFunction
     value='sin(x*pi)'
   [../]
-  [./force_func_y]
+  [./force_func_dispy]
     type = ParsedFunction
     value='cos(y*pi)'
   [../]
-  [./force_func_z]
+  [./force_func_dispz]
     type = ParsedFunction
     value='exp(-z*z)'
   [../]
 []
 
 [BCs]
-   [./bc_x]
+   [./bc_dispx]
      type = DirichletBC
      boundary = 'top bottom front back'
-     variable = x
+     variable = dispx
      value = 0.
    [../]
-   [./bc_y]
+   [./bc_dispy]
      type = DirichletBC
      boundary = 'left right front back'
-     variable = y
+     variable = dispy
      value = 0.
    [../]
-   [./bc_z]
+   [./bc_dispz]
      type = DirichletBC
      boundary = 'left right top bottom'
-     variable = z
+     variable = dispz
      value = 0.
    [../]
 []
@@ -124,16 +124,4 @@
     perf_log = true
     linear_residuals = true
   [../]
-[]
-
-[AuxVariables]
-  [./dispx] order=FIRST family=LAGRANGE [../]
-  [./dispy] order=FIRST family=LAGRANGE [../]
-  [./dispz] order=FIRST family=LAGRANGE [../]
-[]
-
-[AuxKernels]
-  [./aux_dispx] type=DisplacementAux component=0 variable=dispx coordinate=x [../]
-  [./aux_dispy] type=DisplacementAux component=1 variable=dispy coordinate=y [../]
-  [./aux_dispz] type=DisplacementAux component=2 variable=dispz coordinate=z [../]
 []

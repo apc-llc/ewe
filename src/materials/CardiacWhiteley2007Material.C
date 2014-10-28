@@ -15,9 +15,9 @@ template<>
 InputParameters validParams<CardiacWhiteley2007Material>()
 {
   InputParameters params = validParams<Material>();
-  params.addRequiredCoupledVar("x", "The x displaced x coordinate");
-  params.addRequiredCoupledVar("y", "The y displaced y coordinate");
-  params.addRequiredCoupledVar("z", "The z displaced z coordinate");
+  params.addRequiredCoupledVar("dispx", "The x displacement");
+  params.addRequiredCoupledVar("dispy", "The y displacement");
+  params.addRequiredCoupledVar("dispz", "The z displacement");
 
   params.addRequiredParam<std::vector<Real> >("k_MN", "Material parameters k_MN in following order: k_11, k_22, k_33, k_12, k_23, k_13");
   params.addRequiredParam<std::vector<Real> >("a_MN", "Material parameters a_MN in following order: a_11, a_22, a_33, a_12, a_23, a_13");
@@ -32,9 +32,9 @@ InputParameters validParams<CardiacWhiteley2007Material>()
 CardiacWhiteley2007Material::CardiacWhiteley2007Material(const std::string  & name,
                                                  InputParameters parameters)
   :Material(name, parameters),
-   _grad_x(coupledGradient("x")),
-   _grad_y(coupledGradient("y")),
-   _grad_z(coupledGradient("z")),
+   _grad_dispx(coupledGradient("dispx")),
+   _grad_dispy(coupledGradient("dispy")),
+   _grad_dispz(coupledGradient("dispz")),
    _k(SymmTensor(getParam<std::vector<Real> >("k_MN"))),
    _a(SymmTensor(getParam<std::vector<Real> >("a_MN"))),
    _b(SymmTensor(getParam<std::vector<Real> >("b_MN"))),
@@ -120,9 +120,9 @@ CardiacWhiteley2007Material::computeQpProperties()
 
   // local deformation gradient tensor: F(ij) = dx(i)/dX(j)
   // Note that the nonlinear variables are displacements u(i)=x(i)-X(i), thus dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
-  const RealTensorValue F(_grad_x[_qp](0) + 1, _grad_x[_qp](1)    , _grad_x[_qp](2),
-                          _grad_y[_qp](0)    , _grad_y[_qp](1) + 1, _grad_y[_qp](2),
-                          _grad_z[_qp](0)    , _grad_z[_qp](1)    , _grad_z[_qp](2) + 1);
+  const RealTensorValue F(_grad_dispx[_qp](0) + 1, _grad_dispx[_qp](1)    , _grad_dispx[_qp](2),
+                          _grad_dispy[_qp](0)    , _grad_dispy[_qp](1) + 1, _grad_dispy[_qp](2),
+                          _grad_dispz[_qp](0)    , _grad_dispz[_qp](1)    , _grad_dispz[_qp](2) + 1);
   // ...its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
   _J[_qp] = F.det();
   // From here on, we go over to fibre coordinates, i.e. for C, C^-1, E, T

@@ -12,9 +12,9 @@ InputParameters validParams<CardiacKirchhoffStressDivergence>()
 {
   InputParameters params = validParams<Kernel>();
   params.addRequiredParam<unsigned int>("component", "An integer corresponding to the direction the variable this kernel acts in. (0 for x, 1 for y, 2 for z)");
-  params.addRequiredCoupledVar("x", "The x displaced coordinate");
-  params.addRequiredCoupledVar("y", "The y displaced coordinate");
-  params.addRequiredCoupledVar("z", "The z displaced coordinate");
+  params.addRequiredCoupledVar("dispx", "The x displacement");
+  params.addRequiredCoupledVar("dispy", "The y displacement");
+  params.addRequiredCoupledVar("dispz", "The z displacement");
 
   return params;
 }
@@ -25,9 +25,9 @@ CardiacKirchhoffStressDivergence::CardiacKirchhoffStressDivergence(const std::st
    _stress(getMaterialProperty<RealTensorValue>("Kirchhoff_stress")),
    _stress_derivative(getMaterialProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
    _component(getParam<unsigned int>("component")),
-   _xvar(coupled("x")),
-   _yvar(coupled("y")),
-   _zvar(coupled("z"))
+   _xdisp_var(coupled("dispx")),
+   _ydisp_var(coupled("dispy")),
+   _zdisp_var(coupled("dispz"))
 {}
 
 Real CardiacKirchhoffStressDivergence::fullContraction(const RealTensorValue & t,
@@ -81,7 +81,7 @@ CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
 {
   return 0;
   // all displacements enter into the thing in more or less identical form...
-  if (jvar == _xvar || jvar == _yvar || jvar == _zvar)
+  if (jvar == _xdisp_var || jvar == _ydisp_var || jvar == _zdisp_var)
     return computeQpJacobian();
   else
     return 0;

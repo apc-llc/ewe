@@ -38,8 +38,8 @@ protected:
 private:
   const unsigned int _component;
 
-  const unsigned int _xvar;
-  const unsigned int _yvar;
-  const unsigned int _zvar;
+  const unsigned int _xdisp_var;
+  const unsigned int _ydisp_var;
+  const unsigned int _zdisp_var;
 };
 #endif //CardiacKirchhoffStressDivergence_H
