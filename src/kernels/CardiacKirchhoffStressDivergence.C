@@ -103,7 +103,7 @@ CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
 {
   mooseAssert( ~( jvar == _xdisp_var && _component==0
                || jvar == _ydisp_var && _component==1
-               || jvar == _zdisp_var && _component==2), "computeQpOffDiagJacobian called for a diagonal element. Presumably, _component is wrong here.");
+               || jvar == _zdisp_var && _component==2), "CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian() called for a diagonal element. Presumably, _component is wrong here.");
 
   if (jvar == _xdisp_var || jvar == _ydisp_var || jvar == _zdisp_var) {
     // nonlinear variables are displacements u(i)=x(i)-X(i)
