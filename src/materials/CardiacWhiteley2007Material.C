@@ -144,7 +144,7 @@ CardiacWhiteley2007Material::computeQpProperties()
     {
       const Real k(_k(M,N));
 
-      if (k==0) { // TODO: T(MN) should also be 0 if E(MN)<=0, see above eq (8) in [Whiteley2004]
+      if (k==0) { // summand in W does not contribute at all
         T(M,N) = 0.;
         D(M,N) = 0.;
       } else if (k<0) {
@@ -152,14 +152,14 @@ CardiacWhiteley2007Material::computeQpProperties()
         T(M,N) = -k;
         D(M,N) =  0;
       } else /* k>0 */ {
+        const Real e(E(M,N));
         const Real a(_a(M,N));
         const Real b(_b(M,N));
-        const Real e(E(M,N));
         const Real d( a - e );
         if (d <= 0)
           mooseError("CardiacWhiteley2007Material: E_{MN} >= a_{MN} - the strain is too large for this model");
         const Real f( b*e/d );
-        const Real g( k/pow(d,b) );
+        const Real g( k*pow(d,-b) );
 
         T(M,N) = g * e * ( 2+f );
         D(M,N) = g * ( 2 + (4+e/d+f)*f );
