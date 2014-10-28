@@ -12,9 +12,9 @@ InputParameters validParams<CardiacKirchhoffStressDivergence>()
 {
   InputParameters params = validParams<Kernel>();
   params.addRequiredParam<unsigned int>("component", "An integer corresponding to the direction the variable this kernel acts in. (0 for x, 1 for y, 2 for z)");
-  params.addRequiredCoupledVar("disp_x", "The x displacement");
-  params.addRequiredCoupledVar("disp_y", "The y displacement");
-  params.addRequiredCoupledVar("disp_z", "The z displacement");
+  params.addRequiredCoupledVar("x", "The x displaced coordinate");
+  params.addRequiredCoupledVar("y", "The y displaced coordinate");
+  params.addRequiredCoupledVar("z", "The z displaced coordinate");
 
   return params;
 }
@@ -25,9 +25,9 @@ CardiacKirchhoffStressDivergence::CardiacKirchhoffStressDivergence(const std::st
    _stress(getMaterialProperty<RealTensorValue>("Kirchhoff_stress")),
    _stress_derivative(getMaterialProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
    _component(getParam<unsigned int>("component")),
-   _xdisp_var(coupled("disp_x")),
-   _ydisp_var(coupled("disp_y")),
-   _zdisp_var(coupled("disp_z"))
+   _xvar(coupled("x")),
+   _yvar(coupled("y")),
+   _zvar(coupled("z"))
 {}
 
 Real CardiacKirchhoffStressDivergence::fullContraction(const RealTensorValue & t,
@@ -37,7 +37,7 @@ Real CardiacKirchhoffStressDivergence::fullContraction(const RealTensorValue & t
   Real res(0);
   for (unsigned int M=0;M<3;M++)
     for (unsigned int N=0;N<3;N++)
-      res += t(M,N)*v1(M)*v2(N);
+      res += v1(M)*t(M,N)*v2(N);
   return res;
 }
 
@@ -59,37 +59,26 @@ Real CardiacKirchhoffStressDivergence::fullContraction(const SymmGenericElastici
 Real
 CardiacKirchhoffStressDivergence::computeQpResidual()
 {
-  // displacement gradient vector du(i)/dX(M) where i==_component
-  RealVectorValue grad_xi(_grad_u[_qp]);
-  // make a deformation gradient vector from this
-  grad_xi(_component) += 1.;
-  // other convenience shorthands
-  const RealVectorValue grad_test(_grad_test[_i][_qp]);
-
-  // compute _grad_test[_i][_qp] * _stress[_qp] * grad_xi
-  return fullContraction(_stress[_qp], grad_test, grad_xi);
+  // compute _grad_test[_i][_qp] * _stress[_qp] * _grad_u[_qp]
+  return fullContraction(_stress[_qp], _grad_test[_i][_qp], _grad_u[_qp]);
 }
 
 Real
 CardiacKirchhoffStressDivergence::computeQpJacobian()
 {
-  // deformation gradient vector du(i)/dX(M) where i==_component
-  RealVectorValue grad_xi(_grad_u[_qp]);
-  grad_xi(_component) += 1.;
-  // other convenience shorthands
-  const RealVectorValue grad_test(_grad_test[_i][_qp]);
-  const RealVectorValue grad_phi(_grad_phi[_j][_qp]);
-
-  return fullContraction(_stress_derivative[_qp], grad_test, grad_phi, grad_phi, grad_phi)
-    + fullContraction(_stress[_qp], grad_test, grad_phi);
+  return fullContraction(_stress[_qp], _grad_test[_i][_qp], _grad_phi[_j][_qp]);
+    //+ fullContraction(_stress_derivative[_qp], _grad_test[_i][_qp], _grad_phi[_j][_qp], _grad_phi[_j][_qp], _grad_phi[_j][_qp]);
 }
 
+/*
 Real
 CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
 {
+  return 0;
   // all displacements enter into the thing in more or less identical form...
-  if (jvar == _xdisp_var || jvar == _ydisp_var || jvar == _zdisp_var)
+  if (jvar == _xvar || jvar == _yvar || jvar == _zvar)
     return computeQpJacobian();
   else
     return 0;
 }
+*/

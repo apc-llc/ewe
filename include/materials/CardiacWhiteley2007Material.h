@@ -34,9 +34,9 @@ protected:
   const SymmTensor symmProd(const RealTensorValue & outer) const;
   const SymmTensor symmInv(const SymmTensor & C, const Real det) const;
 
-  VariableGradient & _grad_disp_x;
-  VariableGradient & _grad_disp_y;
-  VariableGradient & _grad_disp_z;
+  VariableGradient & _grad_x;
+  VariableGradient & _grad_y;
+  VariableGradient & _grad_z;
 
   SymmTensor _k, _a, _b;
 

@@ -15,9 +15,9 @@ template<>
 InputParameters validParams<CardiacWhiteley2007Material>()
 {
   InputParameters params = validParams<Material>();
-  params.addRequiredCoupledVar("disp_x", "The x displacement");
-  params.addRequiredCoupledVar("disp_y", "The y displacement");
-  params.addRequiredCoupledVar("disp_z", "The z displacement");
+  params.addRequiredCoupledVar("x", "The x displaced x coordinate");
+  params.addRequiredCoupledVar("y", "The y displaced y coordinate");
+  params.addRequiredCoupledVar("z", "The z displaced z coordinate");
 
   params.addRequiredParam<std::vector<Real> >("k_MN", "Material parameters k_MN in following order: k_11, k_22, k_33, k_12, k_23, k_13");
   params.addRequiredParam<std::vector<Real> >("a_MN", "Material parameters a_MN in following order: a_11, a_22, a_33, a_12, a_23, a_13");
@@ -32,9 +32,9 @@ InputParameters validParams<CardiacWhiteley2007Material>()
 CardiacWhiteley2007Material::CardiacWhiteley2007Material(const std::string  & name,
                                                  InputParameters parameters)
   :Material(name, parameters),
-   _grad_disp_x(coupledGradient("disp_x")),
-   _grad_disp_y(coupledGradient("disp_y")),
-   _grad_disp_z(coupledGradient("disp_z")),
+   _grad_x(coupledGradient("x")),
+   _grad_y(coupledGradient("y")),
+   _grad_z(coupledGradient("z")),
    _k(SymmTensor(getParam<std::vector<Real> >("k_MN"))),
    _a(SymmTensor(getParam<std::vector<Real> >("a_MN"))),
    _b(SymmTensor(getParam<std::vector<Real> >("b_MN"))),
@@ -119,24 +119,17 @@ CardiacWhiteley2007Material::computeQpProperties()
   const RealTensorValue R(1,0,0,0,1,0,0,0,1);//TODO: add rotation again (_Rf[_qp]);
 
   // local deformation gradient tensor: F(ij) = dx(i)/dX(j)
-  // Attention: This is not the displacement gradient:
-  //               du(i)/dX(j) = d[x(i)-X(i)]/dX(j) = F(ij) - delta(ij)
-  // Thus, as we are working on displacements, we have to add unity to the diagonal
-  // (every more elegant way I could think of was also less efficient than this one..)
-  const RealTensorValue F(_grad_disp_x[_qp](0) + 1, _grad_disp_x[_qp](1),     _grad_disp_x[_qp](2),
-                          _grad_disp_y[_qp](0),     _grad_disp_y[_qp](1) + 1, _grad_disp_y[_qp](2),
-                          _grad_disp_z[_qp](0),     _grad_disp_z[_qp](1),     _grad_disp_z[_qp](2) + 1);
+  // Conveniently, the constructor of RealTensorValue works row-wise as intended here.
+  const RealTensorValue F(_grad_x[_qp], _grad_y[_qp], _grad_z[_qp]);
   // ...its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
   _J[_qp] = F.det();
-  // From here on, we go over to fibre coordinates, i.e. for C, Cinv, E, T
+  // From here on, we go over to fibre coordinates, i.e. for C, C^-1, E, T
   // Cauchy-Green deformation tensor in fibre coordinates: C = R^T F^T F R
   const SymmTensor C(symmProd(R, symmProd(F)));
-  // .. and its inverse (note that det(C_fibre) = det(C) = det(F^T)*det(F) = det(F)^2, since det(R)==1 )
-  const SymmTensor Cinv(symmInv(C, _J[_qp]*_J[_qp]));
   // Lagrange-Green strain tensor
   const SymmTensor E( (C - _id) * 0.5 );
   
-  // 2nd Piola-Kirchhoff stress tensor: T(MN) = 1/2[dW/dE(MN) + dW/dE(NM)] + [- p + Ta delta(M1) delta(N1) ] Cinv(MN)
+  // 2nd Piola-Kirchhoff stress tensor: T(MN) = 1/2[dW/dE(MN) + dW/dE(NM)] + [- p + Ta delta(M1) delta(N1) ] C^-1(MN)
   // We make use of dW/dE(MN) == dW/dE(NM) and will add active tension and pressure terms later
   SymmTensor T;
   // Derivative of T: D(MNPQ) = dT(MN)/dE(PQ)
@@ -146,10 +139,19 @@ CardiacWhiteley2007Material::computeQpProperties()
 
   for (int M=0;M<3;M++)
     for (int N=M;N<3;N++)
-      if (E(M,N) > 0) {
+    {
+      const Real k(_k(M,N));
+
+      if (k==0) { // TODO: T(MN) should also be 0 if E(MN)<=0, see above eq (8) in [Whiteley2004]
+        T(M,N) = 0.;
+        D(M,N) = 0.;
+      } else if (k<0) {
+        // negative k values force a fallback to the linear case
+        T(M,N) = -k;
+        D(M,N) =  0;
+      } else /* k>0 */ {
         const Real a(_a(M,N));
         const Real b(_b(M,N));
-        const Real k(_k(M,N));
         const Real e(E(M,N));
         const Real d( a - e );
         if (d <= 0)
@@ -159,58 +161,62 @@ CardiacWhiteley2007Material::computeQpProperties()
 
         T(M,N) = g * e * ( 2+f );
         D(M,N) = g * ( 2 + (4+e/d+f)*f );
-      } else {
-        T(M,N) = 0.;
-        D(M,N) = 0.;
       }
+    }
 
   // For convenicence, we rotate back into the outer coordinate system here before adding pressure and active tension
   // This is done because adding them destroys symmetries which would force us to rotate a fourth order tensor in
   // the case of the stress derivative instead of the second order tensor D
   T = symmProd(R.transpose(), T);
   D = symmProd(R.transpose(), D);
-  const RealTensorValue Cinv_outer( R * STtoRTV(Cinv) * R.transpose() ); // Cinv_outer is still symmetric, but we need it as RealTensorValue anyway since we only compose asymmetric products with it
 
+  // Add hydrostatic pressure and active tension
   // The following steps render
   //    T asymmetric
   //    D asymmetric wrt. (MN)<->(PQ), i.e. we need the full fourth order tensor here.
   _stress[_qp] = STtoRTV(T);
   _stress_derivative[_qp] = STtoSGET(D);
 
-  // Add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
-  if (_has_p) {
-    _stress[_qp] -= Cinv_outer*_p[0]; // TODO: is [0] correct for scalar variables?
-    // for the derivative of T, things do become slightly complicated as we have to do
-    // _stress_derivative[_qp](MNPQ) += 2 * _p[0] * Cinv_outer(M,P) * Cinv_outer(Q,N)
-    // note that the pressure term is symmetric in Q<->N and in M<->P, i.e. C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of Cinv_outer
-    for (int M=0;M<3;M++)
-      for (int N=0;N<3;N++)
-        for (int P=M;P<3;P++)
-          for (int Q=N;Q<3;Q++) {
-            const Real Tp(2 * _p[0] * Cinv_outer(M,P) * Cinv_outer(Q,N));
-            _stress_derivative[_qp](M,N,P,Q) += Tp;
-            _stress_derivative[_qp](N,M,P,Q) += Tp;
-            _stress_derivative[_qp](M,N,Q,P) += Tp;
-            _stress_derivative[_qp](N,M,Q,P) += Tp;
-          }
- }
-  // Add active tension in fibre direction
-  if (_has_Ta || _has_Ta_function) {
-    Real Ta;
-    if (_has_Ta)
-      Ta = _Ta[_qp];
-    else
-      Ta = _Ta_function->value(_t, _q_point[_qp]);
-    // representation of active tension in fibre direction in outer coordinate system
-    const RealTensorValue Ta_outer( R * RealTensorValue(Ta, 0, 0, 0, 0, 0, 0, 0, 0) * R.transpose() );
-    _stress[_qp] += Ta_outer*Cinv_outer;
-    // _stress_derivative[_qp](MNPQ) -= 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
-    // Ta_outer is stull a diagonal matrix, i.e. there is a delta(MN) involved
-    // furthermore, Cinv_outer is symmetric
-    for (int M=0;M<3;M++)
-      for (int P=0;P<3;P++)
-        for (int Q=0;Q<3;Q++)
-          _stress_derivative[_qp](M,M,P,Q) += 2 * Ta_outer(M,M) * Cinv_outer(M,P) * Cinv_outer(Q,M);
+  if (_has_p || _has_Ta || _has_Ta_function) {
+    // Inverse of the Cauchy Green deformation tensor (note that det(C_fibre) = det(C) = det(F^T)*det(F) = det(F)^2, since det(R)==1 )
+    const SymmTensor Cinv(symmInv(C, _J[_qp]*_J[_qp]));
+    const RealTensorValue Cinv_outer( R * STtoRTV(Cinv) * R.transpose() ); // Cinv_outer is still symmetric, but we need it as RealTensorValue anyway since we only compose asymmetric products with it
+
+    // Add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
+    if (_has_p) {
+      _stress[_qp] -= Cinv_outer*_p[0]; // TODO: is [0] correct for scalar variables?
+      // for the derivative of T, things do become slightly complicated as we have to do
+      // _stress_derivative[_qp](MNPQ) += 2 * _p[0] * Cinv_outer(M,P) * Cinv_outer(Q,N)
+      // Note that the pressure term is symmetric in Q<->N and in M<->P, i.e. C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of Cinv_outer.
+      for (int M=0;M<3;M++)
+        for (int N=0;N<3;N++)
+          for (int P=M;P<3;P++)
+            for (int Q=N;Q<3;Q++) {
+              const Real Tp(2 * _p[0] * Cinv_outer(M,P) * Cinv_outer(Q,N));
+              _stress_derivative[_qp](M,N,P,Q) += Tp;
+              _stress_derivative[_qp](N,M,P,Q) += Tp;
+              _stress_derivative[_qp](M,N,Q,P) += Tp;
+              _stress_derivative[_qp](N,M,Q,P) += Tp;
+            }
+    }
+    // Add active tension in fibre direction
+    if (_has_Ta || _has_Ta_function) {
+      Real Ta;
+      if (_has_Ta)
+        Ta = _Ta[_qp];
+      else
+        Ta = _Ta_function->value(_t, _q_point[_qp]);
+      // representation of active tension in fibre direction in outer coordinate system
+      const RealTensorValue Ta_outer( R * RealTensorValue(Ta, 0, 0, 0, 0, 0, 0, 0, 0) * R.transpose() );
+      _stress[_qp] += Ta_outer*Cinv_outer;
+      // _stress_derivative[_qp](MNPQ) -= 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
+      // Ta_outer is stull a diagonal matrix, i.e. there is a delta(MN) involved
+      // furthermore, Cinv_outer is symmetric
+      for (int M=0;M<3;M++)
+        for (int P=0;P<3;P++)
+          for (int Q=0;Q<3;Q++)
+            _stress_derivative[_qp](M,M,P,Q) += 2 * Ta_outer(M,M) * Cinv_outer(M,P) * Cinv_outer(Q,M);
+    }
   }
 }
 

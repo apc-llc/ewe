@@ -22,7 +22,7 @@ public:
 protected:
   virtual Real computeQpResidual();
   virtual Real computeQpJacobian();
-  virtual Real computeQpOffDiagJacobian(unsigned int jvar);
+  //virtual Real computeQpOffDiagJacobian(unsigned int jvar);
   MaterialProperty<RealTensorValue> & _stress;
   MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative;
 
@@ -38,8 +38,8 @@ protected:
 private:
   const unsigned int _component;
 
-  const unsigned int _xdisp_var;
-  const unsigned int _ydisp_var;
-  const unsigned int _zdisp_var;
+  const unsigned int _xvar;
+  const unsigned int _yvar;
+  const unsigned int _zvar;
 };
 #endif //CardiacKirchhoffStressDivergence_H

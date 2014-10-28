@@ -35,9 +35,14 @@
     variable  = x
     function  = force_func_x
   [../]
-  [./diffusion_x]
-    type      = Diffusion
+  [./stressdiv_x]
+    type      = CardiacKirchhoffStressDivergence
+    use_displaced_mesh = false
     variable  = x
+    component = 0
+    x         = x
+    y         = y
+    z         = z
   [../]
 
   [./force_y]
@@ -45,9 +50,14 @@
     variable  = y
     function  = force_func_y
   [../]
-  [./diffusion_y]
-    type      = Diffusion
+  [./stressdiv_y]
+    type      = CardiacKirchhoffStressDivergence
+    use_displaced_mesh = false
     variable  = y
+    component = 1
+    x         = x
+    y         = y
+    z         = z
   [../]
 
   [./force_z]
@@ -55,9 +65,14 @@
     variable  = z
     function  = force_func_z
   [../]
-  [./diffusion_z]
-    type      = Diffusion
+  [./stressdiv_z]
+    type      = CardiacKirchhoffStressDivergence
+    use_displaced_mesh = false
     variable  = z
+    component = 2
+    x         = x
+    y         = y
+    z         = z
   [../]
 []
 
@@ -73,6 +88,28 @@
   [./force_func_z]
     type = ParsedFunction
     value='exp(-z*z)'
+  [../]
+[]
+
+[Materials]
+  [./cardiac_properties]
+    type = CardiacPropertiesMaterial
+    block = 0
+    outputs = all
+  [../]
+
+  [./cardiac_material]
+    type = CardiacWhiteley2007Material
+    block = 0
+    use_displaced_mesh = false
+    # material parameters in the order 11 22 33 12 23 31 (symmetric)
+    # These lead to T(MN)=delta(MN)
+    k_MN = '-1. -1. -1.  0.  0.  0.'
+    a_MN = ' 0.  0.  0.  0.  0.  0.'
+    b_MN = ' 1.  1.  1.  1.  1.  1.'
+    x      = x
+    y      = y
+    z      = z
   [../]
 []
 
@@ -97,6 +134,18 @@
    [../]
 []
 
+[AuxVariables]
+  [./dispx] order=FIRST family=LAGRANGE [../]
+  [./dispy] order=FIRST family=LAGRANGE [../]
+  [./dispz] order=FIRST family=LAGRANGE [../]
+[]
+
+[AuxKernels]
+  [./aux_dispx] type=DisplacementAux component=0 variable=dispx coordinate=x [../]
+  [./aux_dispy] type=DisplacementAux component=1 variable=dispy coordinate=y [../]
+  [./aux_dispz] type=DisplacementAux component=2 variable=dispz coordinate=z [../]
+[]
+
 [Executioner]
   type = Steady
 []
@@ -109,16 +158,4 @@
     perf_log = true
     linear_residuals = true
   [../]
-[]
-
-[AuxVariables]
-  [./dispx] order=FIRST family=LAGRANGE [../]
-  [./dispy] order=FIRST family=LAGRANGE [../]
-  [./dispz] order=FIRST family=LAGRANGE [../]
-[]
-
-[AuxKernels]
-  [./aux_dispx] type=DisplacementAux component=0 variable=dispx coordinate=x [../]
-  [./aux_dispy] type=DisplacementAux component=1 variable=dispy coordinate=y [../]
-  [./aux_dispz] type=DisplacementAux component=2 variable=dispz coordinate=z [../]
 []
