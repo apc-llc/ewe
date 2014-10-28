@@ -1,7 +1,0 @@
-[Tests]
-  [./test]
-    type = 'Exodiff'
-    input = 'AnisotropicGradientShiftDiffusion.i'
-    exodiff = 'AnisotropicGradientShiftDiffusion_out.e'
-  [../]
-[]
