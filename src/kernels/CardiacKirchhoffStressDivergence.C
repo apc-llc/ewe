@@ -59,8 +59,13 @@ Real CardiacKirchhoffStressDivergence::fullContraction(const SymmGenericElastici
 Real
 CardiacKirchhoffStressDivergence::computeQpResidual()
 {
-  // compute _grad_test[_i][_qp] * _stress[_qp] * _grad_u[_qp]
-  return fullContraction(_stress[_qp], _grad_test[_i][_qp], _grad_u[_qp]);
+  // nonlinear variables are displacements u(i)=x(i)-X(i)
+  // However, we do need the deformation gradient here: dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
+  RealVectorValue grad_xi(_grad_u[_qp]);
+  grad_xi(_component) += 1;
+
+  // compute _grad_test[_i][_qp] * _stress[_qp] * _grad_xi
+  return fullContraction(_stress[_qp], _grad_test[_i][_qp], grad_xi);
 }
 
 Real

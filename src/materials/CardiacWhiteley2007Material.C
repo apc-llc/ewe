@@ -119,8 +119,10 @@ CardiacWhiteley2007Material::computeQpProperties()
   const RealTensorValue R(1,0,0,0,1,0,0,0,1);//TODO: add rotation again (_Rf[_qp]);
 
   // local deformation gradient tensor: F(ij) = dx(i)/dX(j)
-  // Conveniently, the constructor of RealTensorValue works row-wise as intended here.
-  const RealTensorValue F(_grad_x[_qp], _grad_y[_qp], _grad_z[_qp]);
+  // Note that the nonlinear variables are displacements u(i)=x(i)-X(i), thus dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
+  const RealTensorValue F(_grad_x[_qp](0) + 1, _grad_x[_qp](1)    , _grad_x[_qp](2),
+                          _grad_y[_qp](0)    , _grad_y[_qp](1) + 1, _grad_y[_qp](2),
+                          _grad_z[_qp](0)    , _grad_z[_qp](1)    , _grad_z[_qp](2) + 1);
   // ...its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
   _J[_qp] = F.det();
   // From here on, we go over to fibre coordinates, i.e. for C, C^-1, E, T

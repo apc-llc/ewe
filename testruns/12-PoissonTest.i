@@ -39,6 +39,11 @@
     type      = Diffusion
     variable  = x
   [../]
+  [./shift_x]
+    type      = AnisotropicGradientShift
+    variable  = x
+    component = 0
+  [../]
 
   [./force_y]
     type      = UserForcingFunction
@@ -49,6 +54,11 @@
     type      = Diffusion
     variable  = y
   [../]
+  [./shift_y]
+    type      = AnisotropicGradientShift
+    variable  = y
+    component = 1
+  [../]
 
   [./force_z]
     type      = UserForcingFunction
@@ -58,6 +68,11 @@
   [./diffusion_z]
     type      = Diffusion
     variable  = z
+  [../]
+  [./shift_z]
+    type      = AnisotropicGradientShift
+    variable  = z
+    component = 2
   [../]
 []
 
