@@ -1,0 +1,7 @@
+[Tests]
+  [./test]
+    type = 'Exodiff'
+    input = 'CardiacKirchhoffStressDivergence_AnisotropicPoisson.i'
+    exodiff = 'CardiacKirchhoffStressDivergence_AnisotropicPoisson_out.e'
+  [../]
+[]
