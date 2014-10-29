@@ -31,7 +31,7 @@ protected:
   const RealTensorValue STtoRTV(const SymmTensor & A) const;
   const SymmGenericElasticityTensor STtoSGET(const SymmTensor & A) const;
   const SymmTensor symmProd(const RealTensorValue & outer, const SymmTensor & inner) const;
-  const SymmTensor symmProd(const RealTensorValue & outer) const;
+  const SymmTensor symmProd(const RealTensorValue & A) const;
   const SymmTensor symmInv(const SymmTensor & C, const Real det) const;
 
   VariableGradient & _grad_dispx;

@@ -89,13 +89,17 @@ const SymmTensor CardiacNash2000Material::symmProd(const RealTensorValue & outer
 }
 
 /*
- * computes outer.transpose() * outer
- * TODO: this should be possible in a more efficient way as the resulting matrix is symmetric
+ * computes A.transpose() * A
  */
-const SymmTensor CardiacNash2000Material::symmProd(const RealTensorValue & outer) const
+const SymmTensor CardiacNash2000Material::symmProd(const RealTensorValue & A) const
 {
-  RealTensorValue r(outer.transpose() * outer);
-  return SymmTensor(r(0,0), r(1,1), r(2,2), r(0,1), r(1,2), r(0,2) );
+                    /* i j        i      j        i      j        i      j */
+  return SymmTensor(/* 0 0 */ A(0,0)*A(0,0) + A(1,0)*A(1,0) + A(2,0)*A(2,0),
+                    /* 1 1 */ A(0,1)*A(0,1) + A(1,1)*A(1,1) + A(2,1)*A(2,1),
+                    /* 2 2 */ A(0,2)*A(0,2) + A(1,2)*A(1,2) + A(2,2)*A(2,2),
+                    /* 0 1 */ A(0,0)*A(0,1) + A(1,0)*A(1,1) + A(2,0)*A(2,1),
+                    /* 1 2 */ A(0,1)*A(0,2) + A(1,1)*A(1,2) + A(2,1)*A(2,2),
+                    /* 0 2 */ A(0,0)*A(0,2) + A(1,0)*A(1,2) + A(2,0)*A(2,2));
 }
 
 /*
