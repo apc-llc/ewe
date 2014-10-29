@@ -100,6 +100,18 @@
      variable = dispx
      function = pull
    [../]
+   [./bc_fixy]
+     type = DirichletBC
+     boundary = 'bottom'
+     variable = dispy
+     value = 0.
+   [../]
+   [./bc_fixz]
+     type = DirichletBC
+     boundary = 'bottom'
+     variable = dispz
+     value = 0.
+   [../]
 
    [./bc_dispx]
      type = DirichletBC

@@ -94,11 +94,23 @@
 []
 
 [BCs]
+   [./bc_fixx]
+     type = DirichletBC
+     boundary = 'bottom'
+     variable = dispx
+     value = 0.
+   [../]
    [./bc_pull]
      type = FunctionDirichletBC
      boundary = 'bottom'
      variable = dispy
      function = pull
+   [../]
+   [./bc_fixz]
+     type = DirichletBC
+     boundary = 'bottom'
+     variable = dispz
+     value = 0.
    [../]
 
    [./bc_dispx]

@@ -96,26 +96,38 @@
 [BCs]
    [./bc_pull]
      type = FunctionDirichletBC
-     boundary = 'bottom'
+     boundary = 'back'
      variable = dispx
      function = pull
+   [../]
+   [./bc_fixy]
+     type = DirichletBC
+     boundary = 'back'
+     variable = dispy
+     value = 0.
+   [../]
+   [./bc_fixz]
+     type = DirichletBC
+     boundary = 'back'
+     variable = dispz
+     value = 0.
    [../]
 
    [./bc_dispx]
      type = DirichletBC
-     boundary = 'top'
+     boundary = 'front'
      variable = dispx
      value = 0.
    [../]
    [./bc_y]
      type = DirichletBC
-     boundary = 'top'
+     boundary = 'front'
      variable = dispy
      value = 0.
    [../]
    [./bc_dispz]
      type = DirichletBC
-     boundary = 'top'
+     boundary = 'front'
      variable = dispz
      value = 0.
    [../]

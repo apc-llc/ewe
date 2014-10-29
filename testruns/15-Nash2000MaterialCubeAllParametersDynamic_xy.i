@@ -94,11 +94,23 @@
 []
 
 [BCs]
+   [./bc_fixx]
+     type = DirichletBC
+     boundary = 'left'
+     variable = dispx
+     value = 0.
+   [../]
    [./bc_pull]
      type = FunctionDirichletBC
      boundary = 'left'
      variable = dispy
      function = pull
+   [../]
+   [./bc_fixz]
+     type = DirichletBC
+     boundary = 'left'
+     variable = dispz
+     value = 0.
    [../]
 
    [./bc_dispx]
