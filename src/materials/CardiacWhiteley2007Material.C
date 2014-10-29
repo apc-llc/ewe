@@ -178,7 +178,7 @@ CardiacWhiteley2007Material::computeQpProperties()
   //    D asymmetric wrt. (MN)<->(PQ), i.e. we need the full fourth order tensor here.
   _stress[_qp] = STtoRTV(T);
   _stress_derivative[_qp] = STtoSGET(D);
-  /*
+
   if (_has_p || _has_Ta || _has_Ta_function) {
     // Inverse of the Cauchy Green deformation tensor (note that det(C_fibre) = det(C) = det(F^T)*det(F) = det(F)^2, since det(R)==1 )
     const SymmTensor Cinv(symmInv(C, _J[_qp]*_J[_qp]));
@@ -211,8 +211,8 @@ CardiacWhiteley2007Material::computeQpProperties()
       // representation of active tension in fibre direction in outer coordinate system
       const RealTensorValue Ta_outer( R * RealTensorValue(Ta, 0, 0, 0, 0, 0, 0, 0, 0) * R.transpose() );
       _stress[_qp] += Ta_outer*Cinv_outer;
-      // _stress_derivative[_qp](MNPQ) -= 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
-      // Ta_outer is stull a diagonal matrix, i.e. there is a delta(MN) involved
+      // _stress_derivative[_qp](MNPQ) += 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
+      // Ta_outer is still a diagonal matrix, i.e. there is a delta(MN) involved
       // furthermore, Cinv_outer is symmetric
       for (int M=0;M<3;M++)
         for (int P=0;P<3;P++)
@@ -220,6 +220,6 @@ CardiacWhiteley2007Material::computeQpProperties()
             _stress_derivative[_qp](M,M,P,Q) += 2 * Ta_outer(M,M) * Cinv_outer(M,P) * Cinv_outer(Q,M);
     }
   }
-  */
+
 }
 

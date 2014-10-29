@@ -30,11 +30,6 @@
 []
 
 [Kernels]
-  [./force_dispx]
-    type      = UserForcingFunction
-    variable  = dispx
-    function  = force_func_dispx
-  [../]
   [./stressdiv_dispx]
     type      = CardiacKirchhoffStressDivergence
     use_displaced_mesh = false
@@ -45,11 +40,6 @@
     dispz     = dispz
   [../]
 
-  [./force_dispy]
-    type      = UserForcingFunction
-    variable  = dispy
-    function  = force_func_dispy
-  [../]
   [./stressdiv_dispy]
     type      = CardiacKirchhoffStressDivergence
     use_displaced_mesh = false
@@ -60,11 +50,6 @@
     dispz     = dispz
   [../]
 
-  [./force_dispz]
-    type      = UserForcingFunction
-    variable  = dispz
-    function  = force_func_dispz
-  [../]
   [./stressdiv_dispz]
     type      = CardiacKirchhoffStressDivergence
     use_displaced_mesh = false
@@ -114,21 +99,28 @@
 []
 
 [BCs]
+   [./bc_dispx_back]
+     type = DirichletBC
+     boundary = 'back'
+     variable = dispx
+     value = 0.2
+   [../]
+
    [./bc_dispx]
      type = DirichletBC
-     boundary = 'top bottom front back'
+     boundary = 'front'
      variable = dispx
      value = 0.
    [../]
    [./bc_y]
      type = DirichletBC
-     boundary = 'left right front back'
+     boundary = 'front'
      variable = dispy
      value = 0.
    [../]
    [./bc_dispz]
      type = DirichletBC
-     boundary = 'left right top bottom'
+     boundary = 'front'
      variable = dispz
      value = 0.
    [../]
