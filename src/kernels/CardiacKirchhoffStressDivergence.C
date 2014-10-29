@@ -41,36 +41,6 @@ Real CardiacKirchhoffStressDivergence::fullContraction(const RealTensorValue & t
   return res;
 }
 
-Real CardiacKirchhoffStressDivergence::fullContraction(const SymmGenericElasticityTensor & t,
-                                                       const RealVectorValue & v1,
-                                                       const RealVectorValue & v2,
-                                                       const RealVectorValue & v3,
-                                                       const RealVectorValue & v4) const
-{
-  Real res(0);
-  for (unsigned int M=0;M<3;M++)
-    for (unsigned int N=0;N<3;N++)
-      for (unsigned int P=0;P<3;P++)
-        for (unsigned int Q=0;Q<3;Q++)
-          res += t(M,N,P,Q)*v1(M)*v2(N)*v3(P)*v4(Q);
-  return res;
-}
-
-Real CardiacKirchhoffStressDivergence::doubleLeftSymmDoubleRightContraction(const SymmGenericElasticityTensor & t,
-                                                                            const RealVectorValue & v1,
-                                                                            const RealVectorValue & v2,
-                                                                            const RealVectorValue & v3,
-                                                                            const RealVectorValue & v4) const
-{
-  Real res(0);
-  for (unsigned int M=0;M<3;M++)
-    for (unsigned int N=0;N<3;N++)
-      for (unsigned int P=0;P<3;P++)
-        for (unsigned int Q=0;Q<3;Q++)
-          res += t(M,N,P,Q) * v1(M) * v2(N) * 0.5*(v3(P)*v4(Q)+v3(Q)*v4(P));
-  return res;
-}
-
 Real
 CardiacKirchhoffStressDivergence::computeQpResidual()
 {
@@ -92,10 +62,8 @@ CardiacKirchhoffStressDivergence::computeQpJacobian()
   grad_xi(_component) += 1;
 
   return fullContraction(_stress[_qp], _grad_test[_i][_qp], _grad_phi[_j][_qp])
-    + doubleLeftSymmDoubleRightContraction(_stress_derivative[_qp],
-                                           _grad_test[_i][_qp],
-                                           grad_xi,
-                                           _grad_phi[_j][_qp], grad_xi );
+    + _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(_grad_test[_i][_qp], grad_xi,
+                                                                   _grad_phi[_j][_qp], grad_xi );
 }
 
 Real
@@ -111,10 +79,8 @@ CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
     RealVectorValue grad_xi(_grad_u[_qp]);
     grad_xi(_component) += 1;
 
-    return doubleLeftSymmDoubleRightContraction(_stress_derivative[_qp],
-                                                _grad_test[_i][_qp],
-                                                grad_xi,
-                                                _grad_phi[_j][_qp], grad_xi );
+    return _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(_grad_test[_i][_qp], grad_xi,
+                                                                        _grad_phi[_j][_qp], grad_xi );
   } else
     return 0;
 }
