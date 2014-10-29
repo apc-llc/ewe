@@ -80,10 +80,17 @@ const SymmGenericElasticityTensor CardiacNash2000Material::STtoSGET(const SymmTe
 
 /*
  * computes outer.transpose() * inner * outer
- * TODO: this should be possible in a more efficient way as the resulting matrix is symmetric
  */
 const SymmTensor CardiacNash2000Material::symmProd(const RealTensorValue & outer, const SymmTensor & inner) const
 {
+  SymmTensor res;
+  for (unsigned int i=0;i<3;i++)
+    for (unsigned int j=i;j<3;j++) {
+      Real s(0);
+      for (unsigned int k=0;k<3;k++)
+        s += outer(k,i) * ( inner(k,0)*outer(0,j) + inner(k,1)*outer(1,j) + inner(k,2)*outer(2,j) );
+      res(i,j) = s;
+    }
   RealTensorValue r(outer.transpose() * STtoRTV(inner) * outer);
   return SymmTensor(r(0,0), r(1,1), r(2,2), r(0,1), r(1,2), r(0,2) );
 }
