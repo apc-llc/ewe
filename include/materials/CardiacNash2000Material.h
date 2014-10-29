@@ -1,28 +1,28 @@
 /****************************************************************/
 /*                                                              */
 /*  Implementation of Cardiac Tissue elasticity as given in     */
-/*  [Whiteley2007]                                              */
+/*  [Nash2000]                                              */
 /*                                                              */
 /****************************************************************/
 
-#ifndef CardiacWhiteley2007Material_H
-#define CardiacWhiteley2007Material_H
+#ifndef CardiacNash2000Material_H
+#define CardiacNash2000Material_H
 
 #include "Material.h"
 #include "SymmTensor.h"
 #include "SymmGenericElasticityTensor.h"
 
 //Forward Declarations
-class CardiacWhiteley2007Material;
+class CardiacNash2000Material;
 class SymmElasticityTensor;
 
 template<>
-InputParameters validParams<CardiacWhiteley2007Material>();
+InputParameters validParams<CardiacNash2000Material>();
 
-class CardiacWhiteley2007Material : public Material
+class CardiacNash2000Material : public Material
 {
 public:
-  CardiacWhiteley2007Material(const std::string & name,
+  CardiacNash2000Material(const std::string & name,
                           InputParameters parameters);
 
 protected:
@@ -56,4 +56,4 @@ protected:
   const SymmTensor _id;
 };
 
-#endif //CardiacWhiteley2007Material_H
+#endif //CardiacNash2000Material_H

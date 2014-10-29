@@ -1,18 +1,18 @@
 /****************************************************************/
 /*                                                              */
 /*  Implementation of Cardiac Tissue elasticity as given in     */
-/*  [Whiteley2007]                                              */
+/*  [Nash2000]                                              */
 /*                                                              */
 /****************************************************************/
 
-#include "CardiacWhiteley2007Material.h"
+#include "CardiacNash2000Material.h"
 #include "ColumnMajorMatrix.h"
 #include "CardiacSolidMechanicsMaterial.h"
 #include "SymmOrthotropicElasticityTensor.h"
 #include "VolumetricModel.h"
 
 template<>
-InputParameters validParams<CardiacWhiteley2007Material>()
+InputParameters validParams<CardiacNash2000Material>()
 {
   InputParameters params = validParams<Material>();
   params.addRequiredCoupledVar("dispx", "The x displacement");
@@ -29,7 +29,7 @@ InputParameters validParams<CardiacWhiteley2007Material>()
   return params;
 }
 
-CardiacWhiteley2007Material::CardiacWhiteley2007Material(const std::string  & name,
+CardiacNash2000Material::CardiacNash2000Material(const std::string  & name,
                                                  InputParameters parameters)
   :Material(name, parameters),
    _grad_dispx(coupledGradient("dispx")),
@@ -51,10 +51,10 @@ CardiacWhiteley2007Material::CardiacWhiteley2007Material(const std::string  & na
    _id(1, 1, 1, 0, 0, 0)
 {
   if (_has_Ta && _has_Ta_function)
-    mooseError("CardiacWhiteley2007Material: Only Ta or Ta_function may be given, not both of them.");
+    mooseError("CardiacNash2000Material: Only Ta or Ta_function may be given, not both of them.");
 }
 
-const RealTensorValue CardiacWhiteley2007Material::STtoRTV(const SymmTensor & A) const
+const RealTensorValue CardiacNash2000Material::STtoRTV(const SymmTensor & A) const
 {
   RealTensorValue B;
   B(0,0) = A(0,0);
@@ -66,7 +66,7 @@ const RealTensorValue CardiacWhiteley2007Material::STtoRTV(const SymmTensor & A)
   return B;
 }
 
-const SymmGenericElasticityTensor CardiacWhiteley2007Material::STtoSGET(const SymmTensor & A) const
+const SymmGenericElasticityTensor CardiacNash2000Material::STtoSGET(const SymmTensor & A) const
 {
   SymmGenericElasticityTensor B;
   B(0,0,0,0) = A(0,0);
@@ -82,7 +82,7 @@ const SymmGenericElasticityTensor CardiacWhiteley2007Material::STtoSGET(const Sy
  * computes outer.transpose() * inner * outer
  * TODO: this should be possible in a more efficient way as the resulting matrix is symmetric
  */
-const SymmTensor CardiacWhiteley2007Material::symmProd(const RealTensorValue & outer, const SymmTensor & inner) const
+const SymmTensor CardiacNash2000Material::symmProd(const RealTensorValue & outer, const SymmTensor & inner) const
 {
   RealTensorValue r(outer.transpose() * STtoRTV(inner) * outer);
   return SymmTensor(r(0,0), r(1,1), r(2,2), r(0,1), r(1,2), r(0,2) );
@@ -92,7 +92,7 @@ const SymmTensor CardiacWhiteley2007Material::symmProd(const RealTensorValue & o
  * computes outer.transpose() * outer
  * TODO: this should be possible in a more efficient way as the resulting matrix is symmetric
  */
-const SymmTensor CardiacWhiteley2007Material::symmProd(const RealTensorValue & outer) const
+const SymmTensor CardiacNash2000Material::symmProd(const RealTensorValue & outer) const
 {
   RealTensorValue r(outer.transpose() * outer);
   return SymmTensor(r(0,0), r(1,1), r(2,2), r(0,1), r(1,2), r(0,2) );
@@ -101,7 +101,7 @@ const SymmTensor CardiacWhiteley2007Material::symmProd(const RealTensorValue & o
 /*
  * computes C^-1 using the already known det(C)
  */
-const SymmTensor CardiacWhiteley2007Material::symmInv(const SymmTensor & C, const Real det) const
+const SymmTensor CardiacNash2000Material::symmInv(const SymmTensor & C, const Real det) const
 {
   SymmTensor Cinv(/* 00 */ C(0,0)*C(1,1)-C(1,2)*C(1,2),
                   /* 11 */ C(0,0)*C(0,0)-C(0,2)*C(0,2),
@@ -113,7 +113,7 @@ const SymmTensor CardiacWhiteley2007Material::symmInv(const SymmTensor & C, cons
 }
 
 void
-CardiacWhiteley2007Material::computeQpProperties()
+CardiacNash2000Material::computeQpProperties()
 {
   // TODO: verify that all rotations are done in the correct direction, i.e. where do you have to use _Rf or _Rf.transpose() ?
   const RealTensorValue R(1,0,0,0,1,0,0,0,1);//TODO: add rotation again (_Rf[_qp]);
@@ -157,7 +157,7 @@ CardiacWhiteley2007Material::computeQpProperties()
         const Real b(_b(M,N));
         const Real d( a - e );
         if (d <= 0)
-          mooseError("CardiacWhiteley2007Material: E_{MN} >= a_{MN} - the strain is too large for this model");
+          mooseError("CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model");
         const Real f( b*e/d );
         const Real g( k*pow(d,-b) );
 

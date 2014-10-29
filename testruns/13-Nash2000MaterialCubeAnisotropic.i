@@ -30,6 +30,11 @@
 []
 
 [Kernels]
+  [./force_dispx]
+    type      = UserForcingFunction
+    variable  = dispx
+    function  = force_func_dispx
+  [../]
   [./stressdiv_dispx]
     type      = CardiacKirchhoffStressDivergence
     use_displaced_mesh = false
@@ -40,6 +45,11 @@
     dispz     = dispz
   [../]
 
+  [./force_dispy]
+    type      = UserForcingFunction
+    variable  = dispy
+    function  = force_func_dispy
+  [../]
   [./stressdiv_dispy]
     type      = CardiacKirchhoffStressDivergence
     use_displaced_mesh = false
@@ -50,6 +60,11 @@
     dispz     = dispz
   [../]
 
+  [./force_dispz]
+    type      = UserForcingFunction
+    variable  = dispz
+    function  = force_func_dispz
+  [../]
   [./stressdiv_dispz]
     type      = CardiacKirchhoffStressDivergence
     use_displaced_mesh = false
@@ -84,14 +99,14 @@
   [../]
 
   [./cardiac_material]
-    type = CardiacWhiteley2007Material
+    type = CardiacNash2000Material
     block = 0
     use_displaced_mesh = false
     # material parameters in the order 11 22 33 12 23 31 (symmetric)
-    # taken from [Nash & Hunter, 2000], Table I
-    k_MN = '1.937 0.028 0.310 1.000 1.000 1.000'
-    a_MN = '0.523 0.681 1.037 0.731 0.886 0.731'
-    b_MN = '1.351 5.991 0.398 2.000 2.000 2.000'
+    # These lead to T(MN)=delta(MN)
+    k_MN = '-100. -50. -10.  0.  0.  0.'
+    a_MN = '   0.   0.   0.  0.  0.  0.'
+    b_MN = '   1.   1.   1.  1.  1.  1.'
     dispx      = dispx
     dispy      = dispy
     dispz      = dispz
@@ -99,28 +114,21 @@
 []
 
 [BCs]
-   [./bc_dispx_back]
-     type = DirichletBC
-     boundary = 'back'
-     variable = dispx
-     value = 0.2
-   [../]
-
    [./bc_dispx]
      type = DirichletBC
-     boundary = 'front'
+     boundary = 'top bottom front back'
      variable = dispx
      value = 0.
    [../]
    [./bc_y]
      type = DirichletBC
-     boundary = 'front'
+     boundary = 'left right front back'
      variable = dispy
      value = 0.
    [../]
    [./bc_dispz]
      type = DirichletBC
-     boundary = 'front'
+     boundary = 'left right top bottom'
      variable = dispz
      value = 0.
    [../]

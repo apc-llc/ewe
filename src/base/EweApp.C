@@ -13,7 +13,7 @@
 #include "CardiacKirchhoffStressDivergence.h"
 #include "CardiacLinearIsotropicMaterial.h"
 #include "CardiacLinearOrthotropicMaterial.h"
-#include "CardiacWhiteley2007Material.h"
+#include "CardiacNash2000Material.h"
 #include "PressureLagrangeMultiplier.h"
 #include "DisplacementAux.h"
 #include "AnisotropicGradientShift.h"
@@ -76,7 +76,7 @@ EweApp::registerObjects(Factory & factory)
   registerMaterial(CardiacPropertiesMaterial);
   registerMaterial(CardiacLinearIsotropicMaterial);
   registerMaterial(CardiacLinearOrthotropicMaterial);
-  registerMaterial(CardiacWhiteley2007Material);
+  registerMaterial(CardiacNash2000Material);
 
   registerKernel(ElectrocardioTimeDerivative);
   registerKernel(ElectrocardioDiffusion);

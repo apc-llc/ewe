@@ -99,14 +99,14 @@
   [../]
 
   [./cardiac_material]
-    type = CardiacWhiteley2007Material
+    type = CardiacNash2000Material
     block = 0
     use_displaced_mesh = false
     # material parameters in the order 11 22 33 12 23 31 (symmetric)
     # These lead to T(MN)=delta(MN)
-    k_MN = '-100. -50. -10.  0.  0.  0.'
-    a_MN = '   0.   0.   0.  0.  0.  0.'
-    b_MN = '   1.   1.   1.  1.  1.  1.'
+    k_MN = '-1. -1. -1.  0.  0.  0.'
+    a_MN = ' 0.  0.  0.  0.  0.  0.'
+    b_MN = ' 1.  1.  1.  1.  1.  1.'
     dispx      = dispx
     dispy      = dispy
     dispz      = dispz

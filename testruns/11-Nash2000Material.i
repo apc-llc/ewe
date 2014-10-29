@@ -137,7 +137,7 @@
   [../]
 
   [./linear_orthotropic]
-    type = CardiacWhiteley2007Material
+    type = CardiacNash2000Material
     block = 1
     use_displaced_mesh = false
     # material parameters in the order 11 22 33 12 23 31 (symmetric), taken from [Nash & Hunter, 2000], Table I
