@@ -82,6 +82,7 @@
     dispy      = dispy
     dispz      = dispz
     outputs    = all
+    output_properties = 'Kirchhoff_stress'
   [../]
 []
 

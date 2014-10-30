@@ -66,7 +66,6 @@
     type = CardiacFibresMaterial
     fixed_R = '1 0 0 0 1 0 0 0 1'
     block = 0
-    outputs = all
   [../]
 
   [./cardiac_material]
@@ -82,6 +81,7 @@
     dispy      = dispy
     dispz      = dispz
     outputs    = all
+    output_properties = 'Kirchhoff_stress'
   [../]
 []
 

@@ -95,7 +95,6 @@
   [./cardiac_properties]
     type = CardiacFibresMaterial
     block = 0
-    outputs = all
   [../]
 
   [./cardiac_material]
