@@ -221,7 +221,7 @@ CardiacNash2000Material::computeQpProperties()
         Ta = _Ta_function->value(_t, _q_point[_qp]);
       // representation of active tension in fibre direction in outer coordinate system
       const RealTensorValue Ta_outer( R * RealTensorValue(Ta, 0, 0, 0, 0, 0, 0, 0, 0) * R.transpose() );
-      _stress[_qp] += Ta_outer*Cinv_outer;
+      _stress[_qp] -= Ta_outer*Cinv_outer;
       // _stress_derivative[_qp](MNPQ) += 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
       // Ta_outer is still a diagonal matrix, i.e. there is a delta(MN) involved
       // furthermore, Cinv_outer is symmetric
