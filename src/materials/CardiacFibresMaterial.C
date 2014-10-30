@@ -25,7 +25,7 @@ CardiacFibresMaterial::CardiacFibresMaterial(const std::string & name,
   _fixed_R(_has_fixed_R ? getParam<RealTensorValue>("fixed_R") : _id)
 {
   if (_has_fixed_R && _fixed_R.det() != 1)
-    mooseError("CardiacFibresMaterial: dixed_R has been given externally, but it is not a pure rotation matrix: det[fixed_R] != 1");
+    mooseError("CardiacFibresMaterial: fixed_R has been given externally, but it is not a pure rotation matrix: det[fixed_R] != 1");
 }
 
 void CardiacFibresMaterial::computeQpProperties()
