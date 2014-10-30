@@ -64,7 +64,7 @@ surface_to_volume = 800.0
 
 [Materials]
   [./cardiac_properties]
-   type = CardiacPropertiesMaterial
+   type = CardiacFibresMaterial
    block = all
    outputs = all
    #PropagParams = '+F Test.par'

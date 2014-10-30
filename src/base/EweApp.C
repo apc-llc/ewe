@@ -25,6 +25,7 @@
 #include "ElectrocardioConductivity.h"
 #include "ElectrocardioIC.h"
 #include "CardiacPropertiesMaterial.h"
+#include "CardiacFibresMaterial.h"
 
 template<>
 InputParameters validParams<EweApp>()
@@ -77,6 +78,7 @@ EweApp::registerObjects(Factory & factory)
   registerMaterial(CardiacLinearIsotropicMaterial);
   registerMaterial(CardiacLinearOrthotropicMaterial);
   registerMaterial(CardiacNash2000Material);
+  registerMaterial(CardiacFibresMaterial);
 
   registerKernel(ElectrocardioTimeDerivative);
   registerKernel(ElectrocardioDiffusion);

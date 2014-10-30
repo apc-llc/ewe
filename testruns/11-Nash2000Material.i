@@ -131,7 +131,7 @@
 
 [Materials]
   [./cardiac_properties]
-   type = CardiacPropertiesMaterial
+   type = CardiacFibresMaterial
    block = 1
    outputs = all
   [../]
