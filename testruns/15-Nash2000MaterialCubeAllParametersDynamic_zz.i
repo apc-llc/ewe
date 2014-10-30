@@ -64,6 +64,7 @@
 [Materials]
   [./cardiac_properties]
     type = CardiacFibresMaterial
+    fixed_R = '1 0 0 0 1 0 0 0 1'
     block = 0
     outputs = all
   [../]

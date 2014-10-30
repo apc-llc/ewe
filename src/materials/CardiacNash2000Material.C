@@ -127,7 +127,7 @@ void
 CardiacNash2000Material::computeQpProperties()
 {
   // TODO: verify that all rotations are done in the correct direction, i.e. where do you have to use _Rf or _Rf.transpose() ?
-  const RealTensorValue R(1,0,0,0,1,0,0,0,1);//TODO: add rotation again (_Rf[_qp]);
+  const RealTensorValue R(_Rf[_qp]);
 
   // local deformation gradient tensor: F(ij) = dx(i)/dX(j)
   // Note that the nonlinear variables are displacements u(i)=x(i)-X(i), thus dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
