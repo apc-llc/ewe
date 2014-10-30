@@ -116,6 +116,14 @@
    [../]
 []
 
+[Postprocessors]
+  [./elastic_energy]
+    type = ElementIntegralMaterialProperty
+    execute_on = timestep
+    mat_prop = elastic_energy_density
+  [../]
+[]
+
 [Executioner]
   type = Transient
 

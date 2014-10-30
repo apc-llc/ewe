@@ -44,6 +44,7 @@ protected:
   MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative;
 
   MaterialProperty<Real> & _J;
+  MaterialProperty<Real> & _W;
   MaterialProperty<RealTensorValue> & _Rf;
   bool _has_Ta;
   VariableValue & _Ta;

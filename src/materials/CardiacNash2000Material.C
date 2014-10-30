@@ -41,6 +41,7 @@ CardiacNash2000Material::CardiacNash2000Material(const std::string  & name,
    _stress(declareProperty<RealTensorValue>("Kirchhoff_stress")),
    _stress_derivative(declareProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
    _J(declareProperty<Real>("det_displacement_gradient")),
+   _W(declareProperty<Real>("elastic_energy_density")),
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
    _has_Ta(isCoupled("Ta")),
    _Ta(_has_Ta ? coupledValue("Ta") : _zero),
@@ -149,21 +150,25 @@ CardiacNash2000Material::computeQpProperties()
   // We make use of the symmetry of T and the fact that for our W, dT(MN)/dE(PQ) \propto delta(MP)delta(PQ) if p and Ta are omitted.
   // Thus, a symmetric second-order tensor is sufficient here. Ta and p will be added later, again.
   SymmTensor D;
+  // We will sum up the elastic energy contributions inside the loop
+  _W[_qp] = 0;
 
   for (int M=0;M<3;M++)
     for (int N=M;N<3;N++)
     {
       const Real k(_k(M,N));
+      const Real e(E(M,N));
 
       if (k==0) { // summand in W does not contribute at all
         T(M,N) = 0.;
         D(M,N) = 0.;
+        _W[_qp] += 0.;
       } else if (k<0) {
         // negative k values force a fallback to the linear case
         T(M,N) = -k;
-        D(M,N) =  0;
+        D(M,N) =  0.;
+        _W[_qp] += -k*e;
       } else /* k>0 */ {
-        const Real e(E(M,N));
         const Real a(_a(M,N));
         const Real b(_b(M,N));
         const Real d( a - e );
@@ -174,6 +179,8 @@ CardiacNash2000Material::computeQpProperties()
 
         T(M,N) = g * e * ( 2+f );
         D(M,N) = g * ( 2 + (4+e/d+f)*f );
+
+        _W[_qp] += (M==N ? 1. : 2. ) * g*e*e;
       }
     }
 
@@ -211,6 +218,8 @@ CardiacNash2000Material::computeQpProperties()
               _stress_derivative[_qp](M,N,Q,P) += Tp;
               _stress_derivative[_qp](N,M,Q,P) += Tp;
             }
+      // TODO: how does this go into the elastic energy ?
+      // _W[_qp] += ??
     }
     // Add active tension in fibre direction
     if (_has_Ta || _has_Ta_function) {
@@ -229,6 +238,8 @@ CardiacNash2000Material::computeQpProperties()
         for (int P=0;P<3;P++)
           for (int Q=0;Q<3;Q++)
             _stress_derivative[_qp](M,M,P,Q) += 2 * Ta_outer(M,M) * Cinv_outer(M,P) * Cinv_outer(Q,M);
+      // TODO: how does this go into the elastic energy ?
+      // _W[_qp] += ??
     }
   }
 
