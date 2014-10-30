@@ -1,0 +1,56 @@
+[Tests]
+  [./xx]
+    type = 'ExodiffAndRunException'
+    expect_err = 'CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model'
+    input = 'xx.i'
+    exodiff = 'xx_out.e'
+  [../]
+  [./xy]
+    type = 'ExodiffAndRunException'
+    expect_err = 'CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model'
+    input = 'xy.i'
+    exodiff = 'xy_out.e'
+  [../]
+  [./xz]
+    type = 'ExodiffAndRunException'
+    expect_err = 'CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model'
+    input = 'xz.i'
+    exodiff = 'xz_out.e'
+  [../]
+  [./yx]
+    type = 'ExodiffAndRunException'
+    expect_err = 'CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model'
+    input = 'yx.i'
+    exodiff = 'yx_out.e'
+  [../]
+  [./yy]
+    type = 'ExodiffAndRunException'
+    expect_err = 'CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model'
+    input = 'yy.i'
+    exodiff = 'yy_out.e'
+  [../]
+  [./yz]
+    type = 'ExodiffAndRunException'
+    expect_err = 'CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model'
+    input = 'yz.i'
+    exodiff = 'yz_out.e'
+  [../]
+  [./zx]
+    type = 'ExodiffAndRunException'
+    expect_err = 'CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model'
+    input = 'zx.i'
+    exodiff = 'zx_out.e'
+  [../]
+  [./zy]
+    type = 'ExodiffAndRunException'
+    expect_err = 'CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model'
+    input = 'zy.i'
+    exodiff = 'zy_out.e'
+  [../]
+  [./zz]
+    type = 'ExodiffAndRunException'
+    expect_err = 'CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model'
+    input = 'zz.i'
+    exodiff = 'zz_out.e'
+  [../]
+[]
