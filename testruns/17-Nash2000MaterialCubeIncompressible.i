@@ -28,10 +28,10 @@
     family = LAGRANGE
   [../]
 
-  #[./hydrostatic_pressure]
-  #  order = FIRST
-  #  family = SCALAR
-  #[../]
+  [./hydrostatic_pressure]
+    order = FIRST
+    family = SCALAR
+  [../]
 []
 
 [Kernels]
@@ -64,12 +64,14 @@
     dispy     = dispy
     dispz     = dispz
   [../]
+[]
 
-  #[./incompressibility]
-  #  type = CardiacIncompressibilityLagrangeMultiplier
-  #  variable = hydrostatic_pressure
-  #  volume_ratio_postprocessor = volume_ratio
-  #[../]
+[ScalarKernels]
+  [./incompressibility]
+    type = CardiacIncompressibilityLagrangeMultiplier
+    variable = hydrostatic_pressure
+    volume_ratio_postprocessor = volume_ratio
+  [../]
 []
 
 [Materials]
@@ -94,7 +96,7 @@
     outputs     = all
     output_properties = 'Kirchhoff_stress'
     Ta_function = active_tension
-    #p = hydrostatic_pressure
+    p = hydrostatic_pressure
   [../]
 []
 
