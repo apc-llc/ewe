@@ -24,6 +24,7 @@ protected:
   virtual Real computeQpJacobian();
   virtual Real computeQpOffDiagJacobian(unsigned int jvar);
 
+  MaterialProperty<RealTensorValue> & _F;
   MaterialProperty<Real> & _J;
 
 private:

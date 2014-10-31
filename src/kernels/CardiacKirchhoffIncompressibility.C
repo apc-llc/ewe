@@ -17,6 +17,7 @@ InputParameters validParams<CardiacKirchhoffIncompressibility>()
 
 CardiacKirchhoffIncompressibility::CardiacKirchhoffIncompressibility(const std::string & name, InputParameters parameters)
   :Kernel(name, parameters),
+   _F(getMaterialProperty<RealTensorValue>("displacement_gradient")),
    _J(getMaterialProperty<Real>("det_displacement_gradient")),
    _xdisp_var(coupled("dispx")),
    _ydisp_var(coupled("dispy")),
@@ -38,19 +39,17 @@ CardiacKirchhoffIncompressibility::computeQpJacobian()
 Real
 CardiacKirchhoffIncompressibility::computeQpOffDiagJacobian(unsigned int jvar)
 {
-/*
-  mooseAssert( ~( jvar == _xdisp_var && _component==0
-               || jvar == _ydisp_var && _component==1
-               || jvar == _zdisp_var && _component==2), "CardiacKirchhoffIncompressibility::computeQpOffDiagJacobian() called for a diagonal element. Presumably, _component is wrong here.");
+  unsigned int a, b;
 
-  if (jvar == _xdisp_var || jvar == _ydisp_var || jvar == _zdisp_var) {
-    // nonlinear variables are displacements u(i)=x(i)-X(i)
-    // However, we do need the deformation gradient here: dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
-    RealVectorValue grad_xi(_grad_u[_qp]);
-    grad_xi(_component) += 1;
+  if (jvar == _xdisp_var) {
+    a=1; b=2;
+  } else if (jvar == _ydisp_var) {
+    a=2; b=0;
+  } else if (jvar == _zdisp_var) {
+    a=0; b=1;
+  } else return 0.;
 
-    return _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(_grad_test[_i][_qp], grad_xi,
-                                                                        _grad_phi[_j][_qp], grad_xi );
-  } else
-*/    return 0;
+  return _grad_phi[_j][_qp] *
+    (  RealVectorValue(_F[_qp](a,1)*_F[_qp](b,2), _F[_qp](a,2)*_F[_qp](b,0), _F[_qp](a,0)*_F[_qp](b,1))
+     - RealVectorValue(_F[_qp](2,1)*_F[_qp](b,1), _F[_qp](a,0)*_F[_qp](b,2), _F[_qp](a,1)*_F[_qp](b,0)));
 }
