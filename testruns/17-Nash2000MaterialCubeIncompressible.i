@@ -28,10 +28,10 @@
     family = LAGRANGE
   [../]
 
-  [./hydrostatic_pressure]
-    order = FIRST
-    family = SCALAR
-  [../]
+  #[./hydrostatic_pressure]
+  #  order = FIRST
+  #  family = SCALAR
+  #[../]
 []
 
 [Kernels]
@@ -65,13 +65,11 @@
     dispz     = dispz
   [../]
 
-  [./incompressibility]
-    type = CardiacKirchhoffIncompressibility
-    variable = hydrostatic_pressure
-    dispx    = dispx
-    dispy    = dispy
-    dispz    = dispz
-  [../]
+  #[./incompressibility]
+  #  type = CardiacIncompressibilityLagrangeMultiplier
+  #  variable = hydrostatic_pressure
+  #  volume_ratio_postprocessor = volume_ratio
+  #[../]
 []
 
 [Materials]
@@ -95,28 +93,21 @@
     dispz       = dispz
     outputs     = all
     output_properties = 'Kirchhoff_stress'
-    #Ta_function = active_tension
-    p = hydrostatic_pressure
+    Ta_function = active_tension
+    #p = hydrostatic_pressure
   [../]
 []
 
 [Functions]
   [./active_tension]
     type = PiecewiseLinear
-    x = '0.0 1.0'
-    y = '1.0 1.0'
+    x = '0.0  1.0'
+    y = '0.0  1.0'
     scale_factor = 1
   [../]
 []
 
 [BCs]
-   [./bc_pull]
-     type = DirichletBC
-     boundary = 'right'
-     variable = dispx
-     value = 0.2
-   [../]
-
    [./bc_dispx]
      type = DirichletBC
      boundary = 'left'
@@ -158,10 +149,30 @@
     execute_on = timestep
     mat_prop = elastic_energy_density
   [../]
+
+  [./volume_ratio]
+    type = CardiacMaterialVolumeRatioPostprocessor
+    execute_on = residual
+  [../]
 []
 
 [Executioner]
-  type = Steady
+  type = Transient
+
+  solve_type = PJFNK
+  petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
+  petsc_options_value = '201                 hypre    boomeramg      4'
+  line_search = 'none'
+
+
+  nl_rel_step_tol = 1.e-8
+  l_max_its = 100
+
+  start_time = 0
+  end_time   = 1.0
+  #num_steps = 10
+  dtmax      = 0.005
+  dtmin      = 0.005
 []
 
 [Outputs]

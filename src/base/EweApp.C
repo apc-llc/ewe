@@ -19,6 +19,7 @@
 #include "DisplacementAux.h"
 #include "AnisotropicGradientShift.h"
 #include "CardiacIncompressibilityLagrangeMultiplier.h"
+#include "CardiacMaterialVolumeRatio.h"
 
 #include "Electrocardio.h"
 #include "ElectrocardioForcing.h"
@@ -93,6 +94,8 @@ EweApp::registerObjects(Factory & factory)
   registerAux(KineticEnergyNewmarkAux);
   registerAux(KineticEnergyAux);
   registerAux(DisplacementAux);
+
+  registerPostprocessor(CardiacMaterialVolumeRatioPostprocessor);
 }
 
 void
