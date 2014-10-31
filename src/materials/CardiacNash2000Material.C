@@ -40,6 +40,7 @@ CardiacNash2000Material::CardiacNash2000Material(const std::string  & name,
    _b(SymmTensor(getParam<std::vector<Real> >("b_MN"))),
    _stress(declareProperty<RealTensorValue>("Kirchhoff_stress")),
    _stress_derivative(declareProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
+   _F(declareProperty<RealTensorValue>("displacement_gradient")),
    _J(declareProperty<Real>("det_displacement_gradient")),
    _W(declareProperty<Real>("elastic_energy_density")),
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
@@ -132,14 +133,14 @@ CardiacNash2000Material::computeQpProperties()
 
   // local deformation gradient tensor: F(ij) = dx(i)/dX(j)
   // Note that the nonlinear variables are displacements u(i)=x(i)-X(i), thus dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
-  const RealTensorValue F(_grad_dispx[_qp](0) + 1, _grad_dispx[_qp](1)    , _grad_dispx[_qp](2),
-                          _grad_dispy[_qp](0)    , _grad_dispy[_qp](1) + 1, _grad_dispy[_qp](2),
-                          _grad_dispz[_qp](0)    , _grad_dispz[_qp](1)    , _grad_dispz[_qp](2) + 1);
+  _F[_qp] = RealTensorValue(_grad_dispx[_qp](0) + 1, _grad_dispx[_qp](1)    , _grad_dispx[_qp](2),
+                            _grad_dispy[_qp](0)    , _grad_dispy[_qp](1) + 1, _grad_dispy[_qp](2),
+                            _grad_dispz[_qp](0)    , _grad_dispz[_qp](1)    , _grad_dispz[_qp](2) + 1);
   // ...its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
-  _J[_qp] = F.det();
+  _J[_qp] = _F[_qp].det();
   // From here on, we go over to fibre coordinates, i.e. for C, C^-1, E, T
   // Cauchy-Green deformation tensor in fibre coordinates: C = R^T F^T F R
-  const SymmTensor C(symmProd(R, symmProd(F)));
+  const SymmTensor C(symmProd(R, symmProd(_F[_qp])));
   // Lagrange-Green strain tensor
   const SymmTensor E( (C - _id) * 0.5 );
   
@@ -230,7 +231,7 @@ CardiacNash2000Material::computeQpProperties()
         Ta = _Ta_function->value(_t, _q_point[_qp]);
       // representation of active tension in fibre direction in outer coordinate system
       const RealTensorValue Ta_outer( R * RealTensorValue(Ta, 0, 0, 0, 0, 0, 0, 0, 0) * R.transpose() );
-      _stress[_qp] -= Ta_outer*Cinv_outer;
+      _stress[_qp] += Ta_outer*Cinv_outer;
       // _stress_derivative[_qp](MNPQ) += 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
       // Ta_outer is still a diagonal matrix, i.e. there is a delta(MN) involved
       // furthermore, Cinv_outer is symmetric

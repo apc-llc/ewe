@@ -43,6 +43,7 @@ protected:
   MaterialProperty<RealTensorValue> & _stress;
   MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative;
 
+  MaterialProperty<RealTensorValue> & _F;
   MaterialProperty<Real> & _J;
   MaterialProperty<Real> & _W;
   MaterialProperty<RealTensorValue> & _Rf;
