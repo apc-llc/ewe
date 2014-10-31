@@ -30,7 +30,7 @@
 
   [./hydrostatic_pressure]
     order = FIRST
-    fanily = SCALAR
+    family = SCALAR
   [../]
 []
 
@@ -95,7 +95,8 @@
     dispz       = dispz
     outputs     = all
     output_properties = 'Kirchhoff_stress'
-    Ta_function = active_tension
+    #Ta_function = active_tension
+    p = hydrostatic_pressure
   [../]
 []
 
@@ -103,12 +104,19 @@
   [./active_tension]
     type = PiecewiseLinear
     x = '0.0 1.0'
-    y = '0.0 25'
+    y = '1.0 1.0'
     scale_factor = 1
   [../]
 []
 
 [BCs]
+   [./bc_pull]
+     type = DirichletBC
+     boundary = 'right'
+     variable = dispx
+     value = 0.2
+   [../]
+
    [./bc_dispx]
      type = DirichletBC
      boundary = 'left'
@@ -129,6 +137,21 @@
    [../]
 []
 
+[AuxVariables]
+  [./res_dispx]
+    order = FIRST
+    family = LAGRANGE
+  []
+[]
+
+[AuxKernels]
+  [./residual_dispx]
+    type = DebugResidualAux
+    variable = res_dispx
+    debug_variable = dispx
+  []
+[]
+
 [Postprocessors]
   [./elastic_energy]
     type = ElementIntegralMaterialProperty
@@ -138,22 +161,7 @@
 []
 
 [Executioner]
-  type = Transient
-
-  solve_type = PJFNK
-  petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  petsc_options_value = '201                 hypre    boomeramg      4'
-  line_search = 'none'
-
-
-  nl_rel_step_tol = 1.e-8
-  l_max_its = 100
-
-  start_time = 0
-  end_time   = 1.0
-  #num_steps = 10
-  dtmax      = 0.005
-  dtmin      = 0.005
+  type = Steady
 []
 
 [Outputs]
