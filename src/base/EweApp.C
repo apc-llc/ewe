@@ -18,6 +18,7 @@
 #include "PressureLagrangeMultiplier.h"
 #include "DisplacementAux.h"
 #include "AnisotropicGradientShift.h"
+#include "CardiacIncompressibilityLagrangeMultiplier.h"
 
 #include "Electrocardio.h"
 #include "ElectrocardioForcing.h"
@@ -72,6 +73,8 @@ EweApp::registerObjects(Factory & factory)
   registerKernel(ElectrocardioForcing);
   registerKernel(PressureLagrangeMultiplier);
   registerKernel(AnisotropicGradientShift);
+
+  registerScalarKernel(CardiacIncompressibilityLagrangeMultiplier);
 
   registerMaterial(NewmarkMaterial);
   registerMaterial(Electrocardio);
