@@ -19,6 +19,7 @@
 #include "AnisotropicGradientShift.h"
 #include "CardiacIncompressibilityLagrangeMultiplier.h"
 #include "CardiacMaterialVolumeRatio.h"
+#include "CardiacKirchhoffIncompressibilityPenalty.h"
 
 #include "Electrocardio.h"
 #include "ElectrocardioForcing.h"
@@ -72,6 +73,7 @@ EweApp::registerObjects(Factory & factory)
   registerKernel(ElectrocardioForcing);
   registerKernel(PressureLagrangeMultiplier);
   registerKernel(AnisotropicGradientShift);
+  registerKernel(CardiacKirchhoffIncompressibilityPenalty);
 
   registerScalarKernel(CardiacIncompressibilityLagrangeMultiplier);
 
