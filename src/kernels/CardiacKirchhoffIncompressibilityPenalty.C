@@ -37,7 +37,6 @@ CardiacKirchhoffIncompressibilityPenalty::computeQpResidual()
 Real
 CardiacKirchhoffIncompressibilityPenalty::computeQpJacobian()
 {
-  return 0;
   return JacobianElement(_component);
 }
 
