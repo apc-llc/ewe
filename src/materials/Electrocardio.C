@@ -25,7 +25,7 @@ Electrocardio::Electrocardio(const std::string & name,
 {
   
   // Create pointer to a Bernus model object using the factory class
-  _ionmodel = IionmodelFactory::factory(IionmodelFactory::bernus, & gates_qp, & gates_dt_qp);
+  _ionmodel = IionmodelFactory::factory(IionmodelFactory::BERNUS, & gates_qp, & gates_dt_qp);
   
   std::cout << "Constructing Material Electrocardio..." << std::endl;
 }
