@@ -13,6 +13,19 @@ class SymmTensor;
 template<>
 InputParameters validParams<CardiacKirchhoffIncompressibilityPenalty>();
 
+/**
+ * Kernel for adding a penalty term to a variable's residual for enforcing incompressibility.
+ *
+ * The kernel implements \f$\gamma(\psi_i,J-1)\f$ with 
+ * \f$J=\mathrm{det}\mathbf{F}=\mathrm{det}\frac{\partial x_M}{\partial X_M}\f$,
+ * the displaced coordinates \f$x_{M=1\ldots3}\f$ and 
+ * the coordinates in the reference frame \f$X_{N=1\ldots3}\f$.
+ *
+ * The value for \f$J\f$ is fetched from a CardiacNash2000Material instance
+ * via its `det_displacement_gradient` MaterialProperty.
+ * Furthermore, the `displacement_gradient` MaterialProperty is used in the
+ * kernel's Jacobian computation.
+ */
 class CardiacKirchhoffIncompressibilityPenalty : public Kernel
 {
 public:
@@ -26,15 +39,15 @@ protected:
 
   Real JacobianElement(unsigned int comp);
 
-  MaterialProperty<RealTensorValue> & _F;
-  MaterialProperty<Real> & _J;
+  MaterialProperty<RealTensorValue> & _F; ///< `displacement_gradient` of the corresponding CardiacNash2000Material
+  MaterialProperty<Real> & _J;            ///< `det_displacement_gradient` of the corresponding CardiacNash2000Material
 
 private:
-  const unsigned int _component;
-  const Real _gamma;
+  const unsigned int _component;          ///< cartesian component this kernel works on (to extract correct components of _F in Jacobian computation)
+  const Real _gamma;                      ///< Kernel prefactor for tuning penalty magnitude relative to other residuals
 
-  const unsigned int _xdisp_var;
-  const unsigned int _ydisp_var;
-  const unsigned int _zdisp_var;
+  const unsigned int _xdisp_var;          ///< Moose-internal index of the `dispx` variable (to extract correct components of _F in Jacobian computation)
+  const unsigned int _ydisp_var;          ///< Moose-internal index of the `dispx` variable (to extract correct components of _F in Jacobian computation)
+  const unsigned int _zdisp_var;          ///< Moose-internal index of the `dispx` variable (to extract correct components of _F in Jacobian computation)
 };
 #endif //CardiacKirchhoffIncompressibilityPenalty_H

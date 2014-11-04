@@ -14,7 +14,6 @@
 #include "CardiacLinearIsotropicMaterial.h"
 #include "CardiacLinearOrthotropicMaterial.h"
 #include "CardiacNash2000Material.h"
-#include "PressureLagrangeMultiplier.h"
 #include "DisplacementAux.h"
 #include "AnisotropicGradientShift.h"
 #include "CardiacIncompressibilityLagrangeMultiplier.h"
@@ -71,7 +70,6 @@ EweApp::registerObjects(Factory & factory)
   registerKernel(CardiacStressDivergence);
   registerKernel(CardiacKirchhoffStressDivergence);
   registerKernel(ElectrocardioForcing);
-  registerKernel(PressureLagrangeMultiplier);
   registerKernel(AnisotropicGradientShift);
   registerKernel(CardiacKirchhoffIncompressibilityPenalty);
 

@@ -54,8 +54,8 @@ protected:
   bool _has_p;
   VariableValue & _p;
 
-  // identity matrix for convenience
-  const SymmTensor _id;
+  const SymmTensor _id; ///< identity matrix just for convenience
+
 };
 
 #endif //CardiacNash2000Material_H
