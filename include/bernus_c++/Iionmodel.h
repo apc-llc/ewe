@@ -52,6 +52,11 @@ public:
   //! @param[in] v Membrane potential in mV
   virtual void update_gates_dt(double v) = 0;
   
+  //! @todo docu
+  //! @param[in]
+  //! @param[in]
+  virtual void rush_larsen_step(double, double) = 0;
+  
   //! Gating variables \\( w \\).
   std::vector<double> * gates;
   

@@ -60,6 +60,8 @@ public:
   
   void update_gates_dt(double);
   
+  void rush_larsen_step(double, double);
+  
   //! Static factory function that instantiates a #bernus object and returns a pointer. Called by the #IionmodelFactory class.
   //! @param[out] Iionmodel* A pointer to an object of type #bernus.
   static Iionmodel * factory(std::vector<double>* gates, std::vector<double>* gates_dt) {
@@ -183,6 +185,43 @@ inline void bernus::update_gates_dt(double V) {
   (*this->gates_dt)[v_gate]  = (bnf.v_inf(V) - (*this->gates)[v_gate])/bnf.tau_v(V);
   (*this->gates_dt)[x_gate]  = (bnf.x_inf(V) - (*this->gates)[x_gate])/bnf.tau_x(V);
 }
+
+inline void bernus::rush_larsen_step(double V, double dt) {
+  
+  double y_inf;
+  double tau_y;
+  
+  // m-gate
+  y_inf = bnf.alpha_m(V)/( bnf.alpha_m(V) + bnf.beta_m(V) );
+  tau_y = 1.0/( bnf.alpha_m(V) + bnf.beta_m(V) );
+  (*this->gates)[m_gate] *= exp(-dt/tau_y);
+  (*this->gates)[m_gate] += (1.0 - exp(-dt/tau_y))*y_inf;
+  
+  // f-gate
+  y_inf = bnf.alpha_f(V)/( bnf.alpha_f(V) + bnf.beta_f(V) );
+  tau_y = 1.0/( bnf.alpha_f(V) + bnf.beta_f(V) );
+  (*this->gates)[f_gate] *= exp(-dt/tau_y);
+  (*this->gates)[f_gate] += (1.0 - exp(-dt/tau_y))*y_inf;
+  
+  // to-gate
+  y_inf = bnf.alpha_to(V)/( bnf.alpha_to(V) + bnf.beta_to(V) );
+  tau_y = 1.0/( bnf.alpha_to(V) + bnf.beta_to(V) );
+  (*this->gates)[to_gate] *= exp(-dt/tau_y);
+  (*this->gates)[to_gate] += (1.0 - exp(-dt/tau_y))*y_inf;
+  
+  // v-gate
+  y_inf = bnf.v_inf(V);
+  tau_y = bnf.tau_v(V);
+  (*this->gates)[v_gate] *= exp(-dt/tau_y);
+  (*this->gates)[v_gate] += (1.0 - exp(-dt/tau_y))*y_inf;
+  
+  // x-gate
+  y_inf = bnf.x_inf(V);
+  tau_y = bnf.tau_x(V);
+  (*this->gates)[x_gate] *= exp(-dt/tau_y);
+  (*this->gates)[x_gate] += (1.0 - exp(-dt/tau_y))*y_inf;
+}
+
 
 // Sodium current i_Na
 inline double bernus::i_na(double V){
