@@ -40,7 +40,6 @@ private:
   MaterialProperty<RealVectorValue> & _sigma; // conductivity rotated from fibre coordinate system as in prm_substance[] into outer cartesian coordinate system
   
   int _SubstanceID; // ID for accessing the selected substance in prm_substance[]
-  const std::string & _PropagParams; // command line parameters given funneled to propag
   Real _sigmat, _sigmal; // transverse and longitudinal conductivities for the selected substance and domain
 };
 
