@@ -4,16 +4,13 @@
 /****************************************************************/
 
 #include "Electrocardio.h"
-#include "anatomy.h"
-#include "my_stuff.h"
 
 template<>
 InputParameters validParams<Electrocardio>()
 {
   InputParameters params = validParams<Material>();
-  params.addRequiredCoupledVar("vmem", "Membrane potential needed as input for ion channel model");
-  // TODO: For ion channel models that need the diffusion current, have to fetch the value of Imem somehow
-  //params.addCoupledVar("Imem",0.,"Diffusion current needed as input for ion channel model");
+  params.addRequiredCoupledVar("vmem","Membrane potential needed as input for ion channel model");
+  //! @todo: For ion channel models that need the diffusion current, have to fetch the value of Imem somehow
   return params;
 }
 
@@ -21,90 +18,64 @@ Electrocardio::Electrocardio(const std::string & name,
                                  InputParameters parameters) :
   Material(name, parameters),
   _Iion(declareProperty<Real>("Iion")),
-  _dtime(declareProperty<Real>("dtime")),
-  _dtime_old(declarePropertyOld<Real>("dtime")),
-  _yyy(declareProperty<std::vector<Real> >("yyy")),
-  _yyy_old(declarePropertyOld<std::vector<Real> >("yyy")),
-  _cell_info(getMaterialProperty<Membrane_cell_info>("cell_info")),
+  _gates(declareProperty<std::vector<Real> >("gates")),
+  _gates_old(declarePropertyOld<std::vector<Real> >("gates")),
   // coupled variables
   _vmem(coupledValue("vmem"))
-  //_Imem(coupledValue("Imem"))
-{}
+{
+  
+  // Create pointer to a Bernus model object using the factory class
+  _ionmodel = IionmodelFactory::factory(IionmodelFactory::BERNUS, & gates_qp, & gates_dt_qp);
+  
+  std::cout << "Constructing Material Electrocardio..." << std::endl;
+}
 
 void
 Electrocardio::initQpStatefulProperties()
 {
-  Membrane_cell_info cell_info;  // TODO: this should just be a pointer to CardiacPropertiesMaterial::_cell_info[_qp]; unfortunately, currently CardiacPropertiesMaterial::ComputeQpValue() is only evaluated much later than Electrocardio::InitStatefulProperties
-  cell_info.mcode = 1;           // membrane model code -- BERNUS
-  cell_info.ccode = BERNUS_EPIC; // membrane model-specific cell type code --> BERNUS_EPIC
-  cell_info.param = NULL;        // invalid to avoid accidential use
-  
-  // Sets _yyy
-  ion_init_qp(0.0, cell_info, _yyy[_qp] );
-
-  // init the stateful properties (these will become _bla_old before/in the first call of computeProperties)
-  _dtime[_qp] = 0.0;
-  _Iion[_qp]  = 0.0; // it seems these are not initialized by propag?
+  _gates[_qp].resize(_ionmodel->get_ngates());
+  _gates_old[_qp].resize(_ionmodel->get_ngates());
+  for (int i=0; i<_ionmodel->get_ngates(); ++i) {
+    // Initialize with steady-state gate variables
+    _gates[_qp][i] = (Real) (*_ionmodel->gates)[i];
+    _gates_old[_qp][i] = (Real) (*_ionmodel->gates)[i];
+  }
 }
 
 void
 Electrocardio::computeProperties()
 {
-  _ndep = 0;
-  _nnd  = 0;
   Material::computeProperties();
-  _all_dep = (_nnd==0);
 }
 
 /**
- * TODO: Meh, big problem here... this routine is called in EVERY iteration of the linear and nonlinear solve... and performs an update of the membrane states EVERY time. This is clearly not what we want.....
- * MW: I am not sure if this is a problem (ignoring runtime considerations for now): the routine always uses yyy_old and computes some yyy using the iteration's current membrane potential. I would strongly assume that yyy is only copied to yyy_old automagically after a timestep has converged successfully.
+ * @todo documentation
  */
 void
 Electrocardio::computeQpProperties()
 {
   
-  int mcode= 1; // for Bernus model; can probably be different for different points/elements
+  // Copy old gates values into local gates vector
+  for (int i=0; i<_ionmodel->get_ngates(); ++i) {
+    gates_qp[i] = _gates_old[_qp][i];
+  }
   
-  if(mcode!=MCODE_NONE)
-  {
-    int N = ion_mi[mcode].Nsvar;
+  // Compute ionforcing
+  _Iion[_qp] = _ionmodel->ionforcing(_vmem[_qp]);
+  
+  // Compute time derivative of gating variables
+  _ionmodel->update_gates_dt(_vmem[_qp]);
+  
+  for (int i=0; i<_ionmodel->get_ngates(); ++i) {
+
+    // Forward Euler update step
+    gates_qp[i] += _dt*gates_dt_qp[i];
     
-    /**
-     * Need local copies to be passed to the step function, because it is not build for std:array objects.
-     */
-    yyy_t _yyy_local[N];
-    for (int i=0; i<N; i++) {
-      _yyy_local[i] = (_yyy_old[_qp])[i];
-    }
-    double _Imem_local = 0.0; // TODO: This has to be set to the diffusion current, which needs to be retrieved somehow from the diffusion kernel
-    float _dtime_local = _dtime_old[_qp];
-    
-    /**
-     * Call the step function of the used model
-     */
-    // TODO: I would really not assume that any propag-routines are thread-safe.
-    // _yyy = status variables of the membrane model; subject to the ODE.
-    // _Imem_local = diffusion current = Nabla*( G * Nabla(V) ); TODO: This is to be somehow fetched from the corresponding moose kernel!
-    _Iion[_qp] = (*(ion_mi[mcode].step))(_vmem[_qp], _yyy_local, & _cell_info[_qp], -(_Imem_local), _dt, & _dtime_local, _t, _current_elem->id());
-    
-    /**
-     * Put back the values from the local copies into the arrays.
-     * ... THIS SHOULD ONLY HAPPEN AT THE VERY END OF A TIMESTEP..., TODO: see above
-     */
-    for (int i=0; i<N; i++) {
-      _yyy[_qp][i] = _yyy_local[i];
-    }
-        
-    _dtime[_qp] = _dtime_local;
-    
-    if (_Iion[_qp] < -0.1) _ndep++;
-    if (_dtime[_qp] < 0)   _nnd++;
+    // put updated local values back into global vector
+    _gates[_qp][i] = gates_qp[i];
   }
-  else
-  {
-      _Iion[_qp]= 0.0;
-  }
+  
+  
   
   /**
    * The mono domain equations reads

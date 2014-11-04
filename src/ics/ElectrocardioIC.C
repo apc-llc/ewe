@@ -4,7 +4,6 @@
 
 #include "ElectrocardioIC.h"
 #include <math.h>
-#include "ion.h"
 
 template<>
 InputParameters validParams<ElectrocardioIC>()
@@ -39,14 +38,14 @@ ElectrocardioIC::value(const Point & p)
   
   // The value -90.272 is the resting potential of the bernus model for all except one case...
   
-  const double x_c = 0.5, y_c = 0.5, z_c = 0.5, sig = 0.15;
+  const double x_c = 0.5, y_c = 0.5, sig = 0.15;
   
   double arg   = ((p(0) - x_c)/sig)*((p(0) - x_c)/sig) + ((p(1) - y_c)/sig)*((p(1) - y_c)/sig); // + ((p(2) - z_c)/sig)*((p(2) - z_c)/sig);
   double coeff = exp(0.0);
   //return (1/coeff)*exp(-0.5*arg);
-  //return -90.272 + 60.0*(1/coeff)*exp(-0.5*arg);
-  return -60.0;
-  
+  //return -90.272 + 30.0*(1/coeff)*exp(-0.5*arg);
+  //return -60.0;
+  return -90.272;
   //return sin(M_PI*p(0))*sin(M_PI*p(1));
   
   

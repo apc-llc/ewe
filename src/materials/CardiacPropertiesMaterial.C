@@ -4,8 +4,6 @@
 /****************************************************************/
 
 #include "CardiacPropertiesMaterial.h"
-#include "propag_d.h"
-#include "anatomy.h"
 
 template<>
 InputParameters validParams<CardiacPropertiesMaterial>()
@@ -18,7 +16,6 @@ InputParameters validParams<CardiacPropertiesMaterial>()
 CardiacPropertiesMaterial::CardiacPropertiesMaterial(const std::string & name,
                                  InputParameters parameters) :
   Material(name, parameters),
-  _cell_info(declareProperty<Membrane_cell_info>("cell_info")),
   _Ef(declareProperty<RealVectorValue>("E_fibre")),
   _En(declareProperty<RealVectorValue>("E_normal")),
   _Es(declareProperty<RealVectorValue>("E_sheet")),
@@ -66,14 +63,14 @@ CardiacPropertiesMaterial::CardiacPropertiesMaterial(const std::string & name,
 
 
 void CardiacPropertiesMaterial::computeQpFibreCoordinates() {
-  const RealVectorValue center(0.2, 0.8, 0.0); // TODO: make this a parameter
+  const RealVectorValue center(0.2, 0.8, 0.0); //! @todo: make this a parameter
   // position of quadrature point that is being processed relative to virtual center
   const RealVectorValue x(_q_point[_qp] - center);
-  // TODO: make these externally definable functions, here they are more or less arbitrarily defined (but still similar to Figure 1 in [Holzapfel 2009]
+  //! @todo: make these externally definable functions, here they are more or less arbitrarily defined (but still similar to Figure 1 in [Holzapfel 2009]
   const RealVectorValue f90(-x(2),    0.,  x(0)); // fibre direction at the very inner sheeet
   const RealVectorValue f50( x(1), -x(0),    0.); // fibre direction in mid-wall position
   const RealVectorValue f10( x(2),    0., -x(0)); // fibre direction at the outer sheet
-  // TODO: make these parameters
+  //! @todo: make these parameters
   const Real r_inner(0.1); // position (radial distance) of the innermost sheeth
   const Real r_outer(0.3); // position (radial distance) of the outermost sheeth
   // radial distance of current quadrature point from centre
@@ -107,50 +104,16 @@ void CardiacPropertiesMaterial::computeQpCellInfo()
   // every node corresponds to a cell (ionic properties apply to nodes; materials [e.g. conductivity] apply to elements)
   // there are a few properties of the membrane models that can be specified on a per-node basis; this can happen here
 
-  // TODO: This is the place where spatially-dependent models and celltypes can be introduced
-  // The following is bernus as long as only a single model is loaded
-  // among other places, you should take a look at setup_substances() in anatomy.c, bernus_p.dep and ion_setup_cell_info() in ion.c for handling of params
-  _cell_info[_qp].mcode = 1;           // membrane model code -- BERNUS
-  _cell_info[_qp].ccode = BERNUS_EPIC; // membrane model-specific cell type code --> BERNUS_EPIC
-  _cell_info[_qp].param = NULL;        // invalid to avoid accidential use; originally, param = malloc((size_t)(ion_mi[mc].Nparam)*sizeof(float)), instead of the allocation magic, we should better just point to some global storage of parameter sets here...
+  //! @todo This is the place where spatially-dependent models and celltypes can be introduced
+
 }
 
 
 void CardiacPropertiesMaterial::computeSubstanceProperties()
 {
-  char* substancename = "ventricle"; // TODO: make this a parameter
-  int cdom(DOM_INTRA); // TODO: make this a parameter
-
-  for (int i=0;i<200;i++)
-    if(strcmp(prm_substance[i].name, substancename ) !=0 ) {
-      _SubstanceID = i;
-      break;
-    }
-  if (_SubstanceID == -1) Error(42,"Substance %s not found.\n", substancename);
-  
-  // see conductivites() in fibres.c
-  #define gbulk(i,e) ((i) +(e) )
-  #define gmono(i,e) ((i) +(e) ==0?0.0:(i) *(e) /((i) +(e) ) )
-  switch (cdom) {
-    case DOM_INTRA:
-      _sigmat = prm_substance[_SubstanceID].sigma_it;
-      _sigmal = prm_substance[_SubstanceID].sigma_il;
-      break;
-    case DOM_EXTRA:
-      _sigmat = prm_substance[_SubstanceID].sigma_et;
-      _sigmal = prm_substance[_SubstanceID].sigma_el;
-      break;
-    case DOM_MONO:
-      _sigmat = gmono(prm_substance[_SubstanceID].sigma_it,prm_substance[_SubstanceID].sigma_et);
-      _sigmal = gmono(prm_substance[_SubstanceID].sigma_il,prm_substance[_SubstanceID].sigma_el);
-      break;
-    case DOM_BULK:
-      _sigmat = gbulk(prm_substance[_SubstanceID].sigma_it,prm_substance[_SubstanceID].sigma_et);
-      _sigmal = gbulk(prm_substance[_SubstanceID].sigma_il,prm_substance[_SubstanceID].sigma_el);
-      break;
-    default:
-      Error(22,"This cannot happen: unknown domain=%d\n", cdom);
-  }
+  //! @todo Initialize correct values here
+  _sigmat = 0.0;
+  _sigmal = 0.0;
 }
 
 

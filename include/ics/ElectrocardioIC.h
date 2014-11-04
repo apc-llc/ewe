@@ -6,7 +6,6 @@
 #define ELECTROCARDIOIC_H
 
 #include "InitialCondition.h"
-#include "membrane.h"
 
 // Forward Declarations
 class ElectrocardioIC;

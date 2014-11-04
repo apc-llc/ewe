@@ -4,7 +4,7 @@
  block_id = '0'
  block_name = 'all'
  
- uniform_refine = 0
+ uniform_refine = 3
  dim           = 2
  distribution  = DEFAULT
  nx            = 3
@@ -74,12 +74,11 @@
    vmem = 'potential'
    block = all
    outputs = all
-   #PropagParams = '+F Test.par'
   [../]
  
   [./conductivity]
    type = ElectrocardioConductivity
-   conductivity_coefficient = 0.0
+   conductivity_coefficient = 2.0
    block = all
   [../]
 []
@@ -92,12 +91,13 @@
   l_max_its = 10
   nl_rel_tol = 1e-3
   nl_max_its = 2
-  num_steps = 10000
+# num_steps = 10
+ num_steps = 1000
 # scheme = 'implicit-euler'
- scheme ='bdf2'
+# scheme ='bdf2'
  [./TimeStepper]
  type = ConstantDT
-  dt = 0.05
+  dt = 0.001
  
  [../]
 []

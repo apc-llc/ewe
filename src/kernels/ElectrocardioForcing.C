@@ -34,7 +34,18 @@ ElectrocardioForcing::~ElectrocardioForcing()
 Real
 ElectrocardioForcing::computeQpResidual()
 {
-  return -_ion_coeff*_Iion[_qp]*_test[_i][_qp];
+  
+  double x(_q_point[_qp](0));
+  double y(_q_point[_qp](1));
+  double z(_q_point[_qp](2));
+  double time(_t);
+
+  // Externally applied current
+  //Real _Iion_app( 10.0*pow(cos(M_PI*(x-time)), 6.0) );
+  Real _Iion_app( -1500*exp(-0.5*(x*x/0.01) - 0.5*(y*y/0.01)));
+  if (time>2.0) _Iion_app = 0.0;
+  
+  return _ion_coeff*(_Iion[_qp] - _Iion_app)*_test[_i][_qp];
 }
 
 Real
