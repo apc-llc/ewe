@@ -1,15 +1,10 @@
-/****************************************************************/
-/*                                                              */
-/*                                                              */
-/****************************************************************/
-
 #include "CardiacFibresMaterial.h"
 
 template<>
 InputParameters validParams<CardiacFibresMaterial>()
 {
   InputParameters params = validParams<Material>();
-  params.addParam<RealTensorValue>("fixed_R", "Externally fixed fibre rotation matrix. Primarily meant for debugging purposes.");
+  params.addParam<RealTensorValue>("fixed_R", "Externally fixed fibre rotation matrix (unit vectors column-wise). Primarily meant for debugging purposes.");
   return params;
 }
 
@@ -36,14 +31,14 @@ void CardiacFibresMaterial::computeQpProperties()
     _Es[_qp] = RealVectorValue(_fixed_R(0,1), _fixed_R(1,1), _fixed_R(2,1));
     _En[_qp] = RealVectorValue(_fixed_R(0,2), _fixed_R(1,2), _fixed_R(2,2));
   } else {
-    const RealVectorValue center(0.2, 0.8, 0.0); // TODO: make this a parameter
+    const RealVectorValue center(0.2, 0.8, 0.0); ///< \todo TODO: make this a parameter
     // position of quadrature point that is being processed relative to virtual center
     const RealVectorValue x(_q_point[_qp] - center);
-    // TODO: make these externally definable functions, here they are more or less arbitrarily defined (but still similar to Figure 1 in [Holzapfel 2009]
+    /// \todo  TODO: make these externally definable functions, here they are more or less arbitrarily defined (but still similar to Figure 1 in [Holzapfel 2009]
     const RealVectorValue f90(-x(2),    0.,  x(0)); // fibre direction at the very inner sheeet
     const RealVectorValue f50( x(1), -x(0),    0.); // fibre direction in mid-wall position
     const RealVectorValue f10( x(2),    0., -x(0)); // fibre direction at the outer sheet
-    // TODO: make these parameters
+    /// \todo TODO: make these parameters
     const Real r_inner(0.1); // position (radial distance) of the innermost sheeth
     const Real r_outer(0.3); // position (radial distance) of the outermost sheeth
     // radial distance of current quadrature point from centre

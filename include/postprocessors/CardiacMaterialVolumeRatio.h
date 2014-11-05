@@ -1,7 +1,3 @@
-/****************************************************************/
-/*                                                              */
-/****************************************************************/
-
 #ifndef CardiacMaterialVolumeRatio_H
 #define CardiacMaterialVolumeRatio_H
 
@@ -12,6 +8,10 @@ class CardiacMaterialVolumeRatioPostprocessor;
 template<>
 InputParameters validParams<CardiacMaterialVolumeRatioPostprocessor>();
 
+/**
+ * Postprocessor for computing the global volume ratio, i.e. \f$\frac{1}{V}\int J\dV\f$,
+ * where the local volume rations \f$J\f$ are fetched from a CardiacNash2000Material instance.
+ */
 class CardiacMaterialVolumeRatioPostprocessor : public ElementIntegralPostprocessor
 {
 public:

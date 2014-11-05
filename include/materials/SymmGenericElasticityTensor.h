@@ -3,6 +3,12 @@
 
 #include "SymmElasticityTensor.h"
 
+
+/**
+ * More Generic version of SymmElasticityTensor that allows access to
+ * individual tensor elements and provides some common
+ * contraction operations
+ */
 class SymmGenericElasticityTensor : public SymmElasticityTensor
 {
 public:
@@ -50,7 +56,7 @@ public:
     return _val[convert_indices(m, n, o, p)];
   }
 
-  /// computes   SUM(M,N,P,Q) [ t(M,N,P,Q) v1(M) v2(N) v3(P) v4(Q) ]
+  /// computes \f$\sum_{M,N,P,Q} t_{M,N,P,Q} v1_{M} v2_{N} v3_{P} v4_{Q} \f$
   inline Real fullContraction(const RealVectorValue & v1,
                               const RealVectorValue & v2,
                               const RealVectorValue & v3,
@@ -65,7 +71,7 @@ public:
     return res;
   }
 
-  /// computes   SUM(M,N,P,Q) [ t(M,N,P,Q) v1(M) v2(N)  0.5{ v3(P)v4(Q) + v3(Q)v4(P) } ]
+  /// computes \f$\sum_{M,N,P,Q} t_{M,N,P,Q} v1_{M} v2_{N} \frac{1}{2}\left(v3_{P} v4_{Q} + v3_{Q} v4_{P}\right) \f$
   inline Real doubleLeftSymmDoubleRightContraction(const RealVectorValue & v1,
                                                    const RealVectorValue & v2,
                                                    const RealVectorValue & v3,
@@ -84,6 +90,8 @@ protected:
 
   virtual void calculateEntries(unsigned int qp) {};
 
+  /// Converts indices i, j (slightly modified Voigt Notation, see SymmElasticityTensor.h)
+  /// to a single index into the internal _val[] array
   inline int convert_indices(const unsigned int m,
                              const unsigned int n) const
   {
@@ -101,6 +109,7 @@ protected:
     mooseError("convert_indices: invalid index");
   }
 
+  /// Converts indices M,N,P,Q to a single index into the internal _val[] array
   inline int convert_indices(const unsigned int m,
                              const unsigned int n,
                              const unsigned int o,

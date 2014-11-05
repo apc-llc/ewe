@@ -80,9 +80,6 @@ const SymmGenericElasticityTensor CardiacNash2000Material::STtoSGET(const SymmTe
   return B;
 }
 
-/*
- * computes outer.transpose() * inner * outer
- */
 const SymmTensor CardiacNash2000Material::symmProd(const RealTensorValue & outer, const SymmTensor & inner) const
 {
   SymmTensor res;
@@ -97,9 +94,6 @@ const SymmTensor CardiacNash2000Material::symmProd(const RealTensorValue & outer
   return SymmTensor(r(0,0), r(1,1), r(2,2), r(0,1), r(1,2), r(0,2) );
 }
 
-/*
- * computes A.transpose() * A
- */
 const SymmTensor CardiacNash2000Material::symmProd(const RealTensorValue & A) const
 {
                     /* i j        i      j        i      j        i      j */
@@ -111,9 +105,6 @@ const SymmTensor CardiacNash2000Material::symmProd(const RealTensorValue & A) co
                     /* 0 2 */ A(0,0)*A(0,2) + A(1,0)*A(1,2) + A(2,0)*A(2,2));
 }
 
-/*
- * computes C^-1 using the already known det(C)
- */
 const SymmTensor CardiacNash2000Material::symmInv(const SymmTensor & C, const Real det) const
 {
   SymmTensor Cinv(/* 00 */ C(0,0)*C(1,1)-C(1,2)*C(1,2),
@@ -128,7 +119,7 @@ const SymmTensor CardiacNash2000Material::symmInv(const SymmTensor & C, const Re
 void
 CardiacNash2000Material::computeQpProperties()
 {
-  // TODO: verify that all rotations are done in the correct direction, i.e. where do you have to use _Rf or _Rf.transpose() ?
+  /// \todo TODO: verify that all rotations are done in the correct direction, i.e. where do you have to use _Rf or _Rf.transpose() ?
   const RealTensorValue R(_Rf[_qp]);
 
   // local deformation gradient tensor: F(ij) = dx(i)/dX(j)
@@ -205,7 +196,7 @@ CardiacNash2000Material::computeQpProperties()
 
     // Add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
     if (_has_p) {
-      _stress[_qp] -= Cinv_outer*_p[0]; // TODO: is [0] correct for scalar variables?
+      _stress[_qp] -= Cinv_outer*_p[0];
       // for the derivative of T, things do become slightly complicated as we have to do
       // _stress_derivative[_qp](MNPQ) += 2 * _p[0] * Cinv_outer(M,P) * Cinv_outer(Q,N)
       // Note that the pressure term is symmetric in Q<->N and in M<->P, i.e. C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of Cinv_outer.
@@ -219,7 +210,7 @@ CardiacNash2000Material::computeQpProperties()
               _stress_derivative[_qp](M,N,Q,P) += Tp;
               _stress_derivative[_qp](N,M,Q,P) += Tp;
             }
-      // TODO: how does this go into the elastic energy ?
+      /// \todo TODO: how does this go into the elastic energy ?
       // _W[_qp] += ??
     }
     // Add active tension in fibre direction
@@ -239,7 +230,7 @@ CardiacNash2000Material::computeQpProperties()
         for (int P=0;P<3;P++)
           for (int Q=0;Q<3;Q++)
             _stress_derivative[_qp](M,M,P,Q) += 2 * Ta_outer(M,M) * Cinv_outer(M,P) * Cinv_outer(Q,M);
-      // TODO: how does this go into the elastic energy ?
+      /// \todo TODO: how does this go into the elastic energy ?
       // _W[_qp] += ??
     }
   }
