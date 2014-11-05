@@ -18,6 +18,7 @@
 #include "AnisotropicGradientShift.h"
 #include "CardiacIncompressibilityLagrangeMultiplier.h"
 #include "CardiacMaterialVolumeRatio.h"
+#include "CardiacVolumeRatio.h"
 #include "CardiacKirchhoffIncompressibilityPenalty.h"
 
 #include "Electrocardio.h"
@@ -94,6 +95,7 @@ EweApp::registerObjects(Factory & factory)
   registerAux(DisplacementAux);
 
   registerPostprocessor(CardiacMaterialVolumeRatioPostprocessor);
+  registerPostprocessor(CardiacVolumeRatioPostprocessor);
 }
 
 void
