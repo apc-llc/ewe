@@ -4,18 +4,18 @@
  block_id = '0'
  block_name = 'all'
  
- uniform_refine = 3
+ uniform_refine = 4
  dim           = 2
  distribution  = DEFAULT
  nx            = 3
  ny            = 3
  nz            = 3
  type          = GeneratedMesh
- xmax          = 1.0
+ xmax          = 5.0
  xmin          = 0.0
- ymax          = 1.0
+ ymax          = 5.0
  ymin          = 0.0
- zmax          = 1.0
+ zmax          = 5.0
  zmin          = 0.0
  []
 
@@ -34,7 +34,7 @@
   [./diff]
     type = ElectrocardioDiffusion
     variable = potential
-    surface_to_volume = 800.0
+    surface_to_volume = 1000.0
   [../]
   
   [./ecforcing]
@@ -46,7 +46,7 @@
   [./euler]
     type = ElectrocardioTimeDerivative
     variable = potential
-    capacitance = 1.0
+    capacitance = 1000.0
   [../]
 []
 
@@ -78,7 +78,7 @@
  
   [./conductivity]
    type = ElectrocardioConductivity
-   conductivity_coefficient = 2.0
+   conductivity_coefficient = 20.0
    block = all
   [../]
 []
@@ -87,18 +87,17 @@
   type = Transient   # Here we use the Transient Executioner
   #Preconditioned JFNK (default)
   solve_type = 'PJFNK'
-  l_tol = 1e-5
-  l_max_its = 10
-  nl_rel_tol = 1e-3
-  nl_max_its = 2
+#l_tol = 1e-6
+#  l_max_its = 10
+#  nl_rel_tol = 1e-3
+#  nl_max_its = 4
 # num_steps = 10
- num_steps = 1000
-# scheme = 'implicit-euler'
+  num_steps = 500
+  scheme = 'implicit-euler'
 # scheme ='bdf2'
  [./TimeStepper]
- type = ConstantDT
+  type = ConstantDT
   dt = 0.001
- 
  [../]
 []
 

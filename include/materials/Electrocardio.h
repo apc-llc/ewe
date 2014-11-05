@@ -1,7 +1,10 @@
-/****************************************************************/
-/*                                                              */
-/*                                                              */
-/****************************************************************/
+/**
+* The Electrocardio material allows to couple a ion channel
+* model to a diffusion PDE to model electrocardiac activity.
+*
+*
+*
+*/
 
 #ifndef ELECTROCARDIO_H
 #define ELECTROCARDIO_H

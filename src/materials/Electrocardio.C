@@ -66,10 +66,12 @@ Electrocardio::computeQpProperties()
   // Compute time derivative of gating variables
   _ionmodel->update_gates_dt(_vmem[_qp]);
   
+  _ionmodel->rush_larsen_step(_vmem[_qp], _dt);
+  
   for (int i=0; i<_ionmodel->get_ngates(); ++i) {
 
     // Forward Euler update step
-    gates_qp[i] += _dt*gates_dt_qp[i];
+    //gates_qp[i] += _dt*gates_dt_qp[i];
     
     // put updated local values back into global vector
     _gates[_qp][i] = gates_qp[i];
