@@ -40,6 +40,8 @@ protected:
   const SymmTensor symmProd(const RealTensorValue & A) const;
   /// Computes \f$C^{-1}\f$ using if \f$\mathrm{det}C\f$ is already known.
   const SymmTensor symmInv(const SymmTensor & C, const Real det) const;
+  /// Computes \f$\mathbf{A}\cdot\mathbf{B}\f$ for symmetric tensors (result is not necessarily symmetric any more !)
+  const RealTensorValue prod(const SymmTensor & A, const SymmTensor & B) const;
 
   VariableGradient & _grad_dispx;
   VariableGradient & _grad_dispy;

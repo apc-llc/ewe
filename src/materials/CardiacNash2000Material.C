@@ -116,10 +116,18 @@ const SymmTensor CardiacNash2000Material::symmInv(const SymmTensor & C, const Re
   return Cinv * (1./det);
 }
 
+const RealTensorValue CardiacNash2000Material::prod(const SymmTensor & A, const SymmTensor & B) const
+{
+  RealTensorValue res;
+  for (int M=0;M<3;M++)
+    for (int N=0;N<3;N++)
+      res(M,N) = A(M,0)*B(0,N) + A(M,1)*B(1,N) + A(M,2)*B(2,N);
+  return res;
+}
+
 void
 CardiacNash2000Material::computeQpProperties()
 {
-  /// \todo TODO: verify that all rotations are done in the correct direction, i.e. where do you have to use _Rf or _Rf.transpose() ?
   const RealTensorValue R(_Rf[_qp]);
 
   // local deformation gradient tensor: F(ij) = dx(i)/dX(j)
@@ -129,9 +137,9 @@ CardiacNash2000Material::computeQpProperties()
                             _grad_dispz[_qp](0)    , _grad_dispz[_qp](1)    , _grad_dispz[_qp](2) + 1);
   // ...its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
   _J[_qp] = _F[_qp].det();
-  // From here on, we go over to fibre coordinates, i.e. for C, C^-1, E, T
-  // Cauchy-Green deformation tensor in fibre coordinates: C = R^T F^T F R
-  const SymmTensor C(symmProd(R, symmProd(_F[_qp])));
+  // From here on, we go over to fibre coordinates, i.e. for C, E, T
+  // Cauchy-Green deformation tensor in fibre coordinates: C = R F^T F R^T
+  const SymmTensor C(symmProd(R.transpose(), symmProd(_F[_qp])));
   // Lagrange-Green strain tensor
   const SymmTensor E( (C - _id) * 0.5 );
   
@@ -179,8 +187,8 @@ CardiacNash2000Material::computeQpProperties()
   // For convenicence, we rotate back into the outer coordinate system here before adding pressure and active tension
   // This is done because adding them destroys symmetries which would force us to rotate a fourth order tensor in
   // the case of the stress derivative instead of the second order tensor D
-  T = symmProd(R.transpose(), T);
-  D = symmProd(R.transpose(), D);
+  T = symmProd(R, T);
+  D = symmProd(R, D);
 
   // Add hydrostatic pressure and active tension
   // The following steps render
@@ -191,12 +199,11 @@ CardiacNash2000Material::computeQpProperties()
 
   if (_has_p || _has_Ta || _has_Ta_function) {
     // Inverse of the Cauchy Green deformation tensor (note that det(C_fibre) = det(C) = det(F^T)*det(F) = det(F)^2, since det(R)==1 )
-    const SymmTensor Cinv(symmInv(C, _J[_qp]*_J[_qp]));
-    const RealTensorValue Cinv_outer( R * STtoRTV(Cinv) * R.transpose() ); // Cinv_outer is still symmetric, but we need it as RealTensorValue anyway since we only compose asymmetric products with it
+    const SymmTensor Cinv_outer( symmProd(R, symmInv(C, _J[_qp]*_J[_qp]) ) );
 
     // Add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
     if (_has_p) {
-      _stress[_qp] -= Cinv_outer*_p[0];
+      _stress[_qp] -= STtoRTV( Cinv_outer*_p[0] );
       // for the derivative of T, things do become slightly complicated as we have to do
       // _stress_derivative[_qp](MNPQ) += 2 * _p[0] * Cinv_outer(M,P) * Cinv_outer(Q,N)
       // Note that the pressure term is symmetric in Q<->N and in M<->P, i.e. C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of Cinv_outer.
@@ -221,8 +228,8 @@ CardiacNash2000Material::computeQpProperties()
       else
         Ta = _Ta_function->value(_t, _q_point[_qp]);
       // representation of active tension in fibre direction in outer coordinate system
-      const RealTensorValue Ta_outer( R * RealTensorValue(Ta, 0, 0, 0, 0, 0, 0, 0, 0) * R.transpose() );
-      _stress[_qp] += Ta_outer*Cinv_outer;
+      const SymmTensor Ta_outer( symmProd(R, SymmTensor(Ta, 0, 0, 0, 0, 0)) );
+      _stress[_qp] += prod ( Ta_outer, Cinv_outer );
       // _stress_derivative[_qp](MNPQ) += 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
       // Ta_outer is still a diagonal matrix, i.e. there is a delta(MN) involved
       // furthermore, Cinv_outer is symmetric
