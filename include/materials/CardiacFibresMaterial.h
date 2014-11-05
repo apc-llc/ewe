@@ -20,7 +20,7 @@ InputParameters validParams<CardiacFibresMaterial>();
  * For debugging purposes, the rotation matrix (and respective coordinate
  * system) can also be given externally in the input file.
  *
- * \todo Currently, the local coordiante system is computed to somehow
+ * \todo Currently, the local coordinate system is computed to somehow
  * approximately reflect the fibre distribution given in Figure 1 of
  * [Holzapfel 2009]. This is far from being perfect, though and should
  * be replaced by something more realistic.

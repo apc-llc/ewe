@@ -1,7 +1,3 @@
-/*************************************
- * Template for this file came from moose/modules/solid_mechanics/include/materials/SymmIsotropicElasticityTensor.h
- *************************************/
-
 #ifndef SYMMORTHOTROPICELASTICITYTENSOR_H
 #define SYMMORTHOTROPICELASTICITYTENSOR_H
 
@@ -9,6 +5,8 @@
 
 /**
  * Defines an Orthotropic Elasticity Tensor.
+ *
+ * This is a generalization of SymmIsotropicElasticityTensor
  *
  * The input parameters must be the following:
  *
@@ -29,19 +27,8 @@ public:
 
   virtual ~SymmOrthotropicElasticityTensor() {}
 
-  /**
-   * Set the Young's Moduli
-   */
   void setYoungsModuli(const Real E_1, const Real E_2, const Real E_3);
-
-  /**
-   * Set Poissons Ratios
-   */
   void setPoissonsRatios(const Real nu_12, const Real nu_13, const Real nu_23);
-
-  /**
-   * Set the Shear Moduli
-   */
   void setShearModuli(const Real G_12, const Real G_13, const Real G_23);
 
   virtual Real stiffness( const unsigned i, const unsigned j,
@@ -54,9 +41,6 @@ protected:
 
   Real _E1, _E2, _E3, _nu12, _nu13, _nu23, _G12, _G13, _G23;
 
-  /**
-   * Fill in the matrix.
-   */
   virtual void calculateEntries(unsigned int qp);
 };
 
