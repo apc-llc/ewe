@@ -48,7 +48,7 @@ CardiacNash2000Material::CardiacNash2000Material(const std::string  & name,
    _Ta(_has_Ta ? coupledValue("Ta") : _zero),
    _has_Ta_function(isParamValid("Ta_function")),
    _Ta_function( _has_Ta_function ? &getFunction("Ta_function") : NULL ),
-   _has_p(isCoupled("p")),
+   _has_p(isCoupledScalar("p")),
    _p(_has_p ? coupledScalarValue("p") : _zero),
    _id(1, 1, 1, 0, 0, 0)
 {
@@ -203,7 +203,22 @@ CardiacNash2000Material::computeQpProperties()
 
     // Add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
     if (_has_p) {
-      _stress[_qp] -= STtoRTV( Cinv_outer*_p[0] );
+      /**
+       * \todo TODO: Well, this is a bit tricky. The following line tries to circumvent an issue in
+       * Moose's initialization order. ScalarVariables are initialized after the material. Thus, if we use
+       * _p in the very first attempt of callng computQPProperties(), this will fail. Since I assume
+       * that zero pressure as initial guess is not too bad anyway, we insert it directly in case
+       * _p is not yet ready.
+       * Just for reference: The current initialization order in Moose is as follows:
+       *   1) First initialization of regular nonlinear variables in line 533 of FEProblem.C (call to computeUserObjects() )
+       *      via line 167 in ComputeUserObjectsThread.C (call to _fe_problem.reinitElem(elem, _tid) )
+       *   2) First call to Material::computeProperties also in line 533 of FEProblem.C (call to computeUserObjects() )
+       *      via line 168 in ComputeUserObjectsThread.C ( call to _fe_problem.reinitMaterials(_subdomain, _tid) )
+       *   3) [Much later] First initialization of scalar variables in Line 571 of FEProblem.C ( call to reinitScalars() )
+       */
+      const Real p( _p.size() > 0 ? _p[0] : 0.);
+
+      _stress[_qp] -= STtoRTV( Cinv_outer * p );
       // for the derivative of T, things do become slightly complicated as we have to do
       // _stress_derivative[_qp](MNPQ) += 2 * _p[0] * Cinv_outer(M,P) * Cinv_outer(Q,N)
       // Note that the pressure term is symmetric in Q<->N and in M<->P, i.e. C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of Cinv_outer.
@@ -211,7 +226,7 @@ CardiacNash2000Material::computeQpProperties()
         for (int N=0;N<3;N++)
           for (int P=M;P<3;P++)
             for (int Q=N;Q<3;Q++) {
-              const Real Tp(2 * _p[0] * Cinv_outer(M,P) * Cinv_outer(Q,N));
+              const Real Tp(2 * p * Cinv_outer(M,P) * Cinv_outer(Q,N));
               _stress_derivative[_qp](M,N,P,Q) += Tp;
               _stress_derivative[_qp](N,M,P,Q) += Tp;
               _stress_derivative[_qp](M,N,Q,P) += Tp;
