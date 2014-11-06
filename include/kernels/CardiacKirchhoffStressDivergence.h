@@ -16,7 +16,7 @@ InputParameters validParams<CardiacKirchhoffStressDivergence>();
 /**
  * Stress divergence kernel - tightly coupled to CardiacNash2000Material.
  *
- * This kernel implements \f$(\grad\psi_i,\mathbf{T}\grad u_c)\f$ with 
+ * This kernel implements \f$(\mathrm{grad}\psi_i,\mathbf{T}\mathrm{grad} u_c)\f$ with 
  * the 2nd Piola-Kirchhoff stress tensor \f$\mathbf{T}\f$ that is
  * fetched from a CardiacNash2000Material instance via its
  * `Kirchhoff_stress` MaterialProperty. Furthermore, the
