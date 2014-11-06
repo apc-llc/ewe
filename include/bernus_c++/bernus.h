@@ -42,6 +42,12 @@
  * - Calcium current gate \\( f \\)
  * - Transient outward current gate \\( to \\)
  * - Delayed rectifier potassium current gate \\( x \\)
+ *
+ * <b>A note on physical units</b>: The ionic current return by #ionforcing is in millivolt per millisecond \\( \\textrm{mV}~\\textrm{ms}^{-1} \\): The constants #g_na, #g_ca etc are in
+ *
+ * \\( \\textrm{nS}~\\textrm{pF}^{-1} = 10^3 \\textrm{S}~\\textrm{F}^{-1} = 10^3~\\textrm{s}^{-1} = \\textrm{ms}^{-1} \\)
+ *
+ * with S = Siemens and F = Farad, cf. Table 1 in Bernus et al. The membrane potential and equilibrium potential both are in millivolt.
  */
 class bernus: public Iionmodel {
   

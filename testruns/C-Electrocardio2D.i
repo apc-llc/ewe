@@ -4,8 +4,8 @@
  block_id = '0'
  block_name = 'all'
  
- uniform_refine = 4
- dim           = 2
+ uniform_refine = 2
+ dim           = 3
  distribution  = DEFAULT
  nx            = 3
  ny            = 3
@@ -35,6 +35,7 @@
     type = ElectrocardioDiffusion
     variable = potential
     surface_to_volume = 1000.0
+    capacitance = 1.0
   [../]
   
   [./ecforcing]
@@ -46,7 +47,6 @@
   [./euler]
     type = ElectrocardioTimeDerivative
     variable = potential
-    capacitance = 1000.0
   [../]
 []
 
@@ -78,7 +78,7 @@
  
   [./conductivity]
    type = ElectrocardioConductivity
-   conductivity_coefficient = 20.0
+   conductivity_coefficient = 0.006
    block = all
   [../]
 []
@@ -92,12 +92,12 @@
 #  nl_rel_tol = 1e-3
 #  nl_max_its = 4
 # num_steps = 10
-  num_steps = 500
+  num_steps = 250
   scheme = 'implicit-euler'
 # scheme ='bdf2'
  [./TimeStepper]
   type = ConstantDT
-  dt = 0.001
+  dt = 0.25
  [../]
 []
 

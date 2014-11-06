@@ -24,7 +24,8 @@ protected:
   virtual Real computeQpJacobian();
   
 private:
-  double _surface_to_volume;
+  Real _surface_to_volume;
+  Real _capacitance;
   MaterialProperty<Real> & _conductivity;
 };
 

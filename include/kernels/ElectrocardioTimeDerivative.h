@@ -35,7 +35,6 @@ protected:
 
   virtual Real computeQpJacobian();
 
-  Real _capacitance;
 };
 
 #endif //ELECTROCARDIOTIMEDERIVATIVE_H

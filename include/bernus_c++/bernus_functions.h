@@ -16,6 +16,7 @@
  * and
  *
  * https://models.physiomeproject.org/e/5/bernus_wilders_zemlin_verschelde_panfilov_2002.cellml/view
+ *
  */
 class bernus_functions
 {
@@ -204,26 +205,26 @@ class bernus_functions
   //! Extracellular potassium concentration \\( [\\textrm{K}^{+}]_e \\) from Table 1 in Bernus et al
   double static constexpr k_e  = 4.0;
   
-  //! Universal gas constant
-  double static constexpr R = 8.3144621;
+  //! Universal gas constant in \\( \\textrm{J}~\\textrm{mol}^{-1}~\\textrm{K}^{-1} \\); note that \\( \\textrm{J} = \\textrm{C}~\\textrm{V} \\).
+  //! Because membrane potential in the Bernus model is expressed in milli-Volt, rescale #R to also be in \\( \\textrm{mV} \\).
+  double static constexpr R = 8.3144621*1e3;
   
   //! Absolute temperature (in Kelvin, for value in Celsius see Table 1 in Bernus et al.)
   double static constexpr T = 37.0 + 273.15;
   
-  //! Faraday constant (scaled).
-  /**  Note: In SI units it is \\( \\textrm{Fa}=9.6485 \\times 10^4~\\textrm{C}~\\textrm{mol}^{-1} \\), but parameters for Bernus model are in \\( \\textrm{mM} \\), i.e. \\( 10^{-3} \\times \\textrm{mol} \\), therefore use scaled value.*/
-  double static constexpr Fa = 96.485;
+  //! Faraday constant in \\( \\textrm{C}~\\textrm{mol}^{-1} \\).
+  double static constexpr Fa = 9.64853399*1e4;
   
-  //! Equilibrium potential \\( E_{\\textrm Na} \\), pp. H2306 in Bernus et al. @todo Would be nicer with constexpr, but use of log in constexpr is not yet supported by clang++
+  //! Equilibrium potential \\( E_{\\textrm Na} \\) in millivolt, pp. H2306 in Bernus et al. @todo Would be nicer with constexpr, but use of log in constexpr is not yet supported by clang++
   double static const e_na;
   
-  //! Equilibrium potential \\( E_{\\textrm Ca} \\), pp. H2306 in Bernus et al. @todo Would be nicer with constexpr, but use of log in constexpr is not yet supported by clang++
+  //! Equilibrium potential \\( E_{\\textrm Ca} \\) in millivolt, pp. H2306 in Bernus et al. @todo Would be nicer with constexpr, but use of log in constexpr is not yet supported by clang++
   double static const e_ca;
 
-  //! Equilibrium potential \\( E_{to} \\), pp. H2306 in Bernus et al. @todo Would be nicer with constexpr, but use of log in constexpr is not yet supported by clang++
+  //! Equilibrium potential \\( E_{to} \\) in millivolt, pp. H2306 in Bernus et al. @todo Would be nicer with constexpr, but use of log in constexpr is not yet supported by clang++
   double static const e_to;
   
-  //! Equilibrium potential \\( E_{\\textrm K} \\), pp. H2306 in Bernus et al. @todo Would be nicer with constexpr, but use of log in constexpr is not yet supported by clang++
+  //! Equilibrium potential \\( E_{\\textrm K} \\) in millivolt, pp. H2306 in Bernus et al. @todo Would be nicer with constexpr, but use of log in constexpr is not yet supported by clang++
   double static const e_k;
   
 };
