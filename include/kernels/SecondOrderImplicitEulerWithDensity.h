@@ -10,7 +10,7 @@ InputParameters validParams<SecondOrderImplicitEulerWithDensity>();
 
 /**
  * Second order implicit Euler kernel for PDE terms of the form
- * $\f -\rho\frac{\partial^2u}{\partial t^2} \f$.
+ * \f$ -\rho \frac{\partial^2u}{\partial t^2} \f$.
  *
  * This kernel just uses SecondDerivativeImplicitEuler multiplied
  * by \f$ -\rho \f$.
