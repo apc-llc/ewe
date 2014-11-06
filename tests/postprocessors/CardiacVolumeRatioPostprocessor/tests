@@ -1,0 +1,7 @@
+[Tests]
+  [./compression_to_075]
+    type = 'CSVDiff'
+    input = 'volume_ratio.i'
+    csvdiff = 'volume_ratio_out.csv'
+  [../]
+[]
