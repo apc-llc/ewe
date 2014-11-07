@@ -1,7 +1,3 @@
-/*************************************
- * Template for this file came from moose/modules/solid_mechanics/include/materials/total_strain/LinearIsotropicMaterial.h
- *************************************/
-
 #ifndef CardiacLinearOrthotropicMaterial_H
 #define CardiacLinearOrthotropicMaterial_H
 
@@ -15,7 +11,11 @@ template<>
 InputParameters validParams<CardiacLinearOrthotropicMaterial>();
 
 /**
- * LinearOrthotropic material for use in simple applications that don't need material properties.
+ * Material for providing different lienar elastic properties in the three
+ * cartesian directions (i.e. linear orthotrophy).
+ * The Material is a generalization of LinearIsotropicMaterial.
+ * Local coordinate directions are fetched via the respective properties
+ * of a CardiacFibresMaterial.
  */
 class CardiacLinearOrthotropicMaterial : public CardiacSolidMechanicsMaterial
 {
@@ -28,9 +28,9 @@ public:
 protected:
   virtual void computeProperties();
 
-  std::vector<Real> _youngs_moduli;
-  std::vector<Real> _poissons_ratios;
-  std::vector<Real> _shear_moduli;
+  std::vector<Real> _youngs_moduli;   ///< Young's moduli for the three local coordinate directions
+  std::vector<Real> _poissons_ratios; ///< Poisson's ratios for the three local coordinate directions
+  std::vector<Real> _shear_moduli;    ///< Shear moduli for the three local coordinate directions
   
   MaterialProperty<RealTensorValue> & _Rf;
 

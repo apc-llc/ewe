@@ -1,0 +1,13 @@
+[Tests]
+  [./isotropic]
+    type = 'Exodiff'
+    input = 'AnisotropicGradientShift.i'
+    exodiff = 'AnisotropicGradientShift_out.e'
+  [../]
+
+  [./anisotropic]
+    type = 'Exodiff'
+    input = 'AnisotropicGradientShiftDiffusion.i'
+    exodiff = 'AnisotropicGradientShiftDiffusion_out.e'
+  [../]
+[]

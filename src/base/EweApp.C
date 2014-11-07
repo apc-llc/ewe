@@ -10,8 +10,16 @@
 #include "KineticEnergyAux.h"
 #include "NewmarkMaterial.h"
 #include "CardiacStressDivergence.h"
+#include "CardiacKirchhoffStressDivergence.h"
 #include "CardiacLinearIsotropicMaterial.h"
 #include "CardiacLinearOrthotropicMaterial.h"
+#include "CardiacNash2000Material.h"
+#include "DisplacementAux.h"
+#include "AnisotropicGradientShift.h"
+#include "CardiacIncompressibilityLagrangeMultiplier.h"
+#include "CardiacMaterialVolumeRatio.h"
+#include "CardiacVolumeRatio.h"
+#include "CardiacKirchhoffIncompressibilityPenalty.h"
 
 #include "Electrocardio.h"
 #include "ElectrocardioForcing.h"
@@ -20,6 +28,7 @@
 #include "ElectrocardioConductivity.h"
 #include "ElectrocardioIC.h"
 #include "CardiacPropertiesMaterial.h"
+#include "CardiacFibresMaterial.h"
 
 template<>
 InputParameters validParams<EweApp>()
@@ -60,7 +69,12 @@ EweApp::registerObjects(Factory & factory)
   registerKernel(SecondDerivativeNewmark);
   registerKernel(FirstDerivativeNewmark);
   registerKernel(CardiacStressDivergence);
+  registerKernel(CardiacKirchhoffStressDivergence);
   registerKernel(ElectrocardioForcing);
+  registerKernel(AnisotropicGradientShift);
+  registerKernel(CardiacKirchhoffIncompressibilityPenalty);
+
+  registerScalarKernel(CardiacIncompressibilityLagrangeMultiplier);
 
   registerMaterial(NewmarkMaterial);
   registerMaterial(Electrocardio);
@@ -68,6 +82,8 @@ EweApp::registerObjects(Factory & factory)
   registerMaterial(CardiacPropertiesMaterial);
   registerMaterial(CardiacLinearIsotropicMaterial);
   registerMaterial(CardiacLinearOrthotropicMaterial);
+  registerMaterial(CardiacNash2000Material);
+  registerMaterial(CardiacFibresMaterial);
 
   registerKernel(ElectrocardioTimeDerivative);
   registerKernel(ElectrocardioDiffusion);
@@ -76,6 +92,10 @@ EweApp::registerObjects(Factory & factory)
   
   registerAux(KineticEnergyNewmarkAux);
   registerAux(KineticEnergyAux);
+  registerAux(DisplacementAux);
+
+  registerPostprocessor(CardiacMaterialVolumeRatioPostprocessor);
+  registerPostprocessor(CardiacVolumeRatioPostprocessor);
 }
 
 void
