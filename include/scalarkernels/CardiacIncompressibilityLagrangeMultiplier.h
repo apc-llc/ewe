@@ -9,7 +9,10 @@ template<>
 InputParameters validParams<CardiacIncompressibilityLagrangeMultiplier>();
 
 /**
+ * Kernel for the constraint \f$\mathrm{det}F=1\f$ via a scalar 
+ * Lagrange multiplier (hydrostatic pressure).
  *
+ * The volume ratio \f$J=\mathrm{det}F\f$ is fetched from a postprocessor.
  */
 class CardiacIncompressibilityLagrangeMultiplier : public ScalarKernel
 {
