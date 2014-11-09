@@ -14,41 +14,42 @@
 #include "libmesh/plane.h"
 #include "libmesh/mesh_tools.h"
 
-std::string _boundaryFuser(BoundaryID boundary1, BoundaryID boundary2)
+std::string _boundaryBlockFuser(BoundaryID boundary, SubdomainID block)
 {
   std::stringstream ss;
 
-  ss << boundary1 << "to" << boundary2;
+  ss << boundary << "to" << block;
 
   return ss.str();
 }
 
 
-VolumeNearestNodeLocator::VolumeNearestNodeLocator(SubProblem & subproblem, MooseMesh & mesh, BoundaryID boundary1, BoundaryID boundary2) :
-    Restartable(_boundaryFuser(boundary1, boundary2), "VolumeNearestNodeLocator", subproblem, 0),
+VolumeNearestNodeLocator::VolumeNearestNodeLocator(SubProblem & subproblem, MooseMesh & mesh, BoundaryID boundary, SubdomainID block) :
+    Restartable(_boundaryBlockFuser(boundary, block), "VolumeNearestNodeLocator", subproblem, 0),
     _subproblem(subproblem),
     _mesh(mesh),
-    _slave_node_range(NULL),
-    _boundary1(boundary1),
-    _boundary2(boundary2),
+    _block_node_range(NULL),
+    _boundary(boundary),
+    _block(block),
     _first(true)
 {
-  /*
-  //sanity check on boundary ids
+  //sanity check on ids
   const std::set<BoundaryID>& bids=_mesh.getBoundaryIDs();
   std::set<BoundaryID>::const_iterator sit;
-  sit=bids.find(_boundary1);
+  sit=bids.find(_boundary);
   if (sit == bids.end())
-    mooseError("VolumeNearestNodeLocator being created for boundaries "<<_boundary1<<" and "<<_boundary2<<", but boundary "<<_boundary1<<" does not exist");
-  sit=bids.find(_boundary2);
-  if (sit == bids.end())
-    mooseError("VolumeNearestNodeLocator being created for boundaries "<<_boundary1<<" and "<<_boundary2<<", but boundary "<<_boundary2<<" does not exist");
-  */
+    mooseError("VolumeNearestNodeLocator being created for boundary "<<_boundary<<" and block "<<_block<<", but boundary "<<_boundary<<" does not exist");
+
+  const std::set<SubdomainID>& sids=_mesh.meshSubdomains();
+  std::set<SubdomainID>::const_iterator ssit;
+  ssit=sids.find(_block);
+  if (ssit == sids.end())
+    mooseError("VolumeNearestNodeLocator being created for boundary "<<_boundary<<" and block "<<_block<<", but block "<<_block<<" does not exist");
 }
 
 VolumeNearestNodeLocator::~VolumeNearestNodeLocator()
 {
-  delete _slave_node_range;
+  delete _block_node_range;
 }
 
 void
@@ -58,19 +59,18 @@ VolumeNearestNodeLocator::findNodes()
 
   /**
    * If this is the first time through we're going to build up a "neighborhood" of nodes
-   * surrounding each of the slave nodes.  This will speed searching later.
+   * surrounding each of the block nodes.  This will speed searching later.
    */
   if (_first)
   {
     _first=false;
 
-    // Trial slave nodes are all the nodes on the slave side
+    // Trial block nodes are all the nodes on the slave side
     // We only keep the ones that are either on this processor or are likely
     // to interact with elements on this processor (ie nodes owned by this processor
-    // are in the "neighborhood" of the slave node
-    std::vector<unsigned int> trial_slave_nodes;
-    std::vector<unsigned int> trial_master_nodes;
-
+    // are in the "neighborhood" of the block node
+    std::vector<unsigned int> trial_block_nodes;    // was slave
+    std::vector<unsigned int> trial_boundary_nodes; // was master
 
     // Build a bounding box.  No reason to consider nodes outside of our inflated BB
     MeshTools::BoundingBox * my_inflated_box = NULL;
@@ -111,27 +111,32 @@ VolumeNearestNodeLocator::findNodes()
       unsigned int node_id = bnode->_node->id();
 
       // If we have a BB only consider saving this node if it's in our inflated BB
-      if (!my_inflated_box || (my_inflated_box->contains_point(*bnode->_node)))
-      {
-        if (boundary_id == _boundary1)
-          trial_master_nodes.push_back(node_id);
-        else if (boundary_id == _boundary2)
-          trial_slave_nodes.push_back(node_id);
-      }
+      if (boundary_id == _boundary && (!my_inflated_box || (my_inflated_box->contains_point(*bnode->_node))))
+        trial_boundary_nodes.push_back(node_id);
+    }
+
+    for (libMesh::Node const *nd = *_mesh.localNodesBegin() ; nd != *_mesh.localNodesEnd(); ++nd)
+    {
+      const Node * node = nd;
+      std::set<SubdomainID> sids = _mesh.getNodeBlockIds(*node);
+      std::set<SubdomainID>::const_iterator ssit(sids.find(_block));
+      unsigned int node_id = node->id();
+
+      // If we have a BB only consider saving this node if it's in our inflated BB
+      if (ssit != sids.end() && (!my_inflated_box || (my_inflated_box->contains_point(*node))))
+        trial_block_nodes.push_back(node_id);
     }
 
     // don't need the BB anymore
     delete my_inflated_box;
 
     std::map<unsigned int, std::vector<unsigned int> > & node_to_elem_map = _mesh.nodeToElemMap();
+    SlaveNeighborhoodThread snt(_mesh, trial_boundary_nodes, node_to_elem_map, _mesh.getPatchSize());
 
-    NodeIdRange trial_slave_node_range(trial_slave_nodes.begin(), trial_slave_nodes.end(), 1);
+    NodeIdRange trial_block_node_range(trial_block_nodes.begin(), trial_block_nodes.end(), 1);
+    Threads::parallel_reduce(trial_block_node_range, snt);
 
-    SlaveNeighborhoodThread snt(_mesh, trial_master_nodes, node_to_elem_map, _mesh.getPatchSize());
-
-    Threads::parallel_reduce(trial_slave_node_range, snt);
-
-    _slave_nodes = snt._slave_nodes;
+    _block_nodes = snt._slave_nodes;
     _neighbor_nodes = snt._neighbor_nodes;
 
     for (std::set<unsigned int>::iterator it = snt._ghosted_elems.begin();
@@ -139,15 +144,15 @@ VolumeNearestNodeLocator::findNodes()
         ++it)
       _subproblem.addGhostedElem(*it);
 
-    // Cache the slave_node_range so we don't have to build it each time
-    _slave_node_range = new NodeIdRange(_slave_nodes.begin(), _slave_nodes.end(), 1);
+    // Cache the blocke_node_range so we don't have to build it each time
+    _block_node_range = new NodeIdRange(_block_nodes.begin(), _block_nodes.end(), 1);
   }
 
   _nearest_node_info.clear();
 
   NearestNodeThread nnt(_mesh, _neighbor_nodes);
 
-  Threads::parallel_reduce(*_slave_node_range, nnt);
+  Threads::parallel_reduce(*_block_node_range, nnt);
 
   _max_patch_percentage = nnt._max_patch_percentage;
 
@@ -160,13 +165,13 @@ void
 VolumeNearestNodeLocator::reinit()
 {
   // Reset all data
-  delete _slave_node_range;
-  _slave_node_range = NULL;
+  delete _block_node_range;
+  _block_node_range = NULL;
   _nearest_node_info.clear();
 
   _first = true;
 
-  _slave_nodes.clear();
+  _block_nodes.clear();
   _neighbor_nodes.clear();
 
   // Redo the search

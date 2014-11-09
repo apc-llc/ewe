@@ -23,12 +23,13 @@ class MooseMesh;
 class SubProblem;
 
 /**
- * Finds the nearest node to each node in boundary1 to each node in boundary2 and the other way around.
+ * Finds the nearest node to each node in block to each node in boundary and the other way around.
+ * \todo TODO: the latter is not really necessary but comes from of the algorithm of NearestNodeLocator
  */
 class VolumeNearestNodeLocator : public Restartable
 {
 public:
-  VolumeNearestNodeLocator(SubProblem & subproblem, MooseMesh & mesh, BoundaryID boundary1, BoundaryID boundary2);
+  VolumeNearestNodeLocator(SubProblem & subproblem, MooseMesh & mesh, BoundaryID boundary, SubdomainID block);
 
   ~VolumeNearestNodeLocator();
 
@@ -54,31 +55,31 @@ public:
   const Node * nearestNode(unsigned int node_id);
 
   /**
-   * Returns the list of slave nodes this Locator is tracking.
+   * Returns the list of block nodes this Locator is tracking.
    */
-  std::vector<unsigned int> & slaveNodes() { return _slave_nodes; }
+  std::vector<unsigned int> & blockNodes() { return _block_nodes; }
 
   /**
-   * Returns the NodeIdRange of slave nodes to be used for calling threaded
-   * functions operating on the slave nodes.
+   * Returns the NodeIdRange of block nodes to be used for calling threaded
+   * functions operating on the block nodes.
    */
-  NodeIdRange & slaveNodeRange() { return *_slave_node_range; }
+  NodeIdRange & blockNodeRange() { return *_block_node_range; }
 
 protected:
   SubProblem & _subproblem;
 
   MooseMesh & _mesh;
 
-  NodeIdRange * _slave_node_range;
+  NodeIdRange * _block_node_range;
 
 public:
   std::map<unsigned int, NearestNodeLocator::NearestNodeInfo> _nearest_node_info;
 
-  BoundaryID _boundary1;
-  BoundaryID _boundary2;
+  BoundaryID _boundary;
+  SubdomainID _block;
 
   bool _first;
-  std::vector<unsigned int> _slave_nodes;
+  std::vector<unsigned int> _block_nodes;
 
   std::map<unsigned int, std::vector<unsigned int> > _neighbor_nodes;
 
