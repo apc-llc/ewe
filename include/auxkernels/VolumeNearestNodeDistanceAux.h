@@ -6,7 +6,7 @@
 #define VolumeNearestNodeDistanceAux_H
 
 #include "AuxKernel.h"
-#include "NearestNodeLocator.h"
+#include "VolumeNearestNodeLocator.h"
 
 
 //Forward Declarations
@@ -32,7 +32,7 @@ public:
 protected:
   virtual Real computeValue();
 
-  NearestNodeLocator & _nearest_node;
+  VolumeNearestNodeLocator *_nearest_node;
 };
 
 #endif //VolumeNearestNodeDistanceAux_H
