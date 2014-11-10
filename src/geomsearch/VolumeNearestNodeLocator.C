@@ -1,7 +1,3 @@
-/****************************************************************/
-/*  derived form NearestNodeLocator.C                           */
-/****************************************************************/
-
 #include "VolumeNearestNodeLocator.h"
 #include "MooseMesh.h"
 #include "SubProblem.h"

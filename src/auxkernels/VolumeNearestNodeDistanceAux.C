@@ -1,7 +1,3 @@
-/****************************************************************/
-/* derived from NearestNodeDistanceAux.C and GeometricSearchData.C */
-/****************************************************************/
-
 #include "VolumeNearestNodeDistanceAux.h"
 
 template<>

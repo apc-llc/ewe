@@ -1,7 +1,3 @@
-/****************************************************************/
-/* derived from NearestNodeLocator.h                            */
-/****************************************************************/
-
 #ifndef VolumeNearestNodeLocator_H
 #define VolumeNearestNodeLocator_H
 
@@ -25,6 +21,7 @@ class SubProblem;
 /**
  * Finds the nearest node to each node in block to each node in boundary and the other way around.
  * \todo TODO: the latter is not really necessary but comes from of the algorithm of NearestNodeLocator
+ * This code is (with a few relevant modifications) identical to NearestNodeLocator.h/.C
  */
 class VolumeNearestNodeLocator : public Restartable
 {

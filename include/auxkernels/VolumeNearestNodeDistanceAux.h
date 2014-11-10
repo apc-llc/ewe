@@ -1,7 +1,3 @@
-/****************************************************************/
-/*        derived from NearestNodeDistanceAux.h                 */
-/****************************************************************/
-
 #ifndef VolumeNearestNodeDistanceAux_H
 #define VolumeNearestNodeDistanceAux_H
 
@@ -9,22 +5,24 @@
 #include "VolumeNearestNodeLocator.h"
 
 
-//Forward Declarations
+
 class VolumeNearestNodeDistanceAux;
 
 template<>
 InputParameters validParams<VolumeNearestNodeDistanceAux>();
 
 /**
- * Constant auxiliary value
+ * AuxKernel for computing for all volume nodes the nodes on
+ * a given boundary that are closest to them (as well as their distance).
+ *
+ * This code works totally identical to the NearestNodeDistanceAux kernel.
+ * In fact, most of the code here is taken from NearestNodeDistanceAux.h,
+ * NearestNodeDistanceAux.C, and GeometricSearchData.C
+ * and only had to be slightly modified to fit our needs.
  */
 class VolumeNearestNodeDistanceAux : public AuxKernel
 {
 public:
-  /**
-   * Factory constructor, takes parameters so that all derived classes can be built using the same
-   * constructor.
-   */
   VolumeNearestNodeDistanceAux(const std::string & name, InputParameters parameters);
 
   virtual ~VolumeNearestNodeDistanceAux();
