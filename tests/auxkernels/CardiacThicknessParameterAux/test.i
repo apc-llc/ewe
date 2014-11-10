@@ -56,6 +56,7 @@
     distance_RV_inner = distance_RV_inner
     distance_LV_inner = distance_LV_inner
     distance_outer    = distance_outer
+    distinguishLVRV = true
   [../]
 []
 
