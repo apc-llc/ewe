@@ -9,6 +9,7 @@
 #include "KineticEnergyNewmarkAux.h"
 #include "KineticEnergyAux.h"
 #include "VolumeNearestNodeDistanceAux.h"
+#include "CardiacThicknessParameterAux.h"
 #include "NewmarkMaterial.h"
 #include "CardiacStressDivergence.h"
 #include "CardiacKirchhoffStressDivergence.h"
@@ -95,6 +96,7 @@ EweApp::registerObjects(Factory & factory)
   registerAux(KineticEnergyAux);
   registerAux(DisplacementAux);
   registerAux(VolumeNearestNodeDistanceAux);
+  registerAux(CardiacThicknessParameterAux);
 
   registerPostprocessor(CardiacMaterialVolumeRatioPostprocessor);
   registerPostprocessor(CardiacVolumeRatioPostprocessor);
