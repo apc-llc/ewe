@@ -50,6 +50,9 @@ private:
   const RealTensorValue _id;
   const bool _has_fixed_R;
   const RealTensorValue & _fixed_R;
+  const bool _has_e;
+  const VariableValue & _e;
+  const VariableGradient & _grad_e;
 
 };
 
