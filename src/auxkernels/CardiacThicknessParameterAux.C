@@ -24,11 +24,12 @@ CardiacThicknessParameterAux::computeValue()
   const Real d_inner(std::min(_d_rv[_qp], _d_lv[_qp]));
   const Real d_outer(_d_o[_qp]);
 
+  //TODO: maybe a cleaner regularization instead of adding 1.e-16 to the denominator might make sense...
   if (_d_rv[_qp] < _d_lv[_qp]) {
     // we presumably are in the right ventricle - denote this with a negative thickness parameter
-    return - _d_o[_qp] / ( _d_o[_qp] + _d_rv[_qp] );
+    return - _d_o[_qp] / ( _d_o[_qp] + _d_rv[_qp] + 1.e-16 );
   } else {
     // left ventricle --> positive thickness parameter
-    return   _d_o[_qp] / ( _d_o[_qp] + _d_lv[_qp] );
+    return   _d_o[_qp] / ( _d_o[_qp] + _d_lv[_qp] + 1.e-16 );
   }
 }
