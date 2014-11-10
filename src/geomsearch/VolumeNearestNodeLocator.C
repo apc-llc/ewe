@@ -115,9 +115,9 @@ VolumeNearestNodeLocator::findNodes()
         trial_boundary_nodes.push_back(node_id);
     }
 
-    for (libMesh::Node const *nd = *_mesh.localNodesBegin() ; nd != *_mesh.localNodesEnd(); ++nd)
+    for (MeshBase::const_node_iterator nd = _mesh.localNodesBegin(); nd != _mesh.localNodesEnd(); ++nd)
     {
-      const Node * node = nd;
+      const Node * node = *nd;
       std::set<SubdomainID> sids = _mesh.getNodeBlockIds(*node);
       std::set<SubdomainID>::const_iterator ssit(sids.find(_block));
       unsigned int node_id = node->id();
