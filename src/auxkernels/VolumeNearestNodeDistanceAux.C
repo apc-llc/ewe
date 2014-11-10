@@ -36,6 +36,7 @@ VolumeNearestNodeDistanceAux::VolumeNearestNodeDistanceAux(const std::string & n
   return getNearestNodeLocator(master_id, qslave_id);
   */
 
+  _nearest_node->findNodes();
 }
 
 VolumeNearestNodeDistanceAux::~VolumeNearestNodeDistanceAux()
@@ -47,7 +48,6 @@ VolumeNearestNodeDistanceAux::~VolumeNearestNodeDistanceAux()
 Real
 VolumeNearestNodeDistanceAux::computeValue()
 {
-  _nearest_node->findNodes();
 
   if (_nodal)
     return _nearest_node->distance(_current_node->id());
