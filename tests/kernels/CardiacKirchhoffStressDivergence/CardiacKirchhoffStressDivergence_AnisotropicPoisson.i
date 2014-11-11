@@ -95,6 +95,7 @@
   [./cardiac_properties]
     type = CardiacFibresMaterial
     block = 0
+    fixed_R = '0.36 0.48 -0.8 -0.8 0.6 0.0 0.48 0.64 0.60'
   [../]
 
   [./cardiac_material]

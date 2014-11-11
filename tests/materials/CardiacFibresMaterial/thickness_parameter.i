@@ -56,7 +56,16 @@
     distance_RV_inner = distance_RV_inner
     distance_LV_inner = distance_LV_inner
     distance_outer    = distance_outer
-    distinguishLVRV = true
+    distinguishLVRV = false
+  [../]
+[]
+
+[Materials]
+  [./fibres]
+    type = CardiacFibresMaterial
+    block = 0
+    thickness_parameter = thickness_parameter
+    outputs = all
   [../]
 []
 

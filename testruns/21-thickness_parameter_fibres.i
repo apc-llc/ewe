@@ -1,16 +1,5 @@
 [Mesh]
-      dim           = 3
-      distribution  = DEFAULT
-      nx            = 10
-      ny            = 10
-      nz            = 10
-      type          = GeneratedMesh
-      xmax          =  0.5
-      xmin          = -0.5
-      ymax          =  0.5
-      ymin          = -0.5
-      zmax          =  0.5
-      zmin          = -0.5
+  file = 07-heart_geometry_new.e
 []
 
 [Variables]
@@ -32,22 +21,22 @@
   [./auxdistance_outer]
     type = VolumeNearestNodeDistanceAux
     variable = distance_outer
-    block = 0
-    paired_boundary = left
+    block = 1
+    paired_boundary = ss_outer
   [../]
 
   [./auxdistance_RV_inner]
     type = VolumeNearestNodeDistanceAux
     variable = distance_RV_inner
-    block = 0
-    paired_boundary = top
+    block = 1
+    paired_boundary = ss_RV_inner
   [../]
 
   [./auxdistance_LV_inner]
     type = VolumeNearestNodeDistanceAux
     variable = distance_LV_inner
-    block = 0
-    paired_boundary = bottom
+    block = 1
+    paired_boundary = ss_LV_inner
   [../]
 
   [./auxthickness]
@@ -56,7 +45,15 @@
     distance_RV_inner = distance_RV_inner
     distance_LV_inner = distance_LV_inner
     distance_outer    = distance_outer
-    distinguishLVRV = true
+  [../]
+[]
+
+[Materials]
+  [./fibres]
+    type = CardiacFibresMaterial
+    block = 1
+    thickness_parameter = thickness_parameter
+    outputs = all
   [../]
 []
 

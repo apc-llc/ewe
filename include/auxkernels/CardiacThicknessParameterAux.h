@@ -34,6 +34,7 @@ protected:
   virtual Real computeValue();
 
   const VariableValue & _d_rv, & _d_lv, & _d_o;
+  const Real _rvfac;
 
 };
 

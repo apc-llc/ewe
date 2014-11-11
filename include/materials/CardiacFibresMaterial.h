@@ -9,9 +9,8 @@ template<>
 InputParameters validParams<CardiacFibresMaterial>();
 
 /**
- * Material for providing an interface to fibre direction (or any other
- * specific local coordinate system).
- *
+ * Material for providing an interface to fibre direction
+*
  * Material properties are:
  *  - the local coordinate system's basis vectors \f$\hat{e}_f\f$, \f$\hat{e}_n\f$, \f$\hat{e}_s\f$
  *    (see notation in [Holzapfel 2009, Figure 1])
@@ -20,14 +19,14 @@ InputParameters validParams<CardiacFibresMaterial>();
  * For debugging purposes, the rotation matrix (and respective coordinate
  * system) can also be given externally in the input file.
  *
- * \todo Currently, the local coordinate system is computed to somehow
- * approximately reflect the fibre distribution given in Figure 1 of
- * [Holzapfel 2009]. This is far from being perfect, though and should
- * be replaced by something more realistic.
- * Furthermore, we require the vector field \f$\hat{e}_f\f$ to be divergence free
- * which is currently not the case.
- * See e.g. Marks work on Comparison of mono- and bidomain equation
- * for some hints on how to implement this.
+ * The local fibre coordinate system is constructed in an analogous
+ * fashion to the description in [Potse 2006, "Comparison of.."]
+ * with the difference that we do not average over neighbouring elements
+ * for getting a smoothed thickness parameter e.
+ * Instead, we directly use the result from a CardiacThicknessParameterAux
+ * kernel.
+ * For further details consult the publication and see into the
+ * CardiacThicknessParameterAux and VolumeNearestNodeAux kernels.
  */
 class CardiacFibresMaterial : public Material
 {
@@ -50,6 +49,9 @@ private:
   const RealTensorValue _id;
   const bool _has_fixed_R;
   const RealTensorValue & _fixed_R;
+  const bool _has_e;
+  const VariableValue & _e;
+  const VariableGradient & _grad_e;
 
 };
 
