@@ -26,7 +26,7 @@ CardiacFibresMaterial::CardiacFibresMaterial(const std::string & name,
   if ( !(_has_fixed_R ^ _has_e) )
     mooseError("CardiacFibresMaterial: Either fixed_R or thickness_parameter have to be given (neither both nor none of them).");
 
-  if (_has_fixed_R && _fixed_R.det() != 1) // TODO: det[R]==1 is ncessesary but not sufficient for R being a rotation matrix
+  if (_has_fixed_R && _fixed_R.det() != 1) // TODO: det[R]==1 is necessary but not sufficient for R being a rotation matrix
     mooseError("CardiacFibresMaterial: fixed_R has been given externally, but it is not a pure rotation matrix: det[fixed_R] != 1.");
 }
 
@@ -44,10 +44,8 @@ void CardiacFibresMaterial::computeQpProperties()
     const Real R( _e[_qp] < 0 ? /* RV */ pi/4. : /* LV */ pi/3.); ///< \todo TODO: we would need to distinguis LV and RV here, but have to use distinguishLVRV==false in the CardiacThicknessParameterAux to prevent _grad_e from being wrong. --> Need another way of distinguishing...
     const Real bracket(2. * _e[_qp] - 1.);
     const Real alpha(R * bracket * bracket * bracket); // We avoid the pow() call here. - Might not make a real performance difference, though.
-    const Real ca(std::cos(alpha));
-    const Real sa(std::sin(alpha));
-    // we already know the normal vector's direction (negative beacuse of our e being 1-e of [Potse 2006])
-    _En[_qp] = VectorNormalize(-_grad_e[_qp]);
+    // we already know the normal vector's direction (negative because of our e being (1-e) of [Potse 2006])
+    _En[_qp] = VectorNormalize( _grad_e[_qp].size()==0 ? RealVectorValue(_q_point[_qp]) : -_grad_e[_qp]); ///< \todo TODO: find a better way of dealing with |grad_e|==0
     // the fibre vector shall be rotated by pi/2-alpha wrt. the z-axis
     RealVectorValue Ef(0., std::cos(alpha), std::sin(alpha));
     // orthogonalization wrt _En[_qp]
