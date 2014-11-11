@@ -51,7 +51,7 @@ ElectrocardioForcing::computeQpResidual()
       // to excite spiral waves, stimulate with twice the threshold value
     _Iion_app = -40.0*exp(-0.5*pow(x-x_c, 2.0)/pow(0.25, 2.0));
   }
-  else if ((time>10.0) && (time<12.0)) {
+  else if ((time>150.0) && (time<152.0)) {
     if ( (x<2.5) && (y<2.5)) {_Iion_app = 0.0; }
     //_Iion_app = -20.0*exp(-0.5*pow(y-y_c, 2.0)/pow(0.25, 2.0));
   }
