@@ -14,7 +14,7 @@ InputParameters validParams<AnisotropicGradientShift>();
  *
  * This kernel is mainly used for testing purposes. It helps comparing results of
  * the standard Diffusion kernel (that works on nonlinear variables \f$x_i\f$)
- * to results from the CardiacKirchhoffStressDivergence kernel (that works on
+ * to results from the CardiacKirchhoffStressDivergence kernel that works on
  * displacements \f$u_i=x_i-X_i\f$.
  */
 class AnisotropicGradientShift : public Kernel
