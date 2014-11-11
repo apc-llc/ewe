@@ -14,4 +14,9 @@
     expect_err = 'CardiacFibresMaterial: fixed_R has been given externally, but it is not a pure rotation matrix: det\[fixed_R\] \!= 1'
     input = 'R_invalid.i'
   [../]
+  [./thickness_parameter]
+    type = 'Exodiff'
+    input = 'thickness_parameter.i'
+    exodiff = 'thickness_parameter_out.e'
+  [../]
 []
