@@ -1,19 +1,22 @@
-/****************************************************************/
-/*                                                              */
-/*                                                              */
-/****************************************************************/
-
 #ifndef SECONDORDERIMPLICITEULERWITHDENSITY_H
 #define SECONDORDERIMPLICITEULERWITHDENSITY_H
 
 #include "SecondDerivativeImplicitEuler.h"
 
-// Forward Declarations
 class SecondOrderImplicitEulerWithDensity;
 
 template<>
 InputParameters validParams<SecondOrderImplicitEulerWithDensity>();
 
+/**
+ * Second order implicit Euler kernel for PDE terms of the form
+ * \f$ -\rho \frac{\partial^2u}{\partial t^2} \f$.
+ *
+ * This kernel just uses SecondDerivativeImplicitEuler multiplied
+ * by \f$ -\rho \f$.
+ * Furthermore, it supports mass matrix lumping. The idea for that
+ * specific feature came from the TimeDerivative class.
+ */
 class SecondOrderImplicitEulerWithDensity : public SecondDerivativeImplicitEuler
 {
 public:

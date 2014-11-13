@@ -52,7 +52,7 @@ ElectrocardioForcing::computeQpResidual()
     _Iion_app = -40.0*exp(-0.5*pow(x-x_c, 2.0)/pow(0.25, 2.0));
   }
   else if ((time>325.0) && (time<330.0)) {
-    if ( (x<2.5) && (y<2.5)) {_Iion_app = -40.0; }
+    if ( (x<2.5) && (y<2.5)) {_Iion_app = -40.0;}
     //_Iion_app = -20.0*exp(-0.5*pow(y-y_c, 2.0)/pow(0.25, 2.0));
   }
   else {_Iion_app = 0.0; }

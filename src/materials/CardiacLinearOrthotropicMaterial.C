@@ -1,7 +1,3 @@
-/*************************************
- * Template for this file came from moose/modules/solid_mechanics/src/materials/total_strain/LinearIsotropicMaterial.C
- *************************************/
-
 #include "CardiacLinearOrthotropicMaterial.h"
 #include "ColumnMajorMatrix.h"
 #include "CardiacSolidMechanicsMaterial.h"

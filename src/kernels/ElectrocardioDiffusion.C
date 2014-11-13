@@ -18,8 +18,8 @@ InputParameters validParams<ElectrocardioDiffusion>()
 ElectrocardioDiffusion::ElectrocardioDiffusion(const std::string & name, InputParameters parameters) :
     Kernel(name, parameters),
     _surface_to_volume(getParam<Real>("surface_to_volume")),
-    _conductivity(getMaterialProperty<Real>("conductivity")),
-    _capacitance(getParam<Real>("capacitance"))
+    _capacitance(getParam<Real>("capacitance")),
+    _conductivity(getMaterialProperty<Real>("conductivity"))
 {
   std::cout << "Instantiating ElectrocardioDiffusion ... surface_to_volume = " << _surface_to_volume << std::endl;
   std::cout << "Instantiating ElectrocardioDiffusion ... capacitance = " << _capacitance << std::endl;

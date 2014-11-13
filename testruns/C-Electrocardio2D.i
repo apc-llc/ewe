@@ -63,10 +63,12 @@
 []
 
 [Materials]
-  [./cardiac_properties]
-   type = CardiacPropertiesMaterial
-   block = all
-   outputs = all
+
+ [./cardiac_properties]
+    type = CardiacFibresMaterial
+    fixed_R = '1 0 0 0 1 0 0 0 1'
+    block = all
+    outputs = all
   [../]
   
   [./electrocardio]
@@ -89,10 +91,10 @@
   solve_type = 'PJFNK'
 #l_tol = 1e-6
 #  l_max_its = 10
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-8
   nl_rel_step_tol = 1e-8
-#  nl_max_its = 4
+#   nl_max_its = 4
 # num_steps = 10
   num_steps = 10000
   scheme = 'implicit-euler'
