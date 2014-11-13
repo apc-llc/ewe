@@ -136,13 +136,15 @@ public:
   double static constexpr g_na   = 16.0;
 
   //! Constant \\( g_{\rm Ca} \\) from Table 1 in Bernus et al.
-  double static constexpr g_ca   = 0.064;
+  //double static constexpr g_ca   = 0.064;
+  double static constexpr g_ca   = 0.01;
   
   //! Constant \\( g_{\rm to} \\) from Table 1 in Bernus et al.
   double static constexpr g_to   = 0.4;
   
   //! Constant \\( g_{\rm K} \\) from Table 1 in Bernus et al.
-  double static constexpr g_k    = 0.019;
+  //double static constexpr g_k    = 0.019;
+  double static constexpr g_k    = 0.06;
   
   //! Constant \\( g_{\textrm{K},1} \\) from Table 1 in Bernus et al.
   double static constexpr g_k1   = 3.9;

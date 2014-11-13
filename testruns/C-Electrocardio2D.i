@@ -4,8 +4,8 @@
  block_id = '0'
  block_name = 'all'
  
- uniform_refine = 2
- dim           = 3
+ uniform_refine = 3
+ dim           = 2
  distribution  = DEFAULT
  nx            = 3
  ny            = 3
@@ -89,15 +89,17 @@
   solve_type = 'PJFNK'
 #l_tol = 1e-6
 #  l_max_its = 10
-#  nl_rel_tol = 1e-3
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 1e-10
+  nl_rel_step_tol = 1e-8
 #  nl_max_its = 4
 # num_steps = 10
-  num_steps = 250
+  num_steps = 10000
   scheme = 'implicit-euler'
 # scheme ='bdf2'
  [./TimeStepper]
   type = ConstantDT
-  dt = 0.25
+  dt = 0.1
  [../]
 []
 
