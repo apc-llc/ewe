@@ -25,7 +25,7 @@ Electrocardio::Electrocardio(const std::string & name,
 {
   
   // Create pointer to a Bernus model object using the factory class
-  _ionmodel = IionmodelFactory::factory(IionmodelFactory::BERNUS, & gates_qp, & gates_dt_qp);
+  _ionmodel = IionmodelFactory::factory(IionmodelFactory::BERNUS);
   
   std::cout << "Constructing Material Electrocardio..." << std::endl;
 }
@@ -33,13 +33,8 @@ Electrocardio::Electrocardio(const std::string & name,
 void
 Electrocardio::initQpStatefulProperties()
 {
-  _gates[_qp].resize(_ionmodel->get_ngates());
-  _gates_old[_qp].resize(_ionmodel->get_ngates());
-  for (int i=0; i<_ionmodel->get_ngates(); ++i) {
-    // Initialize with steady-state gate variables
-    _gates[_qp][i] = (Real) (*_ionmodel->gates)[i];
-    _gates_old[_qp][i] = (Real) (*_ionmodel->gates)[i];
-  }
+  // initialize local gate variable vector
+  _ionmodel->initialize(&(_gates[_qp]));
 }
 
 void
@@ -55,29 +50,11 @@ void
 Electrocardio::computeQpProperties()
 {
   
-  // Copy old gates values into local gates vector
-  for (int i=0; i<_ionmodel->get_ngates(); ++i) {
-    gates_qp[i] = _gates_old[_qp][i];
-  }
-  
   // Compute ionforcing
-  _Iion[_qp] = _ionmodel->ionforcing(_vmem[_qp]);
-  
-  // Compute time derivative of gating variables
-  _ionmodel->update_gates_dt(_vmem[_qp]);
-  
-  _ionmodel->rush_larsen_step(_vmem[_qp], _dt);
-  
-  for (int i=0; i<_ionmodel->get_ngates(); ++i) {
+  _Iion[_qp] = _ionmodel->ionforcing(_vmem[_qp], &(_gates_old[_qp]));
 
-    // Forward Euler update step
-    //gates_qp[i] += _dt*gates_dt_qp[i];
-    
-    // put updated local values back into global vector
-    _gates[_qp][i] = gates_qp[i];
-  }
-  
-  
+  // Perform one Rush-Larsen time step
+  _ionmodel->rush_larsen_step(_vmem[_qp], _dt, &(_gates_old[_qp]));
   
   /**
    * The mono domain equations reads

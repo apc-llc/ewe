@@ -38,9 +38,7 @@ private:
   MaterialProperty<Real> & _Iion; // ionic currents
   MaterialProperty<std::vector<Real> > & _gates, & _gates_old; // gating variables
   VariableValue & _vmem; // membrane potential
-  
-  std::vector<double> gates_qp, gates_dt_qp;
-  
+    
   Iionmodel * _ionmodel;
     
 };
