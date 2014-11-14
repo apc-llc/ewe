@@ -28,6 +28,25 @@
   [../]
 []
 
+#[AuxVariables]
+#  [./gates]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+#[]
+
+#[AuxKernels]
+#  active = 'auxgates'
+#
+#  [./auxgates]
+#    type = MaterialVectorAux
+#    vector = gates
+#    variable = gates
+#    block = all
+#    index = 0
+#  [../]
+#[]
+
 [Kernels]
   active = 'diff ecforcing euler'
    
