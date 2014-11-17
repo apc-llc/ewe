@@ -30,8 +30,6 @@ public:
    */
   virtual Real value(const Point & p);
 
-private:
-  int _activated_cells;
 };
 
 #endif //ELECTROCARDIOIC_H

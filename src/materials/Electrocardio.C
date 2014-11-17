@@ -53,9 +53,14 @@ Electrocardio::computeQpProperties()
   // Compute ionforcing
   _Iion[_qp] = _ionmodel->ionforcing(_vmem[_qp], &(_gates_old[_qp]));
 
-  // Perform one Rush-Larsen time step
-  _ionmodel->rush_larsen_step(_vmem[_qp], _dt, &(_gates_old[_qp]));
+  // Copy old values into _gates as initial value
+  for (int i=0; i<_ionmodel->get_ngates(); i++) {
+    _gates[_qp][i] = _gates_old[_qp][i];
+  }
   
+  // Perform one Rush-Larsen time step to propagate forward gating variables
+  _ionmodel->rush_larsen_step(_vmem[_qp], _dt, &(_gates[_qp]));
+
   /**
    * The mono domain equations reads
    *

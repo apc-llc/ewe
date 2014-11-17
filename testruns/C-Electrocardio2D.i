@@ -4,7 +4,7 @@
  block_id = '0'
  block_name = 'all'
  
- uniform_refine = 3
+#uniform_refine = 3
  dim           = 2
  distribution  = DEFAULT
  nx            = 3
@@ -28,24 +28,72 @@
   [../]
 []
 
-#[AuxVariables]
-#  [./gates]
-#    order = CONSTANT
-#    family = MONOMIAL
-#  [../]
-#[]
+[AuxVariables]
+  [./gate_m]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+  [./gate_v]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+  [./gate_f]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+  [./gate_to]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+  [./gate_x]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+[]
 
-#[AuxKernels]
-#  active = 'auxgates'
-#
-#  [./auxgates]
-#    type = MaterialVectorAux
-#    vector = gates
-#    variable = gates
-#    block = all
-#    index = 0
-#  [../]
-#[]
+[AuxKernels]
+
+  [./auxgate_m]
+    type = MaterialStdVectorAux
+    property = 'gates'
+    variable = gate_m
+    block = all
+    index = 0
+  [../]
+ 
+   [./auxgate_v]
+     type = MaterialStdVectorAux
+     property = 'gates'
+     variable = gate_v
+     block = all
+     index = 1
+   [../]
+ 
+   [./auxgate_f]
+     type = MaterialStdVectorAux
+     property = 'gates'
+     variable = gate_f
+     block = all
+     index = 2
+   [../]
+ 
+   [./auxgate_to]
+     type = MaterialStdVectorAux
+     property = 'gates'
+     variable = gate_to
+     block = all
+     index = 3
+   [../]
+   
+   [./auxgate_x]
+     type = MaterialStdVectorAux
+     property = 'gates'
+     variable = gate_x
+     block = all
+     index = 4
+   [../]
+ 
+[]
 
 [Kernels]
   active = 'diff ecforcing euler'
@@ -99,7 +147,9 @@
  
   [./conductivity]
    type = ElectrocardioConductivity
-   conductivity_coefficient = 0.006
+#   conductivity_coefficient = 0.006
+  conductivity_coefficient = 0.0
+
    block = all
   [../]
 []
@@ -110,17 +160,17 @@
   solve_type = 'PJFNK'
 #l_tol = 1e-6
 #  l_max_its = 10
-  nl_rel_tol = 1e-6
+  nl_rel_tol = 1e-3
   nl_abs_tol = 1e-8
   nl_rel_step_tol = 1e-8
-#   nl_max_its = 4
+  nl_max_its = 2
 # num_steps = 10
   num_steps = 10000
   scheme = 'implicit-euler'
 # scheme ='bdf2'
  [./TimeStepper]
   type = ConstantDT
-  dt = 0.1
+  dt = 0.05
  [../]
 []
 
@@ -137,7 +187,7 @@
   exodus = true
   [./console]
     type = Console
-    perf_log = true
-    linear_residuals = true
+    perf_log = false
+    linear_residuals = false
   [../]
 []
