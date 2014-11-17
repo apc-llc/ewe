@@ -46,6 +46,7 @@ ElectrocardioForcing::computeQpResidual()
   // Externally applied current
   Real _Iion_app(0.0);
   
+  /**
   if (time<2.0) {
       // Figure 5 in Bernus et al; threshold current for a 5ms stimulus is approximately 5 pA/pF;
       // to excite spiral waves, stimulate with twice the threshold value
@@ -56,7 +57,8 @@ ElectrocardioForcing::computeQpResidual()
     _Iion_app = -20.0*exp(-0.5*pow(x-5.0, 2.0)/pow(0.25, 2.0) - 0.5*pow(y-0.0, 2.0)/pow(1.0, 2.0));
   }
   else {_Iion_app = 0.0; }
-    
+  */
+  
   return _ion_coeff*(_Iion[_qp] + _Iion_app)*_test[_i][_qp];
 }
 
