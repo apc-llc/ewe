@@ -3,6 +3,9 @@
 
 #include "Kernel.h"
 #include "SymmGenericElasticityTensor.h"
+#include "TensorHelpers.h"
+
+using namespace TensorHelpers;
 
 //Forward Declarations
 class ColumnMajorMatrix;
@@ -37,6 +40,7 @@ protected:
   virtual Real computeQpOffDiagJacobian(unsigned int jvar);
   MaterialProperty<RealTensorValue> & _stress;                          ///< 2nd Piola-Kirchhoff stress tensor \f$T_{MN}\f$
   MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative;   ///< derivative of the 2nd Piola-Kirchhoff stress tensor \f$\frac{\partial T_{MN}}{\partial E_{PQ}}\f$
+  MaterialProperty<RealTensorValue> & _Rf;                              ///< rotation tensor for the local (fibre) coordinate system
 
   /// computes   SUM(M,N) [ t(M,N) v1(M) v2(N) ]
   Real fullContraction(const RealTensorValue & t,
@@ -45,6 +49,10 @@ protected:
 
 private:
   const unsigned int _component;
+
+  const VariableGradient & _grad_disp_x;
+  const VariableGradient & _grad_disp_y;
+  const VariableGradient & _grad_disp_z;
 
   const unsigned int _xdisp_var;
   const unsigned int _ydisp_var;

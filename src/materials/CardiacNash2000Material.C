@@ -10,6 +10,9 @@
 #include "CardiacSolidMechanicsMaterial.h"
 #include "SymmOrthotropicElasticityTensor.h"
 #include "VolumetricModel.h"
+#include "TensorHelpers.h"
+
+using namespace TensorHelpers;
 
 template<>
 InputParameters validParams<CardiacNash2000Material>()
@@ -54,75 +57,6 @@ CardiacNash2000Material::CardiacNash2000Material(const std::string  & name,
 {
   if (_has_Ta && _has_Ta_function)
     mooseError("CardiacNash2000Material: Only Ta or Ta_function may be given, not both of them.");
-}
-
-const RealTensorValue CardiacNash2000Material::STtoRTV(const SymmTensor & A) const
-{
-  RealTensorValue B;
-  B(0,0) = A(0,0);
-  B(1,1) = A(1,1);
-  B(2,2) = A(2,2);
-  B(0,1) = B(1,0) = A(0,1);
-  B(0,2) = B(2,0) = A(0,2);
-  B(1,2) = B(2,1) = A(1,2);
-  return B;
-}
-
-const SymmGenericElasticityTensor CardiacNash2000Material::STtoSGET(const SymmTensor & A) const
-{
-  SymmGenericElasticityTensor B;
-  B(0,0,0,0) = A(0,0);
-  B(1,1,1,1) = A(1,1);
-  B(2,2,2,2) = A(2,2);
-  B(1,2,1,2) = A(1,2);
-  B(0,2,0,2) = A(0,2);
-  B(0,1,0,1) = A(0,1);
-  return B;
-}
-
-const SymmTensor CardiacNash2000Material::symmProd(const RealTensorValue & outer, const SymmTensor & inner) const
-{
-  SymmTensor res;
-  for (unsigned int i=0;i<3;i++)
-    for (unsigned int j=i;j<3;j++) {
-      Real s(0);
-      for (unsigned int k=0;k<3;k++)
-        s += outer(k,i) * ( inner(k,0)*outer(0,j) + inner(k,1)*outer(1,j) + inner(k,2)*outer(2,j) );
-      res(i,j) = s;
-    }
-  RealTensorValue r(outer.transpose() * STtoRTV(inner) * outer);
-  return SymmTensor(r(0,0), r(1,1), r(2,2), r(0,1), r(1,2), r(0,2) );
-}
-
-const SymmTensor CardiacNash2000Material::symmProd(const RealTensorValue & A) const
-{
-                    /* i j        i      j        i      j        i      j */
-  return SymmTensor(/* 0 0 */ A(0,0)*A(0,0) + A(1,0)*A(1,0) + A(2,0)*A(2,0),
-                    /* 1 1 */ A(0,1)*A(0,1) + A(1,1)*A(1,1) + A(2,1)*A(2,1),
-                    /* 2 2 */ A(0,2)*A(0,2) + A(1,2)*A(1,2) + A(2,2)*A(2,2),
-                    /* 0 1 */ A(0,0)*A(0,1) + A(1,0)*A(1,1) + A(2,0)*A(2,1),
-                    /* 1 2 */ A(0,1)*A(0,2) + A(1,1)*A(1,2) + A(2,1)*A(2,2),
-                    /* 0 2 */ A(0,0)*A(0,2) + A(1,0)*A(1,2) + A(2,0)*A(2,2));
-}
-
-const SymmTensor CardiacNash2000Material::symmInv(const SymmTensor & C, const Real det) const
-{
-  SymmTensor Cinv(/* 00 */ C(0,0)*C(1,1)-C(1,2)*C(1,2),
-                  /* 11 */ C(0,0)*C(0,0)-C(0,2)*C(0,2),
-                  /* 22 */ C(0,0)*C(1,1)-C(0,1)*C(0,1),
-                  /* 01 */ C(0,2)*C(1,2)-C(0,0)*C(0,1),
-                  /* 12 */ C(0,1)*C(0,2)-C(0,0)*C(1,2),
-                  /* 02 */ C(0,1)*C(1,2)-C(0,2)*C(1,1));
-  return Cinv * (1./det);
-}
-
-const RealTensorValue CardiacNash2000Material::prod(const SymmTensor & A, const SymmTensor & B) const
-{
-  RealTensorValue res;
-  for (int M=0;M<3;M++)
-    for (int N=0;N<3;N++)
-      res(M,N) = A(M,0)*B(0,N) + A(M,1)*B(1,N) + A(M,2)*B(2,N);
-  return res;
 }
 
 void
@@ -184,22 +118,16 @@ CardiacNash2000Material::computeQpProperties()
       }
     }
 
-  // For convenicence, we rotate back into the outer coordinate system here before adding pressure and active tension
-  // This is done because adding them destroys symmetries which would force us to rotate a fourth order tensor in
-  // the case of the stress derivative instead of the second order tensor D
-  T = symmProd(R, T);
-  D = symmProd(R, D);
-
   // Add hydrostatic pressure and active tension
   // The following steps render
-  //    T asymmetric
+  //    T asymmetric, i.e. we need a general (non-symmetric) tensor here
   //    D asymmetric wrt. (MN)<->(PQ), i.e. we need the full fourth order tensor here.
   _stress[_qp] = STtoRTV(T);
   _stress_derivative[_qp] = STtoSGET(D);
 
   if (_has_p || _has_Ta || _has_Ta_function) {
     // Inverse of the Cauchy Green deformation tensor (note that det(C_fibre) = det(C) = det(F^T)*det(F) = det(F)^2, since det(R)==1 )
-    const SymmTensor Cinv_outer( symmProd(R, symmInv(C, _J[_qp]*_J[_qp]) ) );
+    const SymmTensor Cinv( symmInv(C, _J[_qp]*_J[_qp]) );
 
     // Add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
     if (_has_p) {
@@ -218,15 +146,15 @@ CardiacNash2000Material::computeQpProperties()
        */
       const Real p( _p.size() > 0 ? _p[0] : 0.);
 
-      _stress[_qp] -= STtoRTV( Cinv_outer * p );
+      _stress[_qp] -= STtoRTV( Cinv * p );
       // for the derivative of T, things do become slightly complicated as we have to do
-      // _stress_derivative[_qp](MNPQ) += 2 * _p[0] * Cinv_outer(M,P) * Cinv_outer(Q,N)
-      // Note that the pressure term is symmetric in Q<->N and in M<->P, i.e. C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of Cinv_outer.
+      // _stress_derivative[_qp](MNPQ) += 2 * _p[0] * Cinv(M,P) * Cinv(Q,N)
+      // Note that the pressure term is symmetric in Q<->N and in M<->P, i.e. C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of Cinv.
       for (int M=0;M<3;M++)
         for (int N=0;N<3;N++)
           for (int P=M;P<3;P++)
             for (int Q=N;Q<3;Q++) {
-              const Real Tp(2 * p * Cinv_outer(M,P) * Cinv_outer(Q,N));
+              const Real Tp(2 * p * Cinv(M,P) * Cinv(Q,N));
               _stress_derivative[_qp](M,N,P,Q) += Tp;
               _stress_derivative[_qp](N,M,P,Q) += Tp;
               _stress_derivative[_qp](M,N,Q,P) += Tp;
@@ -237,25 +165,28 @@ CardiacNash2000Material::computeQpProperties()
     }
     // Add active tension in fibre direction
     if (_has_Ta || _has_Ta_function) {
-      Real Ta;
+      Real rTa;
       if (_has_Ta)
-        Ta = _Ta[_qp];
+        rTa = _Ta[_qp];
       else
-        Ta = _Ta_function->value(_t, _q_point[_qp]);
+        rTa = _Ta_function->value(_t, _q_point[_qp]);
       // representation of active tension in fibre direction in outer coordinate system
-      const SymmTensor Ta_outer( symmProd(R, SymmTensor(Ta, 0, 0, 0, 0, 0)) );
-      _stress[_qp] += prod ( Ta_outer, Cinv_outer );
+      const SymmTensor Ta( symmProd(R, SymmTensor(rTa, 0, 0, 0, 0, 0)) );
+      _stress[_qp] += prod ( Ta, Cinv );
       // _stress_derivative[_qp](MNPQ) += 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
-      // Ta_outer is still a diagonal matrix, i.e. there is a delta(MN) involved
-      // furthermore, Cinv_outer is symmetric
+      // Ta is a diagonal matrix, i.e. there is a delta(MN) involved
+      // furthermore, Cinv is symmetric
       for (int M=0;M<3;M++)
         for (int P=0;P<3;P++)
           for (int Q=0;Q<3;Q++)
-            _stress_derivative[_qp](M,M,P,Q) += 2 * Ta_outer(M,M) * Cinv_outer(M,P) * Cinv_outer(Q,M);
+            _stress_derivative[_qp](M,M,P,Q) += 2 * Ta(M,M) * Cinv(M,P) * Cinv(Q,M);
       /// \todo TODO: how does this go into the elastic energy ?
       // _W[_qp] += ??
     }
   }
 
+  // rotate back into the outer coordinate system
+  _stress[_qp] = R.transpose() * _stress[_qp] * R;
+  _stress_derivative[_qp] = _stress_derivative[_qp].doubleLeftProduct(R);
 }
 

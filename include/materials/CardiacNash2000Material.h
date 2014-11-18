@@ -29,20 +29,6 @@ public:
 protected:
   virtual void computeQpProperties();
 
-  /// Converts a SymmTensor to a RealTensorValue with the respective symmetric elements.
-  const RealTensorValue STtoRTV(const SymmTensor & A) const;
-  /// Converts a SymmTensor \f$A\f$ to a SymmGenericElasticityTensor \f$C_{MNPQ}\f$.
-  /// assuming that \f$C_{MN**} = C_{**MN} = A_{MN}\f$.
-  const SymmGenericElasticityTensor STtoSGET(const SymmTensor & A) const;
-  /// Computes \f$\mathrm{outer}^\mathrm{T}\,\mathrm{inner}\,\mathrm{outer}\f$.
-  const SymmTensor symmProd(const RealTensorValue & outer, const SymmTensor & inner) const;
-  /// Computes the symmetric product \f$A^\mathrm{T}A\f$.
-  const SymmTensor symmProd(const RealTensorValue & A) const;
-  /// Computes \f$C^{-1}\f$ using if \f$\mathrm{det}C\f$ is already known.
-  const SymmTensor symmInv(const SymmTensor & C, const Real det) const;
-  /// Computes \f$\mathbf{A}\cdot\mathbf{B}\f$ for symmetric tensors (result is not necessarily symmetric any more !)
-  const RealTensorValue prod(const SymmTensor & A, const SymmTensor & B) const;
-
   VariableGradient & _grad_dispx;
   VariableGradient & _grad_dispy;
   VariableGradient & _grad_dispz;
