@@ -187,6 +187,6 @@ CardiacNash2000Material::computeQpProperties()
 
   // rotate back into the outer coordinate system
   _stress[_qp] = R.transpose() * _stress[_qp] * R;
-  _stress_derivative[_qp] = _stress_derivative[_qp].doubleLeftProduct(R);
+  _stress_derivative[_qp] = _stress_derivative[_qp].doubleLeftdoubleRightProduct(R);
 }
 
