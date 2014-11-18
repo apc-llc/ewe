@@ -43,8 +43,8 @@ ElectrocardioIC::value(const Point & p)
   double coeff = exp(0.0);
   //return (1/coeff)*exp(-0.5*arg);
   //return -90.272 + 30.0*(1/coeff)*exp(-0.5*arg);
-  return -60.0;
-  //return -90.272;
+  //return -60.0;
+  return -90.272;
   //return sin(M_PI*p(0))*sin(M_PI*p(1));
 
 }
