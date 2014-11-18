@@ -53,6 +53,7 @@ void CardiacFibresMaterial::computeQpProperties()
     // normalization
     _Ef[_qp] = VectorNormalize(Ef);
     // sheet direction vector
+    /// \todo TODO: normalization should not be necessary here as _Ef and _En are orthonormal
     _Es[_qp] = VectorNormalize(VectorProduct(_Ef[_qp], _En[_qp]) /* stupid way of constructing the missing orthogonal vector*/);
 
     _Rf[_qp] = RealTensorValue(_Ef[_qp], _Es[_qp], _En[_qp]).transpose();

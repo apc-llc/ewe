@@ -86,6 +86,34 @@ public:
     return res;
   }
 
+  /// computes \f$\sum_{M,N,P,Q} t_{M,N,P,Q} v1_{M} v2_{N} r_{P,Q} \f$
+  inline Real doubleLeftSymmDoubleRightContraction(const RealVectorValue & v1,
+                                                   const RealVectorValue & v2,
+                                                   const SymmTensor & r) const
+  {
+    Real res(0);
+    for (unsigned int M=0;M<3;M++)
+      for (unsigned int N=0;N<3;N++)
+        for (unsigned int P=0;P<3;P++)
+          for (unsigned int Q=0;Q<3;Q++)
+            res += _val[convert_indices(M,N,P,Q)] * v1(M) * v2(N) * r(P,Q);
+    return res;
+  }
+
+  /// computes \f$\sum_{T,U} (R^t)_{M,T} t_{T,U,P,Q} (tt)_{U,N} = \sum_{T,U} (R)_{T,M} (tt)_{U,N} t_{T,U,P,Q}\f$
+  inline SymmGenericElasticityTensor doubleLeftProduct(const RealTensorValue & R) const
+  {
+    SymmGenericElasticityTensor res(0);
+    for (unsigned int M=0;M<3;M++)
+      for (unsigned int N=0;N<3;N++)
+        for (unsigned int P=0;P<3;P++)
+          for (unsigned int Q=0;Q<3;Q++)
+            for (unsigned int T=0;T<3;T++)
+              for (unsigned int U=0;U<3;U++)
+                res(M,N,P,Q) += _val[convert_indices(T,U,P,Q)] * R(T,M) * R(U,N);
+    return res;
+  }
+
 protected:
 
   virtual void calculateEntries(unsigned int qp) {};
