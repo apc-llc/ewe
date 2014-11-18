@@ -67,7 +67,6 @@ CardiacKirchhoffStressDivergence::computeQpJacobian()
                 /* 01 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xi(1) + grad_xi(0)*_grad_phi[_j][_qp](1)),
                 /* 12 */ 0.5*(_grad_phi[_j][_qp](1)*grad_xi(2) + grad_xi(1)*_grad_phi[_j][_qp](2)),
                 /* 02 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xi(2) + grad_xi(0)*_grad_phi[_j][_qp](2)));
-  //dE = symmProd(_Rf[_qp].transpose(), dE);
 
   return _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(_grad_test[_i][_qp], grad_xi, dE)
     + fullContraction(_stress[_qp], _grad_test[_i][_qp], _grad_phi[_j][_qp]);
@@ -101,7 +100,6 @@ CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
                   /* 01 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(1) + grad_xk(0)*_grad_phi[_j][_qp](1)),
                   /* 12 */ 0.5*(_grad_phi[_j][_qp](1)*grad_xk(2) + grad_xk(1)*_grad_phi[_j][_qp](2)),
                   /* 02 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(2) + grad_xk(0)*_grad_phi[_j][_qp](2)));
-    //dE = symmProd(_Rf[_qp].transpose(), dE);
 
     return _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(_grad_test[_i][_qp], grad_xi, dE);
   } else
