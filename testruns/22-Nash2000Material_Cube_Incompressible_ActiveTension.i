@@ -119,9 +119,9 @@
 []
 
 [BCs]
-#  [./dispx] type = DirichletBC variable = dispx boundary = 'left' value = 0. [../]
-#  [./dispy] type = DirichletBC variable = dispy boundary = 'left' value = 0. [../]
-#  [./dispz] type = DirichletBC variable = dispz boundary = 'left' value = 0. [../]
+  [./dispx] type = DirichletBC variable = dispx boundary = 'left' value = 0. [../]
+  [./dispy] type = DirichletBC variable = dispy boundary = 'left' value = 0. [../]
+  [./dispz] type = DirichletBC variable = dispz boundary = 'left' value = 0. [../]
 #  [./ns_lower_polar_point_y] type = DirichletBC variable = dispy boundary = ns_lower_polar_point value = 0. [../]
 #  [./ns_lower_polar_point_z] type = DirichletBC variable = dispz boundary = ns_lower_polar_point value = 0. [../]
 #  [./ns_lower_polar_neighbour_x] type = DirichletBC variable = dispx boundary = ns_lower_polar_neighbour value = 0. [../]

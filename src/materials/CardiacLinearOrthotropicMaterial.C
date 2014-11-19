@@ -58,10 +58,9 @@ CardiacLinearOrthotropicMaterial::computeProperties()
     _elasticity_tensor[_qp] = *_local_elasticity_tensor;
 
     // ...and rotate it to the outer coordinate system
-    const ColumnMajorMatrix R_f_3x3( _Rf[_qp] );
     ColumnMajorMatrix R_f_9x9(9,9);
-    _elasticity_tensor[_qp].form9x9Rotation( R_f_3x3, R_f_9x9 );
-    _elasticity_tensor[_qp].rotateFromGlobalToLocal( R_f_9x9);
+    _elasticity_tensor[_qp].form9x9Rotation( ColumnMajorMatrix(_Rf[_qp]), R_f_9x9 );
+    _elasticity_tensor[_qp].rotateFromLocalToGlobal( R_f_9x9);
 
     SymmTensor strain( _grad_disp_x[_qp](0),
                        _grad_disp_y[_qp](1),

@@ -33,7 +33,7 @@ CardiacPropertiesMaterial::CardiacPropertiesMaterial(const std::string & name,
 
 void CardiacPropertiesMaterial::computeQpConductivities()
 {
-  _sigma[_qp] = _Rf[_qp].transpose() * RealVectorValue(_sigmal, _sigmat, _sigmat);
+  _sigma[_qp] = _Rf[_qp] * RealVectorValue(_sigmal, _sigmat, _sigmat);
 }
 
 

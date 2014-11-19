@@ -20,7 +20,6 @@ CardiacKirchhoffStressDivergence::CardiacKirchhoffStressDivergence(const std::st
   :Kernel(name, parameters),
    _stress(getMaterialProperty<RealTensorValue>("Kirchhoff_stress")),
    _stress_derivative(getMaterialProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
-   _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
    _component(getParam<unsigned int>("component")),
    _grad_disp_x(coupledGradient("dispx")),
    _grad_disp_y(coupledGradient("dispy")),

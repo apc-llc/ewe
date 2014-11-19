@@ -43,8 +43,8 @@ private:
   /// Computes \f$ \vec{a} \times \vec{b}\f$.
   inline RealVectorValue VectorProduct(const RealVectorValue &a, const RealVectorValue &b) { return RealVectorValue(a(1)*b(2) - a(2)*b(1), a(2)*b(0) - a(0)*b(2), a(0)*b(1) - a(1)*b(0)); }
 
-  MaterialProperty<RealVectorValue> & _Ef, & _En, & _Es; ///< unit vectors for fibre direction, sheet normal and sheet axis (all three are perpendicular to each other, see [Holzapfel 2009, Figure 1] for details
-  MaterialProperty<RealTensorValue> & _Rf;               ///< rotation matrix from cartesian to fibre coordinate system. contains columnwise \f$\hat{e}_f\f$, \f$\hat{e}_n\f$, \f$\hat{e}_s\f$
+  MaterialProperty<RealVectorValue> & _Ef, & _Es, & _En; ///< unit vectors for fibre direction, sheet axis and sheet normal (all three are perpendicular to each other, see [Holzapfel 2009, Figure 1] for details
+  MaterialProperty<RealTensorValue> & _Rf;               ///< rotation matrix from cartesian to fibre coordinate system. contains row-wise \f$\hat{e}_f\f$, \f$\hat{e}_s\f$, \f$\hat{e}_n\f$
 
   const RealTensorValue _id;
   const bool _has_fixed_R;

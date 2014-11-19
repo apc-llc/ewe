@@ -62,18 +62,17 @@ CardiacNash2000Material::CardiacNash2000Material(const std::string  & name,
 void
 CardiacNash2000Material::computeQpProperties()
 {
-  const RealTensorValue R(_Rf[_qp]);
-
   // local deformation gradient tensor: F(ij) = dx(i)/dX(j)
   // Note that the nonlinear variables are displacements u(i)=x(i)-X(i), thus dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
-  _F[_qp] = RealTensorValue(_grad_dispx[_qp](0) + 1, _grad_dispx[_qp](1)    , _grad_dispx[_qp](2),
-                            _grad_dispy[_qp](0)    , _grad_dispy[_qp](1) + 1, _grad_dispy[_qp](2),
-                            _grad_dispz[_qp](0)    , _grad_dispz[_qp](1)    , _grad_dispz[_qp](2) + 1);
-  // ...its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
+  _F[_qp] = RealTensorValue(_grad_dispx[_qp], _grad_dispy[_qp], _grad_dispz[_qp]);
+  _F[_qp](0,0) += 1;
+  _F[_qp](1,1) += 1;
+  _F[_qp](2,2) += 1;
+   // ...its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
   _J[_qp] = _F[_qp].det();
   // From here on, we go over to fibre coordinates, i.e. for C, E, T
-  // Cauchy-Green deformation tensor in fibre coordinates: C = R F^T F R^T
-  const SymmTensor C(symmProd(R.transpose(), symmProd(_F[_qp])));
+  // Cauchy-Green deformation tensor in fibre coordinates: C* = R^T F^T F R
+  const SymmTensor C(symmProd(_Rf[_qp], symmProd(_F[_qp])));
   // Lagrange-Green strain tensor
   const SymmTensor E( (C - _id) * 0.5 );
   
@@ -171,7 +170,7 @@ CardiacNash2000Material::computeQpProperties()
       else
         rTa = _Ta_function->value(_t, _q_point[_qp]);
       // representation of active tension in fibre direction in outer coordinate system
-      const SymmTensor Ta( symmProd(R, SymmTensor(rTa, 0, 0, 0, 0, 0)) );
+      const SymmTensor Ta( symmProd(_Rf[_qp].transpose(), SymmTensor(rTa, 0, 0, 0, 0, 0)) );
       _stress[_qp] += prod ( Ta, Cinv );
       // _stress_derivative[_qp](MNPQ) += 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
       // Ta is a diagonal matrix, i.e. there is a delta(MN) involved
@@ -186,7 +185,7 @@ CardiacNash2000Material::computeQpProperties()
   }
 
   // rotate back into the outer coordinate system
-  _stress[_qp] = R.transpose() * _stress[_qp] * R;
-  _stress_derivative[_qp] = _stress_derivative[_qp].doubleLeftdoubleRightProduct(R);
+  _stress[_qp] = _Rf[_qp] * _stress[_qp] * _Rf[_qp].transpose();
+  _stress_derivative[_qp] = _stress_derivative[_qp].quadProduct(_Rf[_qp], _Rf[_qp].transpose(), _Rf[_qp], _Rf[_qp].transpose());
 }
 
