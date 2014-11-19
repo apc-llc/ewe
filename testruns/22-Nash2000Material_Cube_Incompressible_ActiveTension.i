@@ -15,11 +15,11 @@
 []
 
 [Variables]
-  [./dispx] order = SECOND family = LAGRANGE [../]
-  [./dispy] order = SECOND family = LAGRANGE [../]
-  [./dispz] order = SECOND family = LAGRANGE [../]
+  [./dispx] order = FIRST family = LAGRANGE [../]
+  [./dispy] order = FIRST family = LAGRANGE [../]
+  [./dispz] order = FIRST family = LAGRANGE [../]
 
-  ##[./hydrostatic_pressure] order = FIRST family = SCALAR [../]
+  [./hydrostatic_pressure] order = FIRST family = SCALAR [../]
 []
 
 [Kernels]
@@ -58,9 +58,9 @@
   #[./inertia_z] type = SecondOrderImplicitEulerWithDensity variable = dispz density  = 0.0 lumping  = false [../]
 []
 
-##[ScalarKernels]
-##  [./incompressibility] type = CardiacIncompressibilityLagrangeMultiplier variable = hydrostatic_pressure volume_ratio_postprocessor = volume_ratio [../]
-##[]
+[ScalarKernels]
+  [./incompressibility] type = CardiacIncompressibilityLagrangeMultiplier variable = hydrostatic_pressure volume_ratio_postprocessor = volume_ratio [../]
+[]
 
 [AuxVariables]
   [./distance_outer]    order = FIRST family = LAGRANGE [../]
@@ -84,8 +84,8 @@
 
 [Materials]
   [./fibres] type = CardiacFibresMaterial block = 0 
-    #thickness_parameter = thickness_parameter
-    fixed_R = '0.36 0.48 -0.8 -0.8 0.6 0.0 0.48 0.64 0.60'
+    thickness_parameter = thickness_parameter
+    #fixed_R = '0.36 0.48 -0.8 -0.8 0.6 0.0 0.48 0.64 0.60'
     #fixed_R = '1 0 0 0 1 0 0 0 1'
     outputs = all
   [../]
@@ -105,7 +105,7 @@
     outputs = all
     output_properties = 'Kirchhoff_stress'
     Ta_function = active_tension
-    ##p = hydrostatic_pressure
+    p = hydrostatic_pressure
   [../]
 []
 
@@ -113,7 +113,7 @@
   [./active_tension]
     type = PiecewiseLinear
     x = '0.0  1.0'
-    y = '0.0  1.0'
+    y = '0.0  0.5'
     scale_factor = 1
   [../]
 []
@@ -138,23 +138,25 @@
   type = Transient
 
   solve_type = PJFNK
-  #petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  #petsc_options_value = '201                 hypre    boomeramg      4'
-  #petsc_options = '-fp_trap -ksp_converged_reason -ksp_monitor_true_residual -pc_svd_monitor'
-  #petsc_options_iname = '-pc_type'
-  #petsc_options_value = 'svd'
+  petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
+  petsc_options_value = ' 201                lu       boomeramg      4                          '
+  petsc_options = '-fp_trap -info
+                   -snes_monitor -snes_view -snes_converged_reason -snes_mf_operator
+                   -ksp_monitor  -ksp_view  -ksp_converged_reason  -ksp_monitor_true_residual
+                   -pc_svd_monitor'
   line_search = 'none'
 
-  nl_rel_tol = 1.e-8
-  nl_rel_step_tol = 1.e-6
+  nl_rel_tol = 1e-3
+  nl_abs_tol = 1e-8
+  nl_rel_step_tol = 1e-8
   l_tol = 1.e-8
   l_max_its = 20
 
   start_time = 0
   end_time   = 1.0
   #num_steps = 10
-  dtmax      = 0.005
-  dtmin      = 0.005
+  dtmax      = 0.1
+  dtmin      = 0.1
 []
 
 [Outputs]
