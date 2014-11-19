@@ -100,33 +100,23 @@ public:
     return res;
   }
 
-  /// computes \f$\sum_{T,U} (R^t)_{M,T} t_{T,U,P,Q} R_{U,N} = \sum_{T,U} (R)_{T,M} R_{U,N} t_{T,U,P,Q}\f$
-  inline SymmGenericElasticityTensor doubleLeftProduct(const RealTensorValue & R) const
+  /// computes \f$\sum_{m,n,p,q} A_{Mm} B_{Nn} C_{Pp} D_{Qq} t_{m,n,p,q}\f$
+  inline SymmGenericElasticityTensor quadProduct(const RealTensorValue & A,const RealTensorValue & B, const RealTensorValue & C, const RealTensorValue & D) const
   {
     SymmGenericElasticityTensor res(0);
     for (unsigned int M=0;M<3;M++)
       for (unsigned int N=0;N<3;N++)
         for (unsigned int P=0;P<3;P++)
-          for (unsigned int Q=0;Q<3;Q++)
-            for (unsigned int T=0;T<3;T++)
-              for (unsigned int U=0;U<3;U++)
-                res(M,N,P,Q) += _val[convert_indices(T,U,P,Q)] * R(T,M) * R(U,N);
-    return res;
-  }
-
-  /// computes \f$\sum_{m,n,p,q} (R^t)_{M,m} (R^t)_{P,p} t_{m,n,p,q} R_{n,N} R_{q,Q} = \sum_{m,n,p,q} R_{m,M} R_{p,P} R_{n,N} R_{q,Q} t_{m,n,p,q} \f$
-  inline SymmGenericElasticityTensor doubleLeftdoubleRightProduct(const RealTensorValue & R) const
-  {
-    SymmGenericElasticityTensor res(0);
-    for (unsigned int M=0;M<3;M++)
-      for (unsigned int N=0;N<3;N++)
-        for (unsigned int P=0;P<3;P++)
-          for (unsigned int Q=0;Q<3;Q++)
+          for (unsigned int Q=0;Q<3;Q++) {
+            Real r(0);
             for (unsigned int m=0;m<3;m++)
               for (unsigned int n=0;n<3;n++)
                 for (unsigned int p=0;p<3;p++)
                   for (unsigned int q=0;q<3;q++)
-                    res(M,N,P,Q) += _val[convert_indices(m,n,p,q)] * R(m,M) * R(n,N) * R(p,P) * R(q,Q);
+                    r += _val[convert_indices(m,n,p,q)] * A(M,m) * B(N, n) * C(P,p) * D(Q,q);
+            res(M,N,P,Q) = r;
+          }
+
     return res;
   }
 

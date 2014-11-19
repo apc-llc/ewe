@@ -40,7 +40,6 @@ protected:
   virtual Real computeQpOffDiagJacobian(unsigned int jvar);
   MaterialProperty<RealTensorValue> & _stress;                          ///< 2nd Piola-Kirchhoff stress tensor \f$T_{MN}\f$
   MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative;   ///< derivative of the 2nd Piola-Kirchhoff stress tensor \f$\frac{\partial T_{MN}}{\partial E_{PQ}}\f$
-  MaterialProperty<RealTensorValue> & _Rf;                              ///< rotation tensor for the local (fibre) coordinate system
 
   /// computes   SUM(M,N) [ t(M,N) v1(M) v2(N) ]
   Real fullContraction(const RealTensorValue & t,
