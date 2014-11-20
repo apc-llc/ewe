@@ -75,7 +75,7 @@ CardiacNash2000Material::computeQpProperties()
   const SymmTensor C(symmProd(_Rf[_qp], symmProd(_F[_qp])));
   // Lagrange-Green strain tensor
   const SymmTensor E( (C - _id) * 0.5 );
-  
+
   // 2nd Piola-Kirchhoff stress tensor: T(MN) = 1/2[dW/dE(MN) + dW/dE(NM)] + [- p + Ta delta(M1) delta(N1) ] C^-1(MN)
   // We make use of dW/dE(MN) == dW/dE(NM) and will add active tension and pressure terms later
   SymmTensor T;
@@ -104,9 +104,12 @@ CardiacNash2000Material::computeQpProperties()
       } else /* k>0 */ {
         const Real a(_a(M,N));
         const Real b(_b(M,N));
-        const Real d( a - e );
-        if (d <= 0)
-          mooseError("CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model");
+        Real d( a - e );
+        if (d <= 0) {
+          std::cout << "d = " << d << " on element: " << _current_elem->id() << std::endl;
+          //mooseError("CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model");
+          d = 1e-5;
+        }
         const Real f( b*e/d );
         const Real g( k*pow(d,-b) );
 
