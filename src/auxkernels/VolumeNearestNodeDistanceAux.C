@@ -17,6 +17,13 @@ VolumeNearestNodeDistanceAux::VolumeNearestNodeDistanceAux(const std::string & n
   if (blocks().size() > 1)
     mooseError("VolumeNearestNodeDistanceAux can only be used with one block at a time!");
 
+  if (!_nodal) {
+    /// \todo TODO: Some quadrature nodes might not exist in this case. This would render _mesh.QuadratureNode() in computeValue() to fail.
+    /// Therefore, we bail out here. If elemental functionality is needed, we have to find out how
+    /// GeometricSearchData::generateQuadratureNodes() is used
+    mooseError("VolumeNearestNodeDistanceAux does not support element-wise computation. Please switch to type=FIRST for this kernels AuxVariable.");
+  }
+
   unsigned int boundary_id = _mesh.getBoundaryID(parameters.get<BoundaryName>("paired_boundary"));
   unsigned int block_id  = _mesh.getSubdomainID(blocks()[0]);
   _subproblem.addGhostedBoundary(boundary_id);
@@ -47,8 +54,6 @@ VolumeNearestNodeDistanceAux::computeValue()
 
   if (_nodal)
     return _nearest_node->distance(_current_node->id());
-
-  Node * qnode = _mesh.getQuadratureNode(_current_elem, _current_side, _qp);
-
-  return _nearest_node->distance(qnode->id());
+  else
+    return _nearest_node->distance(_mesh.getQuadratureNode(_current_elem, _current_side, _qp)->id());
 }
