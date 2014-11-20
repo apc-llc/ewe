@@ -23,6 +23,8 @@
 #include "CardiacVolumeRatio.h"
 #include "CardiacKirchhoffIncompressibilityPenalty.h"
 
+#include "ActiveTensionODE.h"
+
 #include "Electrocardio.h"
 #include "ElectrocardioForcing.h"
 #include "ElectrocardioTimeDerivative.h"
@@ -86,6 +88,8 @@ EweApp::registerObjects(Factory & factory)
   registerMaterial(CardiacLinearOrthotropicMaterial);
   registerMaterial(CardiacNash2000Material);
   registerMaterial(CardiacFibresMaterial);
+
+  registerMaterial(ActiveTensionODE);
 
   registerKernel(ElectrocardioTimeDerivative);
   registerKernel(ElectrocardioDiffusion);

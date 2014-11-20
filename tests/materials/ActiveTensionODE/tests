@@ -1,0 +1,7 @@
+[Tests]
+  [./active_tension]
+    type = 'Exodiff'
+    input = 'active_tension.i'
+    exodiff = 'active_tension_out.e'
+  [../]
+[]
