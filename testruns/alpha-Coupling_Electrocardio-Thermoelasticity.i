@@ -16,20 +16,9 @@
 []
 
 [Variables]
-  [./disp_x]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./disp_y]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./disp_z]
-    order = FIRST
-    family = LAGRANGE
-  [../]
+  [./disp_x] order = FIRST family = LAGRANGE [../]
+  [./disp_y] order = FIRST family = LAGRANGE [../]
+  [./disp_z] order = FIRST family = LAGRANGE [../]
 []
 
 [SolidMechanics]
@@ -42,24 +31,9 @@
 []
 
 [Kernels]
-  [./inertia_x]
-    type     = SecondOrderImplicitEulerWithDensity
-    variable = disp_x
-    density  = 0.1
-    lumping  = false
-  [../]
-  [./inertia_y]
-    type     = SecondOrderImplicitEulerWithDensity
-    variable = disp_y
-    density  = 0.1
-    lumping  = false
-  [../]
-  [./inertia_z]
-    type     = SecondOrderImplicitEulerWithDensity
-    variable = disp_z
-    density  = 0.1
-    lumping  = false
-  [../]
+  [./inertia_x] type = SecondOrderImplicitEulerWithDensity variable = disp_x density = 0.1 lumping = false [../]
+  [./inertia_y] type = SecondOrderImplicitEulerWithDensity variable = disp_y density = 0.1 lumping = false [../]
+  [./inertia_z] type = SecondOrderImplicitEulerWithDensity variable = disp_z density = 0.1 lumping = false [../]
 []
 
 
@@ -82,9 +56,9 @@
     disp_y = disp_y
     disp_z = disp_z
     # thermal properties
-    thermal_expansion = 0.001
-    t_ref = -100.0
-    temp = from_sub
+    thermal_expansion = -1
+    t_ref = 0
+    temp = active_tension_from_sub
   [../]
 []
 
@@ -100,10 +74,9 @@
   l_max_its = 100
 
   start_time = 0
-  end_time   = 2.0
-  #num_steps = 10
-  dtmax      = 0.1
-  dtmin      = 0.1
+  end_time   = 500.0
+  dtmax      = 0.05
+  dtmin      = 0.05
 []
 
 [Outputs]
@@ -118,15 +91,14 @@
 #  [./exodus_displaced]
 #     file_base = out
 #     type = Exodus
-#use_displaced = true
+#     #use_displaced = true
 #  [../]  
 []
 
 
 [AuxVariables]
-  [./from_sub]
-  [../]
-[] # AuxVariables
+  [./active_tension_from_sub] order = CONSTANT family = MONOMIAL [../]
+[]
 
 [AuxKernels]
 [] # AuxKernels
@@ -150,15 +122,15 @@
 #  multi_app = conv
 #  source_variable = diffused
 #  variable = from_master
-#  fixed_meshes=true
+#  fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
 #  [../]
   [./from_sub]
-  type = MultiAppNearestNodeTransfer
+  type = MultiAppInterpolationTransfer # MultiAppNearestNodeTransfer does not seem to work for elemental (type=CONSTANT) AuxVariables...
   direction = from_multiapp
   execute_on = timestep
   multi_app = electrocardio
-  source_variable = potential
-  variable = from_sub
-  fixed_meshes=true
+  source_variable = active_tension
+  variable = active_tension_from_sub
+  fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
   [../]
 []

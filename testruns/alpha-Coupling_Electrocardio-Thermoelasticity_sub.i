@@ -20,84 +20,28 @@
  []
 
 [Variables]
-  active = 'potential'
-
-  [./potential]
-    order = FIRST
-    family = LAGRANGE
-  [../]
+  [./potential] order = FIRST family = LAGRANGE [../]
 []
 
 [AuxVariables]
-  [./gate_m]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./gate_v]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./gate_f]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./gate_to]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-  [./gate_x]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
+  [./gate_m]  order = CONSTANT family = MONOMIAL [../]
+  [./gate_v]  order = CONSTANT family = MONOMIAL [../]
+  [./gate_f]  order = CONSTANT family = MONOMIAL [../]
+  [./gate_to] order = CONSTANT family = MONOMIAL [../]
+  [./gate_x]  order = CONSTANT family = MONOMIAL [../]
+  [./active_tension] order = CONSTANT family = MONOMIAL [../]
 []
 
 [AuxKernels]
-
-  [./auxgate_m]
-    type = MaterialStdVectorAux
-    property = 'gates'
-    variable = gate_m
-    block = all
-    index = 0
-  [../]
- 
-   [./auxgate_v]
-     type = MaterialStdVectorAux
-     property = 'gates'
-     variable = gate_v
-     block = all
-     index = 1
-   [../]
- 
-   [./auxgate_f]
-     type = MaterialStdVectorAux
-     property = 'gates'
-     variable = gate_f
-     block = all
-     index = 2
-   [../]
- 
-   [./auxgate_to]
-     type = MaterialStdVectorAux
-     property = 'gates'
-     variable = gate_to
-     block = all
-     index = 3
-   [../]
-   
-   [./auxgate_x]
-     type = MaterialStdVectorAux
-     property = 'gates'
-     variable = gate_x
-     block = all
-     index = 4
-   [../]
- 
+  [./auxgate_m]  type = MaterialStdVectorAux property = 'gates' variable = gate_m  block = all index = 0 [../]
+  [./auxgate_v]  type = MaterialStdVectorAux property = 'gates' variable = gate_v  block = all index = 1 [../]
+  [./auxgate_f]  type = MaterialStdVectorAux property = 'gates' variable = gate_f  block = all index = 2 [../]
+  [./auxgate_to] type = MaterialStdVectorAux property = 'gates' variable = gate_to block = all index = 3 [../]
+  [./auxgate_x]  type = MaterialStdVectorAux property = 'gates' variable = gate_x  block = all index = 4 [../]
+  [./aux_active_tension]  type = MaterialRealAux property = active_tension variable = active_tension [../]
 []
 
 [Kernels]
-  active = 'diff ecforcing euler'
-   
   [./diff]
     type = ElectrocardioDiffusion
     variable = potential
@@ -108,7 +52,7 @@
   [./ecforcing]
       type = ElectrocardioForcing
       variable = potential
-#ion_coeff = 0.0
+      #ion_coeff = 0.0
   [../]
 
   [./euler]
@@ -118,15 +62,12 @@
 []
 
 [BCs]
-
   [./bc]
     type = NeumannBC
     variable = potential
     boundary = '1 2 3'
     value = 0
   [../]
-
-
 []
 
 [Materials]
@@ -139,19 +80,31 @@
   [../]
   
   [./electrocardio]
-   type = Electrocardio
-   vmem = 'potential'
-   block = all
-   outputs = all
+    type = Electrocardio
+    vmem = 'potential'
+    block = all
+    outputs = all
   [../]
  
   [./conductivity]
-   type = ElectrocardioConductivity
-#   conductivity_coefficient = 0.006
-  conductivity_coefficient = 0.0
-
-   block = all
+    type = ElectrocardioConductivity
+    #conductivity_coefficient = 0.006
+    conductivity_coefficient = 0.0
+    block = all
   [../]
+
+  [./active_tension_material]
+    type = ActiveTensionODE
+    Vmem = potential
+    block = all
+    # these are the default parameter values, including them here to make sure they are not forgotten as tunable options
+    epsilon_recovery = 0.01
+    epsilon_development = 0.04
+    kTa = 47.9
+    Vrest = -90.272
+    Vmax = 0.
+  [../]
+ 
 []
 
 [Executioner]
@@ -164,14 +117,12 @@
   nl_abs_tol = 1e-8
   nl_rel_step_tol = 1e-8
   nl_max_its = 2
-# num_steps = 10
-  num_steps = 10000
+
+  start_time = 0
+  end_time   = 500.0
+  dtmin = 0.05
+  dtmax = 0.05
   scheme = 'implicit-euler'
-# scheme ='bdf2'
- [./TimeStepper]
-  type = ConstantDT
-  dt = 0.05
- [../]
 []
 
 [ICs]
