@@ -23,7 +23,7 @@ NewmarkMaterial::NewmarkMaterial(const std::string & name,
     Material(name, parameters),
     _comp_name((getVar("disp", 0))->name()),  // we use the name that was supplied as disp parameter to ensure unique naming and finally correct correspondence in SecondDerivativeNewmark.C
     _acc(declareProperty<Real>(       "newmark_acceleration-" + _comp_name)),
-    _acc_old(declarePropertyOld<Real>("newmark_acceleration-" + _comp_name)),
+    _acc_old(declarePropertyOld<Real>("newmark_acceleration-" + _comp_name)),// TODO: maybe we should also make use of DeclarePropertyOlder to circumvent some gymnastics here...
     _vel(declareProperty<Real>(       "newmark_velocity-"     + _comp_name)),
     _vel_old(declarePropertyOld<Real>("newmark_velocity-"     + _comp_name)),
     _gamma(declareProperty<Real>(     "newmark_gamma-"        + _comp_name)),

@@ -83,7 +83,9 @@
 []
 
 [Materials]
-  [./fibres] type = CardiacFibresMaterial block = 0 
+  [./fibres]
+    type = CardiacFibresMaterial
+    block = 0
     thickness_parameter = thickness_parameter
     #fixed_R = '0.36 0.48 -0.8 -0.8 0.6 0.0 0.48 0.64 0.60'
     #fixed_R = '1 0 0 0 1 0 0 0 1'
@@ -139,7 +141,7 @@
 
   solve_type = PJFNK
   petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  petsc_options_value = ' 201                lu       boomeramg      4                          '
+  petsc_options_value = ' 201                hypre    boomeramg      4                          '
   petsc_options = '-fp_trap -info
                    -snes_monitor -snes_view -snes_converged_reason -snes_mf_operator
                    -ksp_monitor  -ksp_view  -ksp_converged_reason  -ksp_monitor_true_residual
