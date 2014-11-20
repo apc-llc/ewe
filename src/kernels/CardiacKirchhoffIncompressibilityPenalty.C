@@ -43,8 +43,6 @@ CardiacKirchhoffIncompressibilityPenalty::computeQpJacobian()
 Real
 CardiacKirchhoffIncompressibilityPenalty::computeQpOffDiagJacobian(unsigned int jvar)
 {
-  unsigned int a, b;
-
        if (jvar == _xdisp_var) { return JacobianElement(0); }
   else if (jvar == _ydisp_var) { return JacobianElement(1); }
   else if (jvar == _zdisp_var) { return JacobianElement(2); }
