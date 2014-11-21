@@ -45,16 +45,29 @@ void CardiacFibresMaterial::computeQpProperties()
     const Real bracket(2. * _e[_qp] - 1.);
     const Real alpha(R * bracket * bracket * bracket); // We avoid the pow() call here. - Might not make a real performance difference, though.
     // we already know the normal vector's direction (negative because of our e being (1-e) of [Potse 2006])
-    _En[_qp] = VectorNormalize( _grad_e[_qp].size()==0 ? RealVectorValue(_q_point[_qp]) : -_grad_e[_qp]); ///< \todo TODO: find a better way of dealing with |grad_e|==0
-    // the fibre vector shall be rotated by pi/2-alpha wrt. the z-axis
-    RealVectorValue Ef(0., std::cos(alpha), std::sin(alpha));
-    // orthogonalization wrt _En[_qp]
-    Ef = Ef - (Ef*_En[_qp])*_En[_qp];
-    // normalization
-    _Ef[_qp] = VectorNormalize(Ef);
-    // sheet direction vector
-    /// \todo TODO: normalization should not be necessary here as _Ef and _En are orthonormal
-    _Es[_qp] = VectorNormalize(VectorProduct(_Ef[_qp], _En[_qp]) /* stupid way of constructing the missing orthogonal vector*/);
+    /// \todo TODO: find a better way of dealing with |grad_e|==0
+    if (_grad_e[_qp].size()==0) {
+      _En[_qp] = VectorNormalize( RealVectorValue(_q_point[_qp]) );
+      //std::cout << _current_elem->id() << " " << _qp << " " << _q_point[_qp] << std::endl;
+    } else
+      _En[_qp] = VectorNormalize( -_grad_e[_qp] );
+
+    const RealVectorValue en(_En[_qp]);
+    mooseAssert(ASSERT_APPROX(en.size(), 1.0), "en.size() == 1.0");
+    const Real ez_en( (1+1e-8)*en(2) ); ///< \todo TODO: Find a better way for avoiding problems with collinear ez and en
+    const Real wz( 1./std::sqrt(1-ez_en*ez_en) );
+    const Real wn(-wz*ez_en);
+    // none of the VectorNormalize calls in the next lines should be necessary.
+    // However, we want to avoid errors due to limited numeric precision.
+    const RealVectorValue ew( VectorNormalize( RealVectorValue(wn*en(0), wn*en(1), wn*en(2)+wz)) );
+    const RealVectorValue ev( VectorNormalize(VectorProduct(ew, en)) );
+    const RealVectorValue ef( VectorNormalize(std::cos(alpha)*ev + std::sin(alpha)*ew) );
+    const RealVectorValue es( VectorNormalize(VectorProduct(ef, en)) );
+
+    _En[_qp] = en;
+    _Ef[_qp] = ef;
+    _Es[_qp] = es;
+
     // row-wise initialization of _Rf
     _Rf[_qp] = RealTensorValue(_Ef[_qp], _Es[_qp], _En[_qp]);
   } else {
