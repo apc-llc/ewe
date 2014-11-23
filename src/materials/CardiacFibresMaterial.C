@@ -45,24 +45,38 @@ void CardiacFibresMaterial::computeQpProperties()
     const Real bracket(2. * _e[_qp] - 1.);
     const Real alpha(R * bracket * bracket * bracket); // We avoid the pow() call here. - Might not make a real performance difference, though.
     // we already know the normal vector's direction (negative because of our e being (1-e) of [Potse 2006])
-    /// \todo TODO: find a better way of dealing with |grad_e|==0
-    if (_grad_e[_qp].size()==0) {
-      _En[_qp] = VectorNormalize( RealVectorValue(_q_point[_qp]) );
-      //std::cout << _current_elem->id() << " " << _qp << " " << _q_point[_qp] << std::endl;
-    } else
-      _En[_qp] = VectorNormalize( -_grad_e[_qp] );
+    RealVectorValue en;
+    if (_grad_e[_qp].size() > 0) {
+      en = VectorNormalize( -_grad_e[_qp] );
+    } else if (_e[_qp]==0.) {
+      // we are on an epicaridal node - just take the surface normal
+      /// \todo TODO: apperantly, the surface normal is not defined for a non-surface material... :-(
+      // en = _normals[_qp];
+      en = VectorNormalize( RealVectorValue(_q_point[_qp]) );
+      std::cout << "EPI:" << _current_elem->id() << " " << _qp << " " << _q_point[_qp] << " " << _e[_qp] << std::endl;
+    } else {
+      /// \todo TODO: find a better way of dealing with |grad_e|==0 inside the material
+      en = VectorNormalize( RealVectorValue(_q_point[_qp]) );
+      std::cout << "MAT: " << _current_elem->id() << " " << _qp << " " << _q_point[_qp] << " " << _e[_qp] << std::endl;
+    }
 
-    const RealVectorValue en(_En[_qp]);
-    mooseAssert(ASSERT_APPROX(en.size(), 1.0), "en.size() == 1.0");
-    const Real ez_en( (1+1e-8)*en(2) ); ///< \todo TODO: Find a better way for avoiding problems with collinear ez and en
-    const Real wz( 1./std::sqrt(1-ez_en*ez_en) );
-    const Real wn(-wz*ez_en);
+    const Real ez_en( en(2) ); ///< \f$\hat{e}_z\cdot\har{e}_n\f$
+    RealVectorValue ew;
+    if (std::abs(ez_en) == 1.0) {
+      // ez and en are (anti)parallel
+      // for simplicity, we make ew the cylindrical normal vector here
+      /// \todo TODO: can we find a better ew in these cases or average over neighbor cells, etc?
+      ew = VectorNormalize(RealVectorValue(_q_point[_qp](0), _q_point[_qp](1), 0.));
+    } else {
+      const Real wz( 1./std::sqrt(1-ez_en*ez_en) );
+      const Real wn(-wz*ez_en);
+      ew = VectorNormalize( RealVectorValue(wn*en(0), wn*en(1), wn*en(2)+wz) );
+    }
     // none of the VectorNormalize calls in the next lines should be necessary.
     // However, we want to avoid errors due to limited numeric precision.
-    const RealVectorValue ew( VectorNormalize( RealVectorValue(wn*en(0), wn*en(1), wn*en(2)+wz)) );
-    const RealVectorValue ev( VectorNormalize(VectorProduct(ew, en)) );
+    const RealVectorValue ev( VectorNormalize( ew.cross(en) ) );
     const RealVectorValue ef( VectorNormalize(std::cos(alpha)*ev + std::sin(alpha)*ew) );
-    const RealVectorValue es( VectorNormalize(VectorProduct(ef, en)) );
+    const RealVectorValue es( VectorNormalize( ef.cross(en) ) );
 
     _En[_qp] = en;
     _Ef[_qp] = ef;

@@ -106,9 +106,9 @@ CardiacNash2000Material::computeQpProperties()
         const Real b(_b(M,N));
         Real d( a - e );
         if (d <= 0) {
-          std::cout << "d = " << d << " on element: " << _current_elem->id() << std::endl;
-          //mooseError("CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model");
-          d = 1e-5;
+          //std::cout << "d = " << d << " on element: " << _current_elem->id() << std::endl;
+          mooseError("CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model");
+          //d = 1e-5;
         }
         const Real f( b*e/d );
         const Real g( k*pow(d,-b) );
