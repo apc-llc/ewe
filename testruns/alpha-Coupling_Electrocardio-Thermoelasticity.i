@@ -1,19 +1,19 @@
 [Mesh]
 #file = 07-heart_geometry_new.e
-#  displacements = 'disp_x disp_y disp_z'
-  dim           = 3
-  distribution  = DEFAULT
-  nx            = 5
-  ny            = 5
-  nz            = 5
-  type          = GeneratedMesh
-  xmax          = 5.0
-  xmin          = 0.0
-  ymax          = 5.0
-  ymin          = 0.0
-  zmax          = 5.0
-  zmin          = 0.0
-[]
+ displacements = 'disp_x disp_y disp_z'
+ dim           = 3
+ distribution  = DEFAULT
+ nx            = 32
+ ny            = 8
+ nz            = 8
+ type          = GeneratedMesh
+ xmax          = 10.0
+ xmin          = 0.0
+ ymax          = 2.5
+ ymin          = 0.0
+ zmax          = 2.5
+ zmin          = 0.0
+ []
 
 [Variables]
   [./disp_x] order = FIRST family = LAGRANGE [../]
@@ -56,7 +56,7 @@
     disp_y = disp_y
     disp_z = disp_z
     # thermal properties
-    thermal_expansion = -1
+    thermal_expansion = -0.004
     t_ref = 0
     temp = active_tension_from_sub
   [../]
@@ -66,21 +66,26 @@
   type = Transient
 
   solve_type = PJFNK
-# petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-# petsc_options_value = '201                 hypre    boomeramg      4'
+  petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
+  petsc_options_value = '201                 hypre    boomeramg      4'
+#petsc_options = '-fp_trap -info
+#     -snes_monitor -snes_converged_reason -snes_mf_operator
+#     -ksp_monitor  -ksp_converged_reason  -ksp_monitor_true_residual
+#     -pc_svd_monitor'
+ 
   line_search = 'none'
 
-  nl_rel_step_tol = 1.e-8
+  nl_rel_step_tol = 1.e-5
   l_max_its = 100
 
   start_time = 0
-  end_time   = 500.0
-  dtmax      = 0.05
-  dtmin      = 0.05
+  end_time   = 500
+  dtmax      = 0.1
+  dtmin      = 0.1
 []
 
 [Outputs]
-  exodus = true
+#  exodus = true
   
   [./console]
     type = Console
@@ -88,11 +93,11 @@
     linear_residuals = false
   [../]
   
-#  [./exodus_displaced]
-#     file_base = out
-#     type = Exodus
-#     #use_displaced = true
-#  [../]  
+  [./exodus_displaced]
+#file_base = out
+     type = Exodus
+     use_displaced = true
+  [../]
 []
 
 
@@ -131,6 +136,6 @@
   multi_app = electrocardio
   source_variable = active_tension
   variable = active_tension_from_sub
-  fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
+#fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
   [../]
 []

@@ -4,11 +4,11 @@
  block_id = '0'
  block_name = 'all'
  
-#uniform_refine = 3
+# uniform_refine = 3
  dim           = 2
  distribution  = DEFAULT
- nx            = 3
- ny            = 3
+ nx            = 100
+ ny            = 100
  nz            = 3
  type          = GeneratedMesh
  xmax          = 5.0
@@ -147,9 +147,7 @@
  
   [./conductivity]
    type = ElectrocardioConductivity
-#   conductivity_coefficient = 0.006
-  conductivity_coefficient = 0.0
-
+   conductivity_coefficient = 0.006
    block = all
   [../]
 []
@@ -165,12 +163,12 @@
   nl_rel_step_tol = 1e-8
   nl_max_its = 2
 # num_steps = 10
-  num_steps = 10000
+  end_time = 500
   scheme = 'implicit-euler'
 # scheme ='bdf2'
  [./TimeStepper]
   type = ConstantDT
-  dt = 0.05
+  dt = 0.1
  [../]
 []
 

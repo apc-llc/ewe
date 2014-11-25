@@ -4,18 +4,18 @@
  block_id = '0'
  block_name = 'all'
  
-#uniform_refine = 3
- dim           = 2
+# uniform_refine = 1
+ dim           = 3
  distribution  = DEFAULT
- nx            = 3
- ny            = 3
- nz            = 3
+ nx            = 32
+ ny            = 8
+ nz            = 8
  type          = GeneratedMesh
- xmax          = 5.0
+ xmax          = 10.0
  xmin          = 0.0
- ymax          = 5.0
+ ymax          = 2.5
  ymin          = 0.0
- zmax          = 5.0
+ zmax          = 2.5
  zmin          = 0.0
  []
 
@@ -88,8 +88,7 @@
  
   [./conductivity]
     type = ElectrocardioConductivity
-    #conductivity_coefficient = 0.006
-    conductivity_coefficient = 0.0
+    conductivity_coefficient = 0.006
     block = all
   [../]
 
@@ -119,9 +118,9 @@
   nl_max_its = 2
 
   start_time = 0
-  end_time   = 500.0
-  dtmin = 0.05
-  dtmax = 0.05
+  end_time   = 250.0
+  dtmin = 0.1
+  dtmax = 0.1
   scheme = 'implicit-euler'
 []
 
@@ -134,7 +133,6 @@
 []
  
 [Outputs]
-  file_base = out
   exodus = true
   [./console]
     type = Console
