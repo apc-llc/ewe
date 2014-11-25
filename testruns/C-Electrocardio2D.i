@@ -163,7 +163,7 @@
   nl_rel_step_tol = 1e-8
   nl_max_its = 2
 # num_steps = 10
-  num_steps = 500
+  end_time = 500
   scheme = 'implicit-euler'
 # scheme ='bdf2'
  [./TimeStepper]
