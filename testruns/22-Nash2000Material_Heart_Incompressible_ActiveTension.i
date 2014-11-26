@@ -1,17 +1,5 @@
 [Mesh]
-      dim           = 3
-      distribution  = DEFAULT
-      nx            = 5
-      ny            = 5
-      nz            = 5
-      type          = GeneratedMesh
-      xmax          =  0.5
-      xmin          = -0.5
-      ymax          =  0.5
-      ymin          = -0.5
-      zmax          =  0.5
-      zmin          = -0.5
-      elem_type     = HEX20
+  file = 07-heart_geometry_new.e
 []
 
 [Variables]
@@ -70,9 +58,9 @@
 []
 
 [AuxKernels]
-  [./auxdistance_outer]    type = VolumeNearestNodeDistanceAux variable = distance_outer    block = 0 paired_boundary = left   [../]
-  [./auxdistance_RV_inner] type = VolumeNearestNodeDistanceAux variable = distance_RV_inner block = 0 paired_boundary = top    [../]
-  [./auxdistance_LV_inner] type = VolumeNearestNodeDistanceAux variable = distance_LV_inner block = 0 paired_boundary = bottom [../]
+  [./auxdistance_outer]    type = VolumeNearestNodeDistanceAux variable = distance_outer    block = 1 paired_boundary = ss_outer    [../]
+  [./auxdistance_RV_inner] type = VolumeNearestNodeDistanceAux variable = distance_RV_inner block = 1 paired_boundary = ss_RV_inner [../]
+  [./auxdistance_LV_inner] type = VolumeNearestNodeDistanceAux variable = distance_LV_inner block = 1 paired_boundary = ss_LV_inner [../]
 
   [./auxthickness]
     type = CardiacThicknessParameterAux variable = thickness_parameter
@@ -85,7 +73,7 @@
 [Materials]
   [./fibres]
     type = CardiacFibresMaterial
-    block = 0
+    block = 1
     thickness_parameter = thickness_parameter
     #fixed_R = '0.36 0.48 -0.8 -0.8 0.6 0.0 0.48 0.64 0.60'
     #fixed_R = '1 0 0 0 1 0 0 0 1'
@@ -94,7 +82,7 @@
 
   [./cardiac_material]
     type = CardiacNash2000Material
-    block = 0
+    block = 1
     use_displaced_mesh = false
     # material parameters in the order 11 22 33 12 23 31 (symmetric)
     # taken from [Nash & Hunter, 2000], Table I
@@ -115,20 +103,21 @@
   [./active_tension]
     type = PiecewiseLinear
     x = '0.0  1.0'
-    y = '0.0  0.5'
+    y = '0.0  0.0'
     scale_factor = 1
   [../]
 []
 
 [BCs]
-  [./dispx] type = DirichletBC variable = dispx boundary = 'left' value = 0. [../]
-  [./dispy] type = DirichletBC variable = dispy boundary = 'left' value = 0. [../]
-  [./dispz] type = DirichletBC variable = dispz boundary = 'left' value = 0. [../]
+#  [./ns_lower_polar_point_x] type = DirichletBC variable = dispx boundary = ns_lower_polar_point value = 0. [../]
 #  [./ns_lower_polar_point_y] type = DirichletBC variable = dispy boundary = ns_lower_polar_point value = 0. [../]
 #  [./ns_lower_polar_point_z] type = DirichletBC variable = dispz boundary = ns_lower_polar_point value = 0. [../]
 #  [./ns_lower_polar_neighbour_x] type = DirichletBC variable = dispx boundary = ns_lower_polar_neighbour value = 0. [../]
 #  [./ns_lower_polar_neighbour_y] type = DirichletBC variable = dispy boundary = ns_lower_polar_neighbour value = 0. [../]
 #  [./ns_lower_polar_neighbour_z] type = DirichletBC variable = dispz boundary = ns_lower_polar_neighbour value = 0. [../]
+  [./ring_x] type = DirichletBC variable = dispx value = 0. boundary = ns_LV_opening [../]
+  [./ring_y] type = DirichletBC variable = dispy value = 0. boundary = ns_LV_opening [../]
+  [./ring_z] type = DirichletBC variable = dispz value = 0. boundary = ns_LV_opening [../]
 []
 
 [Postprocessors]
@@ -146,7 +135,6 @@
                    -snes_monitor -snes_view -snes_converged_reason -snes_mf_operator
                    -ksp_monitor  -ksp_view  -ksp_converged_reason  -ksp_monitor_true_residual
                    -pc_svd_monitor'
-  line_search = 'none'
 
   nl_rel_tol = 1e-3
   nl_abs_tol = 1e-8

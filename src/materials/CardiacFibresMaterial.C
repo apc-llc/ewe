@@ -48,16 +48,10 @@ void CardiacFibresMaterial::computeQpProperties()
     RealVectorValue en;
     if (_grad_e[_qp].size() > 0) {
       en = VectorNormalize( -_grad_e[_qp] );
-    } else if (_e[_qp]==0.) {
-      // we are on an epicaridal node - just take the surface normal
-      /// \todo TODO: apperantly, the surface normal is not defined for a non-surface material... :-(
-      // en = _normals[_qp];
-      en = VectorNormalize( RealVectorValue(_q_point[_qp]) );
-      std::cout << "EPI:" << _current_elem->id() << " " << _qp << " " << _q_point[_qp] << " " << _e[_qp] << std::endl;
     } else {
-      /// \todo TODO: find a better way of dealing with |grad_e|==0 inside the material
+      // The gradient of the thickness parameter vanishes here.
+      /// \todo TODO: can we find a better en in these cases than the spherical normal?
       en = VectorNormalize( RealVectorValue(_q_point[_qp]) );
-      std::cout << "MAT: " << _current_elem->id() << " " << _qp << " " << _q_point[_qp] << " " << _e[_qp] << std::endl;
     }
 
     const Real ez_en( en(2) ); ///< \f$\hat{e}_z\cdot\har{e}_n\f$
