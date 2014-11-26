@@ -29,7 +29,6 @@
   [./gate_f]  order = CONSTANT family = MONOMIAL [../]
   [./gate_to] order = CONSTANT family = MONOMIAL [../]
   [./gate_x]  order = CONSTANT family = MONOMIAL [../]
-  [./active_tension] order = CONSTANT family = MONOMIAL [../]
 []
 
 [AuxKernels]
@@ -38,7 +37,6 @@
   [./auxgate_f]  type = MaterialStdVectorAux property = 'gates' variable = gate_f  block = all index = 2 [../]
   [./auxgate_to] type = MaterialStdVectorAux property = 'gates' variable = gate_to block = all index = 3 [../]
   [./auxgate_x]  type = MaterialStdVectorAux property = 'gates' variable = gate_x  block = all index = 4 [../]
-  [./aux_active_tension]  type = MaterialRealAux property = active_tension variable = active_tension [../]
 []
 
 [Kernels]
@@ -91,18 +89,6 @@
     conductivity_coefficient = 0.006
     block = all
   [../]
-
-  [./active_tension_material]
-    type = ActiveTensionODE
-    Vmem = potential
-    block = all
-    # these are the default parameter values, including them here to make sure they are not forgotten as tunable options
-    epsilon_recovery = 0.01
-    epsilon_development = 0.04
-    kTa = 47.9
-    Vrest = -90.272
-    Vmax = 0.
-  [../]
  
 []
 
@@ -133,7 +119,7 @@
 []
  
 [Outputs]
-  exodus = true
+#exodus = true
   [./console]
     type = Console
     perf_log = false

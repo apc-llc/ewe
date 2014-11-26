@@ -58,8 +58,21 @@
     # thermal properties
     thermal_expansion = -0.004
     t_ref = 0
-    temp = active_tension_from_sub
+    temp = active_tension
   [../]
+ 
+   [./active_tension_material]
+     type = ActiveTensionODE
+     Vmem = potential_from_sub
+     block = 0
+    # these are the default parameter values, including them here to make sure they are not forgotten as tunable options
+     epsilon_recovery = 0.01
+     epsilon_development = 0.04
+     kTa = 47.9
+     Vrest = -90.272
+     Vmax = 0.
+   [../]
+ 
 []
 
 [Executioner]
@@ -79,7 +92,7 @@
   l_max_its = 100
 
   start_time = 0
-  end_time   = 500
+  end_time   = 500.0
   dtmax      = 0.1
   dtmin      = 0.1
 []
@@ -96,16 +109,19 @@
   [./exodus_displaced]
 #file_base = out
      type = Exodus
-     use_displaced = true
+#     use_displaced = true
   [../]
 []
 
 
 [AuxVariables]
-  [./active_tension_from_sub] order = CONSTANT family = MONOMIAL [../]
-[]
+  [./potential_from_sub] order = FIRST family = LAGRANGE [../]
+  [./active_tension] order = CONSTANT family = MONOMIAL [../]
+
+ []
 
 [AuxKernels]
+ [./aux_active_tension]  type = MaterialRealAux property = active_tension variable = active_tension [../]
 [] # AuxKernels
 
 [MultiApps]
@@ -130,12 +146,12 @@
 #  fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
 #  [../]
   [./from_sub]
-  type = MultiAppInterpolationTransfer # MultiAppNearestNodeTransfer does not seem to work for elemental (type=CONSTANT) AuxVariables...
+  type = MultiAppNearestNodeTransfer
   direction = from_multiapp
   execute_on = timestep
   multi_app = electrocardio
-  source_variable = active_tension
-  variable = active_tension_from_sub
-#fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
+  source_variable = potential
+  variable = potential_from_sub
+  fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
   [../]
 []
