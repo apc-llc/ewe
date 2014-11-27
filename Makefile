@@ -17,6 +17,7 @@ CURRENT_DIR        := $(shell pwd)
 # framework
 include $(FRAMEWORK_DIR)/build.mk
 include $(FRAMEWORK_DIR)/moose.mk
+libmesh_CXXFLAGS += -std=c++11
 
 ################################## MODULES ####################################
 ALL_MODULES := yes
