@@ -1,4 +1,5 @@
 include/base/EweRevision.h
+include/EweRevision.h
 doc
 *.xcodeproj
 *.d
