@@ -52,10 +52,10 @@
   [../]
   
   [./ecforcing]
-      type = ElectrocardioForcing
-      variable = potential
-      #ion_coeff = 0.0
-      use_displaced_mesh = true
+    type = ElectrocardioForcing
+    variable = potential
+    #ion_coeff = 0.0
+    use_displaced_mesh = true
   [../]
 
   [./euler]
@@ -88,14 +88,14 @@
     vmem = 'potential'
     block = all
     outputs = all
-    use_displaced_mesh = true
+    #use_displaced_mesh = true # TODO: if activated I am getting a segfault
   [../]
  
   [./conductivity]
     type = ElectrocardioConductivity
     conductivity_coefficient = 0.006
     block = all
-    use_displaced_mesh = true
+    #use_displaced_mesh = true # TODO: if activated I am getting a segfault
   [../]
  
 []

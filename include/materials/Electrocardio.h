@@ -29,7 +29,6 @@ public:
                   InputParameters parameters);
 
 protected:
-  virtual void computeProperties();
   virtual void computeQpProperties();
   virtual void initQpStatefulProperties();
 

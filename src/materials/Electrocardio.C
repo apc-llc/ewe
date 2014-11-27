@@ -37,12 +37,6 @@ Electrocardio::initQpStatefulProperties()
   _ionmodel->initialize(&(_gates[_qp]));
 }
 
-void
-Electrocardio::computeProperties()
-{
-  Material::computeProperties();
-}
-
 /**
  * @todo documentation
  */
