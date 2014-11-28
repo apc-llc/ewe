@@ -33,6 +33,7 @@
 #include "ElectrocardioIC.h"
 #include "CardiacPropertiesMaterial.h"
 #include "CardiacFibresMaterial.h"
+#include "PiecewiseParsedFunction.h"
 
 template<>
 InputParameters validParams<EweApp>()
@@ -104,6 +105,8 @@ EweApp::registerObjects(Factory & factory)
 
   registerPostprocessor(CardiacMaterialVolumeRatioPostprocessor);
   registerPostprocessor(CardiacVolumeRatioPostprocessor);
+
+  registerFunction(PiecewiseParsedFunction);
 }
 
 void
