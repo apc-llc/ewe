@@ -7,7 +7,7 @@ InputParameters validParams<PiecewiseParsedFunction>()
   InputParameters params = validParams<Function>();
   params += validParams<MooseParsedFunctionBase>();
   params.addParam<std::string>("default_function", "0", "The default function that is used if non of the given intervals matches.");
-  params.addRequiredParam<std::vector<std::string> >("functions", "The functions(i) to be used in the intervals [left(i); right(i)[. Note that individual function definition may not contain spaces as these are used to split distinct functions.");
+  params.addRequiredParam<std::vector<std::string> >("functions", "The functions(i) to be used in the intervals [left(i); right(i)[. Note that individual function definition *may not contain spaces* as these are used to split distinct functions.");
   params.addRequiredParam<std::vector<Real> >("left", "The left limits of the time intervals.");
   params.addRequiredParam<std::vector<Real> >("right", "The right limits of the time intervals.");
   return params;
@@ -29,7 +29,19 @@ PiecewiseParsedFunction::PiecewiseParsedFunction(const std::string & name, Input
        _left.size() != v.size())
       mooseError("PiecewiseParsedFunction: numbers of entries in left, right, functions do not match. Check these and make also sure that the individual functions do not contain space characters.");
 
-   /// \todo TODO: ensure correct ordering of left and right arrays and prevent overlap
+   if (_left.size() == 0)
+     mooseError("PiecewiseParsedFunction: no interval given.");
+
+   // ensure correct ordering of left and right arrays and prevent overlap
+   if (_right[0] <= _left[0])
+     mooseError("PiecewiseParsedFunction: invalid ordering of interval limits.");
+
+   for (unsigned int i=1; i<_left.size(); i++)
+     if (   _left[i]  <= _left[i-1]
+         || _right[i] <= _right[i-1]
+         || _left[i]  <  _right[i-1]
+         || _right[i] <= _left[i] )
+       mooseError("PiecewiseParsedFunction: invalid ordering of interval limits.");
 
    for (unsigned int i=0; i<_functions.size(); i++)
      _function_ptrs.push_back(std::unique_ptr<MooseParsedFunctionWrapper>(new MooseParsedFunctionWrapper(_pfb_feproblem, _functions[i], _vars, _vals)));
