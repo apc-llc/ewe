@@ -30,7 +30,7 @@ private:
   
   double _conductivity_coefficient;
   
-  // TODO: Have to make conductivity a tensor... - should be possible to fetch from CardiacPropertiesMaterial
+  // TODO: Have to make conductivity a tensor... - should be possible to construct using CardiacFibresMaterial
   MaterialProperty<Real> & _conductivity;
 };
 

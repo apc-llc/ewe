@@ -31,7 +31,6 @@
 #include "ElectrocardioDiffusion.h"
 #include "ElectrocardioConductivity.h"
 #include "ElectrocardioIC.h"
-#include "CardiacPropertiesMaterial.h"
 #include "CardiacFibresMaterial.h"
 #include "PiecewiseParsedFunction.h"
 
@@ -84,7 +83,6 @@ EweApp::registerObjects(Factory & factory)
   registerMaterial(NewmarkMaterial);
   registerMaterial(Electrocardio);
   registerMaterial(ElectrocardioConductivity);
-  registerMaterial(CardiacPropertiesMaterial);
   registerMaterial(CardiacLinearIsotropicMaterial);
   registerMaterial(CardiacLinearOrthotropicMaterial);
   registerMaterial(CardiacNash2000Material);
