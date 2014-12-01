@@ -183,6 +183,7 @@
 [Outputs]
   file_base = out
   exodus = true
+  interval = 16
   [./console]
     type = Console
     perf_log = false
