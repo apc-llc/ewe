@@ -17,7 +17,6 @@ ElectrocardioTimeDerivative::ElectrocardioTimeDerivative(const std::string & nam
                                              InputParameters parameters) :
     TimeDerivative(name,parameters)
 {
-  std::cout << "Instantiating ElectrocardioTimeDerivative .... " << std::endl;
 }
 
 Real
