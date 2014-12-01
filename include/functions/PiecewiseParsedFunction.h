@@ -82,7 +82,7 @@ public:
   virtual RealVectorValue vectorValue(Real t, const Point & p);
 
   /**
-   * Creates the parsed function.
+   * Nothing to do here.
    */
   virtual void initialSetup();
 

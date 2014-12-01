@@ -20,18 +20,18 @@ PiecewiseParsedFunction::PiecewiseParsedFunction(const std::string & name, Input
     _left(getParam<std::vector<Real> >("left")),
     _right(getParam<std::vector<Real> >("right"))
 {
-   std::vector<std::string> v(getParam<std::vector<std::string> >("value"));
+   std::vector<std::string> v(getParam<std::vector<std::string> >("functions"));
 
-   for (int i=0; i<v.size(); i++)
+   for (unsigned int i=0; i<v.size(); i++)
      _functions.push_back(verifyFunction(v[i]));
 
    if (_left.size() != _right.size() ||
        _left.size() != v.size())
-      mooseError("PiecewiseParsedFunction: numbers of entries in left, right, functions do not match.");
+      mooseError("PiecewiseParsedFunction: numbers of entries in left, right, functions do not match. Check these and make also sure that the individual functions do not contain space characters.");
 
    /// \todo TODO: ensure correct ordering of left and right arrays and prevent overlap
 
-   for (int i=0; i<_functions.size(); i++)
+   for (unsigned int i=0; i<_functions.size(); i++)
      _function_ptrs.push_back(std::unique_ptr<MooseParsedFunctionWrapper>(new MooseParsedFunctionWrapper(_pfb_feproblem, _functions[i], _vars, _vals)));
    // we puth the default function to the very end. This simplifies value() and gradient() since we avoid branching there if no interval is found.
    _function_ptrs.push_back(std::unique_ptr<MooseParsedFunctionWrapper>(new MooseParsedFunctionWrapper(_pfb_feproblem, _def_function, _vars, _vals)));
@@ -41,10 +41,15 @@ PiecewiseParsedFunction::~PiecewiseParsedFunction()
 {
 }
 
+void
+PiecewiseParsedFunction::initialSetup()
+{
+}
+
 int
 PiecewiseParsedFunction::find_function(Real t)
 {
-  for (int i=0; i<_left.size(); i++)
+  for (unsigned int i=0; i<_left.size(); i++)
     if (_left[i] <= t && _right[i] > t)
       return i;
   return _left.size();
