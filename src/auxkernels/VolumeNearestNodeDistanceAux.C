@@ -18,7 +18,7 @@ VolumeNearestNodeDistanceAux::VolumeNearestNodeDistanceAux(const std::string & n
     mooseError("VolumeNearestNodeDistanceAux can only be used with one block at a time!");
 
   if (!_nodal) {
-    /// \todo TODO: Some quadrature nodes might not exist in this case. This would render _mesh.QuadratureNode() in computeValue() to fail.
+    /// @todo TODO: Some quadrature nodes might not exist in this case. This would render _mesh.QuadratureNode() in computeValue() to fail.
     /// Therefore, we bail out here. If elemental functionality is needed, we have to find out how
     /// GeometricSearchData::generateQuadratureNodes() is used
     mooseError("VolumeNearestNodeDistanceAux does not support element-wise computation. Please switch to type=FIRST for this kernels AuxVariable.");

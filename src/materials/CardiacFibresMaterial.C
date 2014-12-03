@@ -41,7 +41,7 @@ void CardiacFibresMaterial::computeQpProperties()
     // initial angle for fibre angle as stated by [Potse 2006]
     // We follow the notation from this paper. Our e is defined slightly different, though.
     const Real pi(3.141592653589);
-    const Real R( _e[_qp] < 0 ? /* RV */ pi/4. : /* LV */ pi/3.); ///< \todo TODO: we would need to distinguish LV and RV here, but have to use distinguishLVRV==false in the CardiacThicknessParameterAux to prevent _grad_e from being wrong. --> Need another way of distinguishing...
+    const Real R( _e[_qp] < 0 ? /* RV */ pi/4. : /* LV */ pi/3.); ///< @todo TODO: we would need to distinguish LV and RV here, but have to use distinguishLVRV==false in the CardiacThicknessParameterAux to prevent _grad_e from being wrong. --> Need another way of distinguishing...
     const Real bracket(2. * _e[_qp] - 1.);
     const Real alpha(R * bracket * bracket * bracket); // We avoid the pow() call here. - Might not make a real performance difference, though.
     // we already know the normal vector's direction (negative because of our e being (1-e) of [Potse 2006])
@@ -50,7 +50,7 @@ void CardiacFibresMaterial::computeQpProperties()
       en = VectorNormalize( -_grad_e[_qp] );
     } else {
       // The gradient of the thickness parameter vanishes here.
-      /// \todo TODO: can we find a better en in these cases than the spherical normal?
+      /// @todo TODO: can we find a better en in these cases than the spherical normal?
       en = VectorNormalize( RealVectorValue(_q_point[_qp]) );
     }
 
@@ -59,7 +59,7 @@ void CardiacFibresMaterial::computeQpProperties()
     if (std::abs(ez_en) == 1.0) {
       // ez and en are (anti)parallel
       // for simplicity, we make ew the cylindrical normal vector here
-      /// \todo TODO: can we find a better ew in these cases or average over neighbor cells, etc?
+      /// @todo TODO: can we find a better ew in these cases or average over neighbor cells, etc?
       ew = VectorNormalize(RealVectorValue(_q_point[_qp](0), _q_point[_qp](1), 0.));
     } else {
       const Real wz( 1./std::sqrt(1-ez_en*ez_en) );

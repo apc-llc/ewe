@@ -101,21 +101,27 @@ public:
   }
 
   /// computes \f$\sum_{m,n,p,q} A_{Mm} B_{Nn} C_{Pp} D_{Qq} t_{m,n,p,q}\f$
-  inline SymmGenericElasticityTensor quadProduct(const RealTensorValue & A,const RealTensorValue & B, const RealTensorValue & C, const RealTensorValue & D) const
+  inline SymmGenericElasticityTensor quadProduct(RealTensorValue & A, RealTensorValue & B, RealTensorValue & C, RealTensorValue & D) const
   {
     SymmGenericElasticityTensor res(0);
     for (unsigned int M=0;M<3;M++)
-      for (unsigned int N=0;N<3;N++)
+      for (unsigned int N=M;N<3;N++)
         for (unsigned int P=0;P<3;P++)
-          for (unsigned int Q=0;Q<3;Q++) {
-            Real r(0);
-            for (unsigned int m=0;m<3;m++)
-              for (unsigned int n=0;n<3;n++)
-                for (unsigned int p=0;p<3;p++)
-                  for (unsigned int q=0;q<3;q++)
-                    r += _val[convert_indices(m,n,p,q)] * A(M,m) * B(N, n) * C(P,p) * D(Q,q);
-            res(M,N,P,Q) = r;
-          }
+          for (unsigned int Q=P;Q<3;Q++)
+            res(M,N,P,Q) = fullContraction(A.row(M), B.row(N), C.row(P), D.row(Q));
+
+    return res;
+  }
+
+  /// computes \f$\sum_{m,n,p,q} A_{Mm} A_{Nn} A_{Pp} A_{Qq} t_{m,n,p,q}\f$
+  inline SymmGenericElasticityTensor quadProduct(RealTensorValue & A) const
+  {
+    SymmGenericElasticityTensor res(0);
+    for (unsigned int M=0;M<3;M++)
+      for (unsigned int N=M;N<3;N++)
+        for (unsigned int P=0;P<3;P++)
+          for (unsigned int Q=P;Q<3;Q++)
+            res(M,N,P,Q) = fullContraction(A.row(M), A.row(N), A.row(P), A.row(Q));
 
     return res;
   }

@@ -32,7 +32,7 @@ namespace TensorHelpers {
 
   /// Computes \f$\mathrm{outer}^\mathrm{T}\,\mathrm{inner}\,\mathrm{outer}\f$.
   const inline SymmTensor symmProd(const RealTensorValue & outer, const SymmTensor & inner) {
-    /** \todo TODO: this would be much more efficient:
+    /** @todo TODO: this would be much more efficient:
     SymmTensor res;
     for (unsigned int i=0;i<3;i++)
       for (unsigned int j=i;j<3;j++) {

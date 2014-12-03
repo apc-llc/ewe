@@ -134,7 +134,7 @@ CardiacNash2000Material::computeQpProperties()
     // Add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
     if (_has_p) {
       /**
-       * \todo TODO: Well, this is a bit tricky. The following line tries to circumvent an issue in
+       * @todo TODO: Well, this is a bit tricky. The following line tries to circumvent an issue in
        * Moose's initialization order. ScalarVariables are initialized after the material. Thus, if we use
        * _p in the very first attempt of callng computQPProperties(), this will fail. Since I assume
        * that zero pressure as initial guess is not too bad anyway, we insert it directly in case
@@ -162,7 +162,7 @@ CardiacNash2000Material::computeQpProperties()
               _stress_derivative[_qp](M,N,Q,P) += Tp;
               _stress_derivative[_qp](N,M,Q,P) += Tp;
             }
-      /// \todo TODO: how does this go into the elastic energy ?
+      /// @todo TODO: how does this go into the elastic energy ?
       // _W[_qp] += ??
     }
     // Add active tension in fibre direction
@@ -182,13 +182,13 @@ CardiacNash2000Material::computeQpProperties()
         for (int P=0;P<3;P++)
           for (int Q=0;Q<3;Q++)
             _stress_derivative[_qp](M,M,P,Q) += 2 * Ta(M,M) * Cinv(M,P) * Cinv(Q,M);
-      /// \todo TODO: how does this go into the elastic energy ?
+      /// @todo TODO: how does this go into the elastic energy ?
       // _W[_qp] += ??
     }
   }
 
   // rotate back into the outer coordinate system
   _stress[_qp] = _Rf[_qp] * _stress[_qp] * _Rf[_qp].transpose();
-  _stress_derivative[_qp] = _stress_derivative[_qp].quadProduct(_Rf[_qp], _Rf[_qp].transpose(), _Rf[_qp], _Rf[_qp].transpose());
+  _stress_derivative[_qp] = _stress_derivative[_qp].quadProduct(_Rf[_qp]);
 }
 

@@ -107,9 +107,12 @@
 []
 
 [BCs]
-#  [./dispx] type = DirichletBC variable = dispx boundary = 'left' value = 0. [../]
-#  [./dispy] type = DirichletBC variable = dispy boundary = 'left' value = 0. [../]
-#  [./dispz] type = DirichletBC variable = dispz boundary = 'left' value = 0. [../]
+  [./dispx_inner] type = NeumannBC variable = dispx boundary = 'ss_inner' value = 0. [../]
+  [./dispy_inner] type = NeumannBC variable = dispy boundary = 'ss_inner' value = 0. [../]
+  [./dispz_inner] type = NeumannBC variable = dispz boundary = 'ss_inner' value = 0. [../]
+  [./dispx_outer] type = NeumannBC variable = dispx boundary = 'ss_outer' value = 0. [../]
+  [./dispy_outer] type = NeumannBC variable = dispy boundary = 'ss_outer' value = 0. [../]
+  [./dispz_outer] type = NeumannBC variable = dispz boundary = 'ss_outer' value = 0. [../]
 #  [./ns_lower_polar_point_y] type = DirichletBC variable = dispy boundary = ns_lower_polar_point value = 0. [../]
 #  [./ns_lower_polar_point_z] type = DirichletBC variable = dispz boundary = ns_lower_polar_point value = 0. [../]
 #  [./ns_lower_polar_neighbour_x] type = DirichletBC variable = dispx boundary = ns_lower_polar_neighbour value = 0. [../]
@@ -125,14 +128,14 @@
 [Executioner]
   type = Transient
 
-  solve_type = NEWTON
-  petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  petsc_options_value = ' 201                hypre    boomeramg      4                          '
-  petsc_options = '-fp_trap -info
-                   -snes_monitor -snes_view -snes_converged_reason -snes_mf_operator
-                   -ksp_monitor  -ksp_view  -ksp_converged_reason  -ksp_monitor_true_residual
-                   -pc_svd_monitor'
-  line_search = 'none'
+  solve_type = PJFNK
+  #petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
+  #petsc_options_value = ' 201                hypre    boomeramg      4                          '
+  #petsc_options = '-fp_trap -info
+  #                 -snes_monitor -snes_view -snes_converged_reason -snes_mf_operator
+  #                 -ksp_monitor  -ksp_view  -ksp_converged_reason  -ksp_monitor_true_residual
+  #                 -pc_svd_monitor'
+  line_search = 'basic'
 
   nl_rel_tol = 1e-3
   nl_abs_tol = 1e-8
