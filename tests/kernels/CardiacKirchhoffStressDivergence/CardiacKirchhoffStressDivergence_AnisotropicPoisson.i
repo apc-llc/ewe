@@ -109,9 +109,7 @@
     k_MN = '-100. -50. -10.  0.  0.  0.'
     a_MN = '   0.   0.   0.  0.  0.  0.'
     b_MN = '   1.   1.   1.  1.  1.  1.'
-    dispx      = dispx
-    dispy      = dispy
-    dispz      = dispz
+    displacements ='dispx dispy dispz'
   [../]
 []
 

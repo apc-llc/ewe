@@ -1,10 +1,3 @@
-/****************************************************************/
-/*                                                              */
-/*  Implementation of Cardiac Tissue elasticity as given in     */
-/*  [Nash2000]                                                  */
-/*                                                              */
-/****************************************************************/
-
 #include "CardiacMechanicsMaterial.h"
 #include "ColumnMajorMatrix.h"
 #include "CardiacSolidMechanicsMaterial.h"
@@ -47,6 +40,8 @@ CardiacMechanicsMaterial::CardiacMechanicsMaterial(const std::string  & name,
 
   // see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top for details on this magic
   _grad_disp.resize(coupledComponents("displacements"));
+
+  mooseAssert(_grad_disp.size() == 3, "CardiacMechanicsMaterial: displacements must have exactly 3 components");
 
   for (unsigned int i=0; i<_grad_disp.size(); ++i)
     _grad_disp[i] = &coupledGradient("displacements", i);

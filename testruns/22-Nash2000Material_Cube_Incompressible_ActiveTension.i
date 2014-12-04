@@ -101,9 +101,7 @@
     k_MN = '1.937 0.028 0.310 1.000 1.000 1.000'
     a_MN = '0.523 0.681 1.037 0.731 0.886 0.731'
     b_MN = '1.351 5.991 0.398 2.000 2.000 2.000'
-    dispx = dispx
-    dispy = dispy
-    dispz = dispz
+    displacements ='dispx dispy dispz'
     outputs = all
     output_properties = 'Kirchhoff_stress'
     Ta_function = active_tension
@@ -121,9 +119,9 @@
 []
 
 [BCs]
-  [./dispx] type = DirichletBC variable = dispx boundary = 'left' value = 0. [../]
-  [./dispy] type = DirichletBC variable = dispy boundary = 'left' value = 0. [../]
-  [./dispz] type = DirichletBC variable = dispz boundary = 'left' value = 0. [../]
+  [./dispx] type = DirichletBC variable = dispx boundary = 'left right top bottom front back' value = 0. [../]
+  [./dispy] type = DirichletBC variable = dispy boundary = 'left right top bottom front back' value = 0. [../]
+  [./dispz] type = DirichletBC variable = dispz boundary = 'left right top bottom front back' value = 0. [../]
 #  [./ns_lower_polar_point_y] type = DirichletBC variable = dispy boundary = ns_lower_polar_point value = 0. [../]
 #  [./ns_lower_polar_point_z] type = DirichletBC variable = dispz boundary = ns_lower_polar_point value = 0. [../]
 #  [./ns_lower_polar_neighbour_x] type = DirichletBC variable = dispx boundary = ns_lower_polar_neighbour value = 0. [../]
@@ -139,20 +137,22 @@
 [Executioner]
   type = Transient
 
-  solve_type = PJFNK
-  petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  petsc_options_value = ' 201                hypre    boomeramg      4                          '
+  solve_type = NEWTON
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = ' hypre'
+  #petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
+  #petsc_options_value = ' 201                hypre    boomeramg      4                          '
   petsc_options = '-fp_trap -info
                    -snes_monitor -snes_view -snes_converged_reason -snes_mf_operator
                    -ksp_monitor  -ksp_view  -ksp_converged_reason  -ksp_monitor_true_residual
-                   -pc_svd_monitor'
+                   -pc_svd_monitor -snes_ls_monitor'
   line_search = 'none'
 
   nl_rel_tol = 1e-3
   nl_abs_tol = 1e-8
   nl_rel_step_tol = 1e-8
   l_tol = 1.e-8
-  l_max_its = 20
+  #l_max_its = 20
 
   start_time = 0
   end_time   = 1.0
@@ -167,6 +167,6 @@
   [./console]
     type = Console
     perf_log = false
-    linear_residuals = true
+    linear_residuals = false
   [../]
 []

@@ -145,9 +145,7 @@
     k_MN = '1.937 0.028 0.310 1.000 1.000 1.000'
     a_MN = '0.523 0.681 1.037 0.731 0.886 0.731'
     b_MN = '1.351 5.991 0.398 2.000 2.000 2.000'
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    displacements ='disp_x disp_y disp_z'
     #TODO: Ta = Ta                          # .. active strain, i.e. strain that results from electrophysiology, default (if unset) = 0
     Ta_function = active_tension_function
     #TODO: p = pressure                     # .. p (pressure / Lagrange multiplier for incompressibility)
