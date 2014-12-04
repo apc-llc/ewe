@@ -1,7 +1,7 @@
 /****************************************************************/
 /*                                                              */
 /*  Implementation of Cardiac Tissue elasticity as given in     */
-/*  [Nash2000]                                              */
+/*  [Nash2000]                                                  */
 /*                                                              */
 /****************************************************************/
 
@@ -78,13 +78,13 @@ CardiacNash2000Material::computeQpProperties()
 
   // 2nd Piola-Kirchhoff stress tensor: T(MN) = 1/2[dW/dE(MN) + dW/dE(NM)] + [- p + Ta delta(M1) delta(N1) ] C^-1(MN)
   // We make use of dW/dE(MN) == dW/dE(NM) and will add active tension and pressure terms later
-  SymmTensor T;
+  SymmTensor T(0);
   // Derivative of T: D(MNPQ) = dT(MN)/dE(PQ)
   // We make use of the symmetry of T and the fact that for our W, dT(MN)/dE(PQ) \propto delta(MP)delta(PQ) if p and Ta are omitted.
   // Thus, a symmetric second-order tensor is sufficient here. Ta and p will be added later, again.
-  SymmTensor D;
+  SymmTensor D(0);
   // We will sum up the elastic energy contributions inside the loop
-  _W[_qp] = 0;
+  Real W(0);
 
   for (int M=0;M<3;M++)
     for (int N=M;N<3;N++)
@@ -92,31 +92,22 @@ CardiacNash2000Material::computeQpProperties()
       const Real k(_k(M,N));
       const Real e(E(M,N));
 
-      if (k==0) { // summand in W does not contribute at all
-        T(M,N) = 0.;
-        D(M,N) = 0.;
-        _W[_qp] += 0.;
-      } else if (k<0) {
+      if (k<0) {
         // negative k values force a fallback to the linear case
-        T(M,N) = -k;
-        D(M,N) =  0.;
+        T(M,N)  += -k;
+        D(M,N)  +=  0.;
         _W[_qp] += -k*e;
-      } else /* k>0 */ {
+      } else if (k>0) {
         const Real a(_a(M,N));
         const Real b(_b(M,N));
-        Real d( a - e );
-        if (d <= 0) {
-          //std::cout << "d = " << d << " on element: " << _current_elem->id() << std::endl;
-          mooseError("CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model");
-          //d = 1e-5;
-        }
+        const Real d( a - e );
+        if (d <= 0) mooseError("CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model");
         const Real f( b*e/d );
         const Real g( k*pow(d,-b) );
 
-        T(M,N) = g * e * ( 2+f );
-        D(M,N) = g * ( 2 + (4+e/d+f)*f );
-
-        _W[_qp] += (M==N ? 1. : 2. ) * g*e*e;
+        T(M,N) += 0.5 * g * e * ( 2+f );
+        D(M,N) += 0.5 * g * ( 2 + (4+e/d+f)*f );
+        W      += 0.5 * g * e*e;
       }
     }
 
@@ -126,6 +117,7 @@ CardiacNash2000Material::computeQpProperties()
   //    D asymmetric wrt. (MN)<->(PQ), i.e. we need the full fourth order tensor here.
   _stress[_qp] = STtoRTV(T);
   _stress_derivative[_qp] = STtoSGET(D);
+  _W[_qp] = W;
 
   if (_has_p || _has_Ta || _has_Ta_function) {
     // Inverse of the Cauchy Green deformation tensor (note that det(C_fibre) = det(C) = det(F^T)*det(F) = det(F)^2, since det(R)==1 )
@@ -154,13 +146,9 @@ CardiacNash2000Material::computeQpProperties()
       // Note that the pressure term is symmetric in Q<->N and in M<->P, i.e. C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of Cinv.
       for (int M=0;M<3;M++)
         for (int N=0;N<3;N++)
-          for (int P=M;P<3;P++)
-            for (int Q=N;Q<3;Q++) {
-              const Real Tp(2 * p * Cinv(M,P) * Cinv(Q,N));
-              _stress_derivative[_qp](M,N,P,Q) += Tp;
-              _stress_derivative[_qp](N,M,P,Q) += Tp;
-              _stress_derivative[_qp](M,N,Q,P) += Tp;
-              _stress_derivative[_qp](N,M,Q,P) += Tp;
+          for (int P=0;P<3;P++)
+            for (int Q=0;Q<3;Q++) {
+              _stress_derivative[_qp](M,N,P,Q) = 2 * p * Cinv(M,P) * Cinv(Q,N);
             }
       /// @todo TODO: how does this go into the elastic energy ?
       // _W[_qp] += ??
