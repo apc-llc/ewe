@@ -19,7 +19,6 @@ ElectrocardioConductivity::ElectrocardioConductivity(const std::string & name,
     _conductivity_coefficient(getParam<Real>("conductivity_coefficient")),
     _conductivity(declareProperty<Real>("conductivity"))
 {
-  std::cout << "Instantiating ElectrocardioConductivity ... conductivity_factor = " << _conductivity_coefficient << std::endl;
 }
 
 void
