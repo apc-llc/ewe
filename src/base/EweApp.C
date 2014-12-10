@@ -17,6 +17,7 @@
 #include "CardiacLinearIsotropicMaterial.h"
 #include "CardiacLinearOrthotropicMaterial.h"
 #include "CardiacNash2000Material.h"
+#include "CardiacHolzapfel2009Material.h"
 #include "DisplacementAux.h"
 #include "AnisotropicGradientShift.h"
 #include "CardiacIncompressibilityLagrangeMultiplier.h"
@@ -87,6 +88,7 @@ EweApp::registerObjects(Factory & factory)
   registerMaterial(CardiacLinearIsotropicMaterial);
   registerMaterial(CardiacLinearOrthotropicMaterial);
   registerMaterial(CardiacNash2000Material);
+  registerMaterial(CardiacHolzapfel2009Material);
   registerMaterial(CardiacFibresMaterial);
 
   registerMaterial(ActiveTensionODE);

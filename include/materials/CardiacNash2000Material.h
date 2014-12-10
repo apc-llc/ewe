@@ -24,7 +24,7 @@ public:
                           InputParameters parameters);
 
 protected:
-  virtual void computeQpStressProperties(const SymmTensor &E);
+  virtual void computeQpStressProperties(const SymmTensor &C, const SymmTensor &E);
 
   SymmTensor _k, _a, _b;
 };

@@ -77,6 +77,47 @@ namespace TensorHelpers {
     return res;
   }
 
+  /// Computes \f$\mathbf{A}\cdot\mathbf{A}\f$ for symmetric tensors
+  const inline SymmTensor square(const SymmTensor & A) {
+    SymmTensor res;
+    for (int M=0;M<3;M++)
+      for (int N=M;N<3;N++)
+        res(M,N) = A(M,0)*A(0,N) + A(M,1)*A(1,N) + A(M,2)*A(2,N);
+    return res;
+  }
+
+  /// Computes \f$\vec{a}\otimes\vec{b}=\vec{a}\cdot\vec{b}^\mathrm{T}\f$
+  const inline RealTensorValue kron(const RealVectorValue &a, const RealVectorValue &b) {
+    RealTensorValue res;
+    for (int M=0;M<3;M++)
+      for (int N=0;N<3;N++)
+        res(M,N) = a(M)*b(N);
+    return res;
+  }
+
+  /// Computes \f$\vec{a}\otimes\vec{a}=\vec{a}\cdot\vec{a}^\mathrm{T}\f$
+  const inline SymmTensor kron(const RealVectorValue &a) {
+    SymmTensor res;
+    for (int M=0;M<3;M++)
+      for (int N=M;N<3;N++)
+        res(M,N) = a(M)*a(N);
+    return res;
+  }
+
+  /// Computes \f$\vec{a}\otimes\vec{b} + \vec{b}\otimes\vec{a} = \vec{a}\cdot\vec{b}^\mathrm{T} + \vec{b}\cdot\vec{a}^\mathrm{T}\f$
+  const inline SymmTensor kronSym(const RealVectorValue &a, const RealVectorValue &b) {
+    SymmTensor res;
+    for (int M=0;M<3;M++)
+      for (int N=M;N<3;N++)
+        res(M,N) = a(M)*b(N) + a(N)*b(M);
+    return res;
+  }
+
+  /// Prepares a scales identity matrix, i.e. \f$a\cdot\mathbf{I}\f$
+  const inline SymmTensor scaledID(const Real &a) {
+    return SymmTensor(a,a,a,0,0,0);
+  }
+
 }
 
 #endif

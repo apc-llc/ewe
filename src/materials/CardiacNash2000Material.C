@@ -26,7 +26,7 @@ CardiacNash2000Material::CardiacNash2000Material(const std::string  & name,
 }
 
 void
-CardiacNash2000Material::computeQpStressProperties(const SymmTensor &E)
+CardiacNash2000Material::computeQpStressProperties(const SymmTensor &C, const SymmTensor &E)
 {
   // 2nd Piola-Kirchhoff stress tensor: T(MN) = 1/2[dW/dE(MN) + dW/dE(NM)] + [- p + Ta delta(M1) delta(N1) ] C^-1(MN)
   // We make use of dW/dE(MN) == dW/dE(NM) and will add active tension and pressure terms outside (see #CardiacMechanicsMaterial)

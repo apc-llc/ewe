@@ -27,13 +27,16 @@ CardiacMechanicsMaterial::CardiacMechanicsMaterial(const std::string  & name,
    _J(declareProperty<Real>("det_displacement_gradient")),
    _W(declareProperty<Real>("elastic_energy_density")),
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
+   _Ef(getMaterialProperty<RealVectorValue>("E_fibre")),
+   _Es(getMaterialProperty<RealVectorValue>("E_sheet")),
+   _En(getMaterialProperty<RealVectorValue>("E_normal")),
    _has_Ta(isCoupled("Ta")),
    _Ta(_has_Ta ? coupledValue("Ta") : _zero),
    _has_Ta_function(isParamValid("Ta_function")),
    _Ta_function( _has_Ta_function ? &getFunction("Ta_function") : NULL ),
    _has_p(isCoupledScalar("p")),
    _p(_has_p ? coupledScalarValue("p") : _zero),
-   _id(1, 1, 1, 0, 0, 0)
+   _id(scaledID(1))
 {
   if (_has_Ta && _has_Ta_function)
     mooseError("CardiacMechanicsMaterial: Only Ta or Ta_function may be given, not both of them.");
@@ -64,7 +67,7 @@ CardiacMechanicsMaterial::computeQpProperties()
   // Lagrange-Green strain tensor
   const SymmTensor E( (C - _id) * 0.5 );
   // in the rotated system compute _stress[_qp], _stress_derivative[_qp], and _W[_qp]
-  computeQpStressProperties(E);
+  computeQpStressProperties(C, E);
   // Add hydrostatic pressure and active tension
   // The following steps render
   //    T asymmetric, i.e. we need a general (non-symmetric) tensor here

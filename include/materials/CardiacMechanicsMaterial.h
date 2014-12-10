@@ -34,7 +34,7 @@ protected:
    * subclasses. It must compute _stress[_qp],
    * stress_derivative[_qp] and _W[_qp]
    */
-  virtual void computeQpStressProperties(const SymmTensor &E) = 0;
+  virtual void computeQpStressProperties(const SymmTensor &C, const SymmTensor &E) = 0;
 
   std::vector<VariableGradient *> _grad_disp;
 
@@ -44,6 +44,7 @@ protected:
   MaterialProperty<Real> & _J; ///< det F, i.e. volume change
   MaterialProperty<Real> & _W; ///< elastic energy
   MaterialProperty<RealTensorValue> & _Rf; ///< fibre orientation rotation matrix
+  MaterialProperty<RealVectorValue> & _Ef, & _Es, & _En; ///< fibre basis vectors
   bool _has_Ta;
   VariableValue & _Ta;
   bool _has_Ta_function;
