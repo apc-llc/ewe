@@ -1,8 +1,8 @@
 [Mesh]
       dim           = 3
-      nx            = 1
-      ny            = 1
-      nz            = 1
+      nx            = 5
+      ny            = 5
+      nz            = 5
       type          = GeneratedMesh
       xmax          =  1.0
       xmin          =  0.0
@@ -98,8 +98,8 @@
 [Functions]
   [./active_tension]
     type = PiecewiseLinear
-    x = '0.0  1.0'
-    y = '0.0  5.0'
+    x = '0.0   1.0'
+    y = '0.0  25.0'
     scale_factor = 1
   [../]
 []
@@ -168,8 +168,8 @@
   start_time = 0
   end_time   = 1.0
   #num_steps = 10
-  dtmax      = 0.005
-  dtmin      = 0.005
+  dtmax      = 0.05
+  dtmin      = 0.05
 []
 
 [Outputs]
