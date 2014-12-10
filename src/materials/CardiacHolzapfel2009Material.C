@@ -38,26 +38,24 @@ CardiacHolzapfel2009Material::computeQpStressProperties(const SymmTensor &C, con
   const Real I8fn(_Ef[_qp]*(C*_En[_qp]));
   const Real I8sn(_Es[_qp]*(C*_En[_qp]));
 
-  // elastic energy contribution
-  Real W(  _p[A1 ]/(2*_p[B1 ]) *  std::exp(_p[B1 ]*(I1-3)         )
-         + _p[Af ]/(2*_p[Bf ]) * (std::exp(_p[Bf ]*(I4f-1)*(I4f-1)) - 1)
-         + _p[As ]/(2*_p[Bs ]) * (std::exp(_p[Bs ]*(I4s-1)*(I4s-1)) - 1)
-         + _p[Afs]/(2*_p[Bfs]) * (std::exp(_p[Bfs]* I8fs  * I8fs   ) - 1)
-        );
+  // the following will be needed in the stress as well as in the energy and stress_derivative
+  const Real  i_term(   _p[A1 ]*std::exp(_p[B1 ]*(I1 -3)        ) );
+  const Real  f_term( 2*_p[Af ]*std::exp(_p[Bf ]*(I4f-1)*(I4f-1)) );
+  const Real  s_term( 2*_p[As ]*std::exp(_p[Bs ]*(I4s-1)*(I4s-1)) );
+  const Real fs_term(   _p[Afs]*std::exp(_p[Bfs]* I8fs  * I8fs  ) );
 
+  // elastic energy contribution
+  _W[_qp] =  i_term             /(2*_p[B1 ])
+         + ( f_term - 2*_p[Af ])/(2*_p[Bf ])
+         + ( s_term - 2*_p[As ])/(2*_p[Bs ])
+         + (fs_term - 2*_p[Afs])/(2*_p[Bfs]);
+
+  // tensors for constructing stress and stress_derivative
   const SymmTensor EfEf(kron(_Ef[_qp]));
   const SymmTensor EsEs(kron(_Es[_qp]));
   const SymmTensor EfEs(kronSym(_Ef[_qp],_Es[_qp]));
 
-  SymmTensor T( scaledID( _p[A1 ]         * std::exp(_p[B1 ]*(I1-3))        )
-               + EfEf * 2*_p[Af ]*(I4f-1) * std::exp(_p[Bf ]*(I4f-1)*(I4f-1))
-               + EsEs * 2*_p[As ]*(I4s-1) * std::exp(_p[Bs ]*(I4s-1)*(I4s-1))
-               + EfEs *   _p[Afs]* I8fs   * std::exp(_p[Bfs]* I8fs  * I8fs  )
-              );
-
-  _stress[_qp] = STtoRTV(T);
+  _stress[_qp] = STtoRTV( scaledID(i_term) + EfEf*(I4f-1)*f_term + EsEs*(I4s-1)*s_term + EfEs*I8fs*fs_term );
 // TODO  _stress_derivative[_qp] = STtoSGET(D);
-  _W[_qp] = W;
-
 }
 
