@@ -93,36 +93,43 @@ CardiacMechanicsMaterial::computeQpProperties()
        */
       const Real p( _p.size() > 0 ? _p[0] : 0.);
 
+      // _stress(MN) += p*Cinv(MN)
       _stress[_qp] -= STtoRTV( Cinv * p );
       // for the derivative of T, things do become slightly complicated as we have to do
-      // _stress_derivative[_qp](MNPQ) += 2 * _p[0] * Cinv(M,P) * Cinv(Q,N)
-      // Note that the pressure term is symmetric in Q<->N and in M<->P, i.e. C(MNPQ)=C(MQPN) and C(MNPQ)=C(PNMQ) due to symmetry of Cinv.
+      // _stress_derivative(MNPQ) += 2 * p * Cinv(M,P) * Cinv(Q,N)
+      SymmGenericElasticityTensor sdp;
+
       for (int M=0;M<3;M++)
-        for (int N=0;N<3;N++)
-          for (int P=0;P<3;P++)
-            for (int Q=0;Q<3;Q++) {
-              _stress_derivative[_qp](M,N,P,Q) = 2 * p * Cinv(M,P) * Cinv(Q,N);
+        for (int N=M;N<3;N++)
+          for (int P=M;P<3;P++)
+            for (int Q=P;Q<3;Q++) {
+              sdp(M,N,P,Q) = 2 * p * Cinv(M,P) * Cinv(Q,N);
             }
-      /// @todo TODO: how does this go into the elastic energy ?
-      // _W[_qp] += ??
+
+      _stress_derivative[_qp] += sdp;
+      // no energy contribution from a Lagrange multiplier
+      // _W[_qp] += 0
     }
+
     // Add active tension in fibre direction
     if (_has_Ta || _has_Ta_function) {
-      Real rTa;
+      Real Ta;
       if (_has_Ta)
-        rTa = _Ta[_qp];
+        Ta = _Ta[_qp];
       else
-        rTa = _Ta_function->value(_t, _q_point[_qp]);
-      // representation of active tension in fibre direction in outer coordinate system
-      const SymmTensor Ta( symmProd(_Rf[_qp].transpose(), SymmTensor(rTa, 0, 0, 0, 0, 0)) );
-      _stress[_qp] += prod ( Ta, Cinv );
-      // _stress_derivative[_qp](MNPQ) += 2 * _Ta[_qp] delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
-      // Ta is a diagonal matrix, i.e. there is a delta(MN) involved
-      // furthermore, Cinv is symmetric
-      for (int M=0;M<3;M++)
-        for (int P=0;P<3;P++)
-          for (int Q=0;Q<3;Q++)
-            _stress_derivative[_qp](M,M,P,Q) += 2 * Ta(M,M) * Cinv(M,P) * Cinv(Q,M);
+        Ta = _Ta_function->value(_t, _q_point[_qp]);
+
+      // _stress(MN) += _Ta * delta(M1) delta(N1) * invC(M,N)
+      const int M(0);
+      const int N(0);
+      _stress[_qp](M,N) += Ta*Cinv(M,N);
+      // _stress_derivative(MNPQ) += -2 * _Ta * delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
+      SymmGenericElasticityTensor sda;
+      for (int P=0;P<3;P++)
+        for (int Q=P;Q<3;Q++)
+          sda(M,N,P,Q) = -2 * Ta * Cinv(M,P) * Cinv(Q,N);
+
+      _stress_derivative[_qp] += sda;
       /// @todo TODO: how does this go into the elastic energy ?
       // _W[_qp] += ??
     }
