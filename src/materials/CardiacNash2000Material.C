@@ -43,7 +43,7 @@ CardiacNash2000Material::computeQpStressProperties(const SymmTensor &C, const Sy
       const Real e(std::abs(E(M,N)));
       const Real a(_a(M,N));
       const Real b(_b(M,N));
-      if (b > 1 && b < 2 && e>a) mooseError("CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model");
+      if (e>a) mooseError("CardiacNash2000Material: E_{MN} >= a_{MN} - the strain is too large for this model");
       const Real d(std::abs(a - e));
       const Real f( b*e/d );
       const Real g( k*pow(d,-b) );

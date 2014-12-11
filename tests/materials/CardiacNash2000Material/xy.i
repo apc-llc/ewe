@@ -81,8 +81,8 @@
   [./pull]
     type = PiecewiseLinear
     x = '0.0  1.0'
-    y = '0.0 -2.5'
-    scale_factor = 1
+    y = '0.0 -1.0'
+    scale_factor = 2.5
   [../]
 []
 
