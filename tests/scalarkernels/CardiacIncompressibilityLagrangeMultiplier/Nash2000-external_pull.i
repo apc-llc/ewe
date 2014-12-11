@@ -1,8 +1,8 @@
 [Mesh]
       dim           = 3
-      nx            = 1
-      ny            = 1
-      nz            = 1
+      nx            = 3
+      ny            = 3
+      nz            = 3
       type          = GeneratedMesh
       xmax          =  1.0
       xmin          =  0.0
@@ -94,7 +94,7 @@
      type = DirichletBC
      boundary = 'right'
      variable = dispx
-     value = -0.25
+     value = +0.001
    [../]
 
    [./bc_dispx]
@@ -103,15 +103,15 @@
      variable = dispx
      value = 0.
    [../]
-   [./bc_y]
+   [./bc_dispy]
      type = DirichletBC
-     boundary = 'left'
+     boundary = 'left right'
      variable = dispy
      value = 0.
    [../]
    [./bc_dispz]
      type = DirichletBC
-     boundary = 'left'
+     boundary = 'left right'
      variable = dispz
      value = 0.
    [../]
