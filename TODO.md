@@ -85,17 +85,19 @@ P.S.: Notizen für mich darüber, wo interessante Anregungen zu finden sind:
 Cardiac Fibres
 ==============
 * Find a good way to distinguish left and right ventricle elements in the computation of fibre directions. - Currently, CardiacThicknessParameter already supplies the necessary information (by means of the sign of e) but this is not interpreted correctly, yet.
+* I think, in our geometry the z-axis is pointing into the opposite direction compared to [Streeter,1969]
 
 Cardiac Mechanics
 =================
-* Couple to displacements through a coupled vector instead of individual disp_.. variables.
-	* for details see
-	* A working example is found in CardiacMechanicsMaterial.C
-	* All affected files can be found via
-  
-                 grepc -iR \"disp src/*
+* ~~Couple to displacements through a coupled vector instead of individual disp_.. variables.~~
+    * ~~For details see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top~~
+	* ~~A working example is found in CardiacMechanicsMaterial.C ~~
+	* ~~All affected files can be found via `grepc -iR \"disp src/*`~~
                  
 * Find out how Ta enters into the elastic energy.
 * Check and rework Newmark integrator, especially think about using declarePropertyOlder() and is_implict=true
 * Think about the Jacobian of the CardiacIncompressibilityLagrangeMultiplier kernel.
 
+General
+=======
+* Clean formatting of all *.i files that are around

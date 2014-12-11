@@ -36,9 +36,7 @@
     use_displaced_mesh = false
     variable  = dispx
     component = 0
-    dispx     = dispx
-    dispy     = dispy
-    dispz     = dispz
+    displacements ='dispx dispy dispz'
   [../]
   [./incomp_dispx]
     type      = CardiacKirchhoffIncompressibilityPenalty
@@ -56,9 +54,7 @@
     use_displaced_mesh = false
     variable  = dispy
     component = 1
-    dispx     = dispx
-    dispy     = dispy
-    dispz     = dispz
+    displacements ='dispx dispy dispz'
   [../]
   [./incomp_dispy]
     type      = CardiacKirchhoffIncompressibilityPenalty
@@ -76,9 +72,7 @@
     use_displaced_mesh = false
     variable  = dispz
     component = 2
-    dispx     = dispx
-    dispy     = dispy
-    dispz     = dispz
+    displacements ='dispx dispy dispz'
   [../]
   [./incomp_dispz]
     type      = CardiacKirchhoffIncompressibilityPenalty

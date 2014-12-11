@@ -11,9 +11,7 @@ template<>
 InputParameters validParams<CardiacSolidMechanicsMaterial>()
 {
   InputParameters params = validParams<Material>();
-  params.addRequiredCoupledVar("disp_x", "The x displacement");
-  params.addRequiredCoupledVar("disp_y", "The y displacement");
-  params.addRequiredCoupledVar("disp_z", "The z displacement");
+  params.addRequiredCoupledVar("displacements", "The x, y, and z displacement");
   params.addCoupledVar("c","variable that zeros out the stiffness");
 
   return params;
@@ -21,14 +19,20 @@ InputParameters validParams<CardiacSolidMechanicsMaterial>()
 
 CardiacSolidMechanicsMaterial::CardiacSolidMechanicsMaterial(const std::string & name, InputParameters parameters)
   :Material(name, parameters),
-   _grad_disp_x(coupledGradient("disp_x")),
-   _grad_disp_y(coupledGradient("disp_y")),
-   _grad_disp_z(coupledGradient("disp_z")),
    _has_c(isCoupled("c")),
    _c( _has_c ? coupledValue("c") : _zero),
    _stress(declareProperty<SymmTensor>("stress")),
    _elasticity_tensor(declareProperty<SymmElasticityTensor>("elasticity_tensor")),
    _Jacobian_mult(declareProperty<SymmElasticityTensor>("Jacobian_mult")),
    _elastic_strain(declareProperty<SymmTensor>("elastic_strain"))
-{}
+{
+  // see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top for details on this magic
+  _grad_disp.resize(coupledComponents("displacements"));
+
+  mooseAssert(_grad_disp.size() == 3, "CardiacSolidMechanicsMaterial: displacements must have exactly 3 components");
+
+  for (unsigned int i=0; i<_grad_disp.size(); ++i) {
+    _grad_disp[i] = &coupledGradient("displacements", i);
+  }
+}
 

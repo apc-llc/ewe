@@ -20,7 +20,7 @@ namespace TensorHelpers {
   /// Converts a SymmTensor \f$A\f$ to a SymmGenericElasticityTensor \f$C_{MNPQ}\f$.
   /// assuming that \f$C_{MN**} = C_{**MN} = A_{MN}\f$.
   const inline SymmGenericElasticityTensor STtoSGET(const SymmTensor & A) {
-    SymmGenericElasticityTensor B;
+    SymmGenericElasticityTensor B(0);
     B(0,0,0,0) = A(0,0);
     B(1,1,1,1) = A(1,1);
     B(2,2,2,2) = A(2,2);

@@ -25,9 +25,7 @@ public:
   CardiacSolidMechanicsMaterial(const std::string & name, InputParameters parameters);
 
 protected:
-  VariableGradient & _grad_disp_x;
-  VariableGradient & _grad_disp_y;
-  VariableGradient & _grad_disp_z;
+  std::vector<VariableGradient *> _grad_disp;
 
   bool _has_c;
   VariableValue & _c;
