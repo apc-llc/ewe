@@ -32,8 +32,7 @@ protected:
   virtual Real computeValue();
   
   Real _density;
-  bool _has_x, _has_y, _has_z;
-  MaterialProperty<Real> *_vel_x, *_vel_y, *_vel_z;
+  std::vector<MaterialProperty<Real> *> _vel;
 };
 
 #endif //KINETICENERGYNEWMARKAUX_H

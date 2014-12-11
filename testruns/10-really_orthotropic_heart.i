@@ -314,8 +314,6 @@
   [./kinetic_energy]
     type = KineticEnergyNewmarkAux
     variable = kinetic_energy
-    dispx = dispx
-    dispy = dispy
-    dispz = dispz
+    displacements = 'dispx dispy dispz'
   [../]
 [] # AuxKernels
