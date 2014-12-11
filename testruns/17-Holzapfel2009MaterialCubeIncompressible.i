@@ -13,56 +13,32 @@
 []
 
 [Variables]
-  [./dispx]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./dispy]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./dispz]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./hydrostatic_pressure]
-    order = FIRST
-    family = SCALAR
-  [../]
+  [./dispx] order = FIRST  family = LAGRANGE [../]
+  [./dispy] order = FIRST  family = LAGRANGE [../]
+  [./dispz] order = FIRST  family = LAGRANGE [../]
+  [./hydrostatic_pressure] order = FIRST  family = SCALAR [../]
 []
 
 [Kernels]
   [./stressdiv_dispx]
     type      = CardiacKirchhoffStressDivergence
-    use_displaced_mesh = false
     variable  = dispx
     component = 0
-    dispx     = dispx
-    dispy     = dispy
-    dispz     = dispz
+    displacements = 'dispx dispy dispz'
   [../]
 
   [./stressdiv_dispy]
     type      = CardiacKirchhoffStressDivergence
-    use_displaced_mesh = false
     variable  = dispy
     component = 1
-    dispx     = dispx
-    dispy     = dispy
-    dispz     = dispz
+    displacements = 'dispx dispy dispz'
   [../]
 
   [./stressdiv_dispz]
     type      = CardiacKirchhoffStressDivergence
-    use_displaced_mesh = false
     variable  = dispz
     component = 2
-    dispx     = dispx
-    dispy     = dispy
-    dispz     = dispz
+    displacements = 'dispx dispy dispz'
   [../]
 []
 
@@ -126,10 +102,7 @@
 []
 
 [AuxVariables]
-  [./res_dispx]
-    order = FIRST
-    family = LAGRANGE
-  []
+  [./res_dispx] order = FIRST  family = LAGRANGE [../]
 []
 
 [AuxKernels]

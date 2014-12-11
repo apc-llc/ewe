@@ -38,9 +38,7 @@
     use_displaced_mesh = false
     variable  = disp_x
     component = 0
-    disp_x    = disp_x
-    disp_y    = disp_y
-    disp_z    = disp_z
+    displacements ='disp_x disp_y disp_z'
   [../]
 #  [./inertia_x]
 #    type     = SecondDerivativeNewmark
@@ -54,9 +52,7 @@
     use_displaced_mesh = false
     variable  = disp_y
     component = 1
-    disp_x    = disp_x
-    disp_y    = disp_y
-    disp_z    = disp_z
+    displacements ='disp_x disp_y disp_z'
   [../]
 #  [./inertia_y]
 #    type     = SecondDerivativeNewmark
@@ -70,9 +66,7 @@
     use_displaced_mesh = false
     variable  = disp_z
     component = 2
-    disp_x    = disp_x
-    disp_y    = disp_y
-    disp_z    = disp_z
+    displacements ='disp_x disp_y disp_z'
   [../]
 #  [./inertia_z]
 #    type     = SecondDerivativeNewmark
