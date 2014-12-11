@@ -13,21 +13,21 @@
       ymin          = -0.5
       zmax          =  5.0
       zmin          = -5.0
-      displacements = 'disp_x disp_y disp_z'
+      displacements = 'dispx dispy dispz'
 []
 
 [Variables]
-  [./disp_x]
+  [./dispx]
     order = FIRST
     family = LAGRANGE
   [../]
 
-  [./disp_y]
+  [./dispy]
     order = FIRST
     family = LAGRANGE
   [../]
 
-  [./disp_z]
+  [./dispz]
     order = FIRST
     family = LAGRANGE
   [../]
@@ -36,28 +36,28 @@
 [SolidMechanics]
   # for every variable given, this sets up a StressDivergence kernel (see SolidMechanicsAction.C)  
   [./solid]
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    disp_x = dispx
+    disp_y = dispy
+    disp_z = dispz
   [../]
 []
 
 [Kernels]
   [./inertia_x]
     type     = SecondOrderImplicitEulerWithDensity
-    variable = disp_x
+    variable = dispx
     density  = 0.1
     lumping  = true
   [../]
   [./inertia_y]
     type     = SecondOrderImplicitEulerWithDensity
-    variable = disp_y
+    variable = dispy
     density  = 0.1
     lumping  = true
   [../]
   [./inertia_z]
     type     = SecondOrderImplicitEulerWithDensity
-    variable = disp_z
+    variable = dispz
     density  = 0.1
     lumping  = true
   [../]
@@ -67,33 +67,33 @@
 [BCs]
   [./force_x]
     type = NeumannBC
-    variable = disp_x
+    variable = dispx
     boundary = 'front'
     value = 0.0
   [../]
   [./force_y]
     type = NeumannBC
-    variable = disp_y
+    variable = dispy
     boundary = 'front'
     value = 0.0
   [../]
   [./force_z]
     type = NeumannBC
-    variable = disp_z
+    variable = dispz
     boundary = 'front'
     value = 0.0
   [../]
 
   [./displacement_y]
     type = DirichletBC
-    variable = disp_y
+    variable = dispy
     boundary = 'front'
     value = 0.0
   [../]
 
   [./force_back]
     type = FunctionDirichletBC
-    variable = disp_y
+    variable = dispy
     boundary = 'back'
     function = pull
   [../]
@@ -105,9 +105,9 @@
     block = 0
     youngs_modulus = 1.e5
     poissons_ratio = 0.3
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    dispx = dispx
+    dispy = dispy
+    dispz = dispz
   [../]
 
 []
@@ -286,8 +286,6 @@
   [./kinetic_energy]
     type = KineticEnergyAux
     variable = kinetic_energy
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    displacements = 'dispx dispy dispz'
   [../]
 [] # AuxKernels
