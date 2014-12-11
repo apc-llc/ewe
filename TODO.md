@@ -1,7 +1,9 @@
 Electrocardio
 =============
 * Add (Boolean) material property that shows the de/repolarization status of the cells
-* Make stimulation parameters adjustable from outside (e.g.. via user-defined functions)
+* ~~Make stimulation parameters adjustable from outside (e.g.. via user-defined functions)~~ DONE
+* Use fibre directions for anisotropic conductivities
+* Add option for getting an ion model's resting potential. - Currently, it is fixed in ElectrocardioIC
 
 
 Electrocardio: Celltypes in the ion model
@@ -54,7 +56,7 @@ P.S.: Notizen für mich darüber, wo interessante Anregungen zu finden sind:
                  #define    TPX_RVMC 3     // RV midmyocardial
                  #define    TPX_RVEPI 4     // RV epicardial
                  #define    TPX_T5    5     // spare type, has endo characteristics by default
-                 #define TPX_T6    6     // systematic naming for spare types
+                 #define    TPX_T6    6     // systematic naming for spare types
 
                  see @<tabulate steady-state values and time constants@>+=
 
@@ -80,6 +82,10 @@ P.S.: Notizen für mich darüber, wo interessante Anregungen zu finden sind:
                  set_default_substance(6,"His bundle",3.0,1.2,3.0,0.3);
                  set_default_substance(7,"AV node",3.0,1.2,3.0,0.3); 
 
+Cardiac Fibres
+==============
+* Find a good way to distinguish left and right ventricle elements in the computation of fibre directions. - Currently, CardiacThicknessParameter already supplies the necessary information (by means of the sign of e) but this is not interpreted correctly, yet.
+
 Cardiac Mechanics
 =================
 * Couple to displacements through a coupled vector instead of individual disp_.. variables.
@@ -87,5 +93,9 @@ Cardiac Mechanics
 	* A working example is found in CardiacMechanicsMaterial.C
 	* All affected files can be found via
   
-      grepc -iR \"disp src/*
+                 grepc -iR \"disp src/*
+                 
+* Find out how Ta enters into the elastic energy.
+* Check and rework Newmark integrator, especially think about using declarePropertyOlder() and is_implict=true
+* Think about the Jacobian of the CardiacIncompressibilityLagrangeMultiplier kernel.
 
