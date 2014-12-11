@@ -99,3 +99,6 @@ Cardiac Mechanics
 * Check and rework Newmark integrator, especially think about using declarePropertyOlder() and is_implict=true
 * Think about the Jacobian of the CardiacIncompressibilityLagrangeMultiplier kernel.
 
+General
+=======
+* Clean formatting of all *.i files that are around
