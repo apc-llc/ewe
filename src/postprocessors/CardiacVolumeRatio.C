@@ -4,24 +4,27 @@ template<>
 InputParameters validParams<CardiacVolumeRatioPostprocessor>()
 {
   InputParameters params = validParams<ElementIntegralPostprocessor>();
-  params.addRequiredCoupledVar("dispx", "Displacement in x direction.");
-  params.addRequiredCoupledVar("dispy", "Displacement in y direction.");
-  params.addRequiredCoupledVar("dispz", "Displacement in z direction.");
+  params.addRequiredCoupledVar("displacements", "The x, y, and z displacement");
   return params;
 }
 
 CardiacVolumeRatioPostprocessor::CardiacVolumeRatioPostprocessor(const std::string & name, InputParameters parameters) :
-    ElementIntegralPostprocessor(name, parameters),
-    _grad_dispx(coupledGradient("dispx")),
-    _grad_dispy(coupledGradient("dispy")),
-    _grad_dispz(coupledGradient("dispz"))
-{}
+    ElementIntegralPostprocessor(name, parameters)
+{
+  // see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top for details on this magic
+  _grad_disp.resize(coupledComponents("displacements"));
+
+  mooseAssert(_grad_disp.size() == 3, "CardiacMechanicsMaterial: displacements must have exactly 3 components");
+
+  for (unsigned int i=0; i<_grad_disp.size(); ++i)
+    _grad_disp[i] = &coupledGradient("displacements", i);
+}
 
 Real
 CardiacVolumeRatioPostprocessor::computeQpIntegral()
 {
-  RealTensorValue F(_grad_dispx[_qp](0) + 1, _grad_dispx[_qp](1),     _grad_dispx[_qp](2),
-                    _grad_dispy[_qp](0),     _grad_dispy[_qp](1) + 1, _grad_dispy[_qp](2),
-                    _grad_dispz[_qp](0),     _grad_dispz[_qp](1),     _grad_dispz[_qp](2) + 1);
+  RealTensorValue F((*_grad_disp[0])[_qp](0) + 1, (*_grad_disp[0])[_qp](1),     (*_grad_disp[0])[_qp](2),
+                    (*_grad_disp[1])[_qp](0),     (*_grad_disp[1])[_qp](1) + 1, (*_grad_disp[1])[_qp](2),
+                    (*_grad_disp[2])[_qp](0),     (*_grad_disp[2])[_qp](1),     (*_grad_disp[2])[_qp](2) + 1);
   return F.det();
 }

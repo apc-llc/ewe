@@ -20,7 +20,7 @@ public:
 protected:
   virtual Real computeQpIntegral();
 
-  VariableGradient & _grad_dispx, & _grad_dispy, & _grad_dispz;
+  std::vector<VariableGradient *> _grad_disp;
 };
 
 #endif

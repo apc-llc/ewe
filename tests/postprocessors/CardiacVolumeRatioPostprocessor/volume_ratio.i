@@ -13,26 +13,14 @@
 []
 
 [Variables]
-  [./dispx]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./dispy]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./dispz]
-    order = FIRST
-    family = LAGRANGE
-  [../]
+  [./dispx] order = FIRST  family = LAGRANGE [../]
+  [./dispy] order = FIRST  family = LAGRANGE [../]
+  [./dispz] order = FIRST  family = LAGRANGE [../]
 []
 
 [Kernels]
   [./stressdiv_dispx]
     type      = CardiacKirchhoffStressDivergence
-    use_displaced_mesh = false
     variable  = dispx
     component = 0
     displacements = 'dispx dispy dispz'
@@ -40,7 +28,6 @@
 
   [./stressdiv_dispy]
     type      = CardiacKirchhoffStressDivergence
-    use_displaced_mesh = false
     variable  = dispy
     component = 1
     displacements = 'dispx dispy dispz'
@@ -48,7 +35,6 @@
 
   [./stressdiv_dispz]
     type      = CardiacKirchhoffStressDivergence
-    use_displaced_mesh = false
     variable  = dispz
     component = 2
     displacements = 'dispx dispy dispz'
@@ -76,43 +62,13 @@
 []
 
 [BCs]
-   [./bc_pull]
-     type = DirichletBC
-     boundary = 'left'
-     variable = dispx
-     value = 0.25
-   [../]
-   [./bc_fixy]
-     type = DirichletBC
-     boundary = 'left'
-     variable = dispy
-     value = 0.
-   [../]
-   [./bc_fixz]
-     type = DirichletBC
-     boundary = 'left'
-     variable = dispz
-     value = 0.
-   [../]
+   [./bc_pull] type = DirichletBC  boundary = 'left'  variable = dispx  value = 0.25 [../]
+   [./bc_fixy] type = DirichletBC  boundary = 'left'  variable = dispy  value = 0.   [../]
+   [./bc_fixz] type = DirichletBC  boundary = 'left'  variable = dispz  value = 0.   [../]
 
-   [./bc_dispx]
-     type = DirichletBC
-     boundary = 'right'
-     variable = dispx
-     value = 0.
-   [../]
-   [./bc_y]
-     type = DirichletBC
-     boundary = 'right'
-     variable = dispy
-     value = 0.
-   [../]
-   [./bc_dispz]
-     type = DirichletBC
-     boundary = 'right'
-     variable = dispz
-     value = 0.
-   [../]
+   [./bc_dispx] type = DirichletBC  boundary = 'right'  variable = dispx  value = 0. [../]
+   [./bc_dispy] type = DirichletBC  boundary = 'right'  variable = dispy  value = 0. [../]
+   [./bc_dispz] type = DirichletBC  boundary = 'right'  variable = dispz  value = 0. [../]
 []
 
 [Executioner]
@@ -124,9 +80,7 @@
     type = CardiacVolumeRatioPostprocessor
     execute_on = residual
     outputs = all
-    dispx = dispx
-    dispy = dispy
-    dispz = dispz
+    displacements = 'dispx dispy dispz'
   [../]
 []
 
