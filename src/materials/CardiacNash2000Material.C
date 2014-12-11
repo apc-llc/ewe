@@ -32,14 +32,12 @@ CardiacNash2000Material::computeQpStressProperties(const SymmTensor &C, const Sy
   // We make use of dW/dE(MN) == dW/dE(NM) and will add active tension and pressure terms outside (see #CardiacMechanicsMaterial)
   SymmTensor T(0);
   // Derivative of T: D(MNPQ) = dT(MN)/dE(PQ)
-  // We make use of the symmetry of T and the fact that for our W, dT(MN)/dE(PQ) \propto delta(MP)delta(PQ) if p and Ta are omitted.
-  // Thus, a symmetric second-order tensor is sufficient here. Ta and p will be added outside, again (see #CardiacMechanicsMaterial).
-  SymmTensor D(0);
+  SymmGenericElasticityTensor D(0);
   // We will sum up the elastic energy contributions inside the loop
   Real W(0);
 
-  for (int M=0;M<3;M++)
-    for (int N=M;N<3;N++)
+  for (unsigned int M=0;M<3;M++)
+    for (unsigned int N=M;N<3;N++)
     {
       const Real k(_k(M,N));
       const Real e(std::abs(E(M,N)));
@@ -50,13 +48,21 @@ CardiacNash2000Material::computeQpStressProperties(const SymmTensor &C, const Sy
       const Real f( b*e/d );
       const Real g( k*pow(d,-b) );
 
-      T(M,N) += 0.5 * g * e * ( 2+f );
-      D(M,N) += 0.5 * g * ( 2 + (4+e/d+f)*f );
-      W      += 0.5 * g * e*e;
+      const Real fact(M==N ? 1.0 : 0.5);
+
+      T(M,N) = fact * g * e * ( 2+f );
+
+      // insane loop to cover all elements of the symmetric 4th order tensor exactly once. The if-construct avoids douple-counting for major-symmetry pairs of MN<->PQ
+      for (unsigned int P=M;P<3;P++)
+        for (unsigned int Q=P;Q<3;Q++)
+          if (P != M || Q >= N)
+            D(M,N,P,Q) = fact * g * ( 2 + (4+e/d+f)*f );
+
+      W += fact * g * e*e;
     }
 
   _stress[_qp] = STtoRTV(T);
-  _stress_derivative[_qp] = STtoSGET(D);
+  _stress_derivative[_qp] = D;
   _W[_qp] = W;
 }
 
