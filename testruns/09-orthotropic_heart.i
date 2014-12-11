@@ -113,9 +113,7 @@
     poissons_ratios = '0.3 0.3 0.3'
     # linear isotropic: shear_modulus = youngs_modulus / (2 * (1+poissons_ratio) )
     shear_moduli    = '38461.538462 38461.538462 38461.538462'
-    dispx = dispx
-    dispy = dispy
-    dispz = dispz
+    displacements = 'dispx dispy dispz'
   [../]
 
    [./newmarkx]

@@ -105,9 +105,7 @@
     block = 1
     youngs_modulus = 1.e5
     poissons_ratio = 0.3
-    dispx = dispx
-    dispy = dispy
-    dispz = dispz
+    displacements = 'dispx dispy dispz'
   [../]
 
    [./newmarkx]
