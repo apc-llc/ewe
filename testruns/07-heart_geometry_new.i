@@ -79,9 +79,9 @@
     block = 1
     youngs_modulus = 1.e5
     poissons_ratio = 0.3
-    dispx = dispx
-    dispy = dispy
-    dispz = dispz
+    disp_x = dispx
+    disp_y = dispy
+    disp_z = dispz
     # thermal properties
     # thermal_expansion = 1.0
     # t_ref = 0.0

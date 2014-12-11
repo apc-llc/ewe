@@ -64,10 +64,10 @@ surface_to_volume = 800.0
 
 [Materials]
   [./cardiac_properties]
-   type = CardiacFibresMaterial
-   block = all
-   outputs = all
-   #PropagParams = '+F Test.par'
+    type = CardiacFibresMaterial
+    block = all
+    outputs = all
+    fixed_R = '1 0 0 0 1 0 0 0 1'
   [../]
   
   [./electrocardio]

@@ -105,9 +105,9 @@
     block = 0
     youngs_modulus = 1.e5
     poissons_ratio = 0.3
-    dispx = dispx
-    dispy = dispy
-    dispz = dispz
+    disp_x = dispx
+    disp_y = dispy
+    disp_z = dispz
   [../]
 
 []

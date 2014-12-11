@@ -101,9 +101,10 @@
 
 [Materials]
   [./cardiac_properties]
-   type = CardiacFibresMaterial
-   block = 1
-   outputs = all
+    type = CardiacFibresMaterial
+    block = 1
+    outputs = all
+    fixed_R = '1 0 0 0 1 0 0 0 1'
   [../]
 
   [./linear_orthotropic]

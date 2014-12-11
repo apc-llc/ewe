@@ -91,7 +91,7 @@ Cardiac Mechanics
 =================
 * ~~Couple to displacements through a coupled vector instead of individual disp_.. variables.~~
     * ~~For details see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top~~
-	* ~~A working example is found in CardiacMechanicsMaterial.C ~~
+	* ~~A working example is found in CardiacMechanicsMaterial.C~~
 	* ~~All affected files can be found via `grepc -iR \"disp src/*`~~
                  
 * Find out how Ta enters into the elastic energy.
