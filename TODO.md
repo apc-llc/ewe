@@ -85,6 +85,7 @@ P.S.: Notizen für mich darüber, wo interessante Anregungen zu finden sind:
 Cardiac Fibres
 ==============
 * Find a good way to distinguish left and right ventricle elements in the computation of fibre directions. - Currently, CardiacThicknessParameter already supplies the necessary information (by means of the sign of e) but this is not interpreted correctly, yet.
+* I think, in our geometry the z-axis is pointing into the opposite direction compared to [Streeter,1969]
 
 Cardiac Mechanics
 =================
