@@ -1,0 +1,47 @@
+[Tests]
+  [./xx]
+    type = 'Exodiff'
+    input = 'xx.i'
+    exodiff = 'xx_out.e'
+  [../]
+  [./xy]
+    type = 'Exodiff'
+    input = 'xy.i'
+    exodiff = 'xy_out.e'
+  [../]
+  [./xz]
+    type = 'Exodiff'
+    input = 'xz.i'
+    exodiff = 'xz_out.e'
+  [../]
+  [./yx]
+    type = 'Exodiff'
+    input = 'yx.i'
+    exodiff = 'yx_out.e'
+  [../]
+  [./yy]
+    type = 'Exodiff'
+    input = 'yy.i'
+    exodiff = 'yy_out.e'
+  [../]
+  [./yz]
+    type = 'Exodiff'
+    input = 'yz.i'
+    exodiff = 'yz_out.e'
+  [../]
+  [./zx]
+    type = 'Exodiff'
+    input = 'zx.i'
+    exodiff = 'zx_out.e'
+  [../]
+  [./zy]
+    type = 'Exodiff'
+    input = 'zy.i'
+    exodiff = 'zy_out.e'
+  [../]
+  [./zz]
+    type = 'Exodiff'
+    input = 'zz.i'
+    exodiff = 'zz_out.e'
+  [../]
+[]
