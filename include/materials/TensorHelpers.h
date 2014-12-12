@@ -3,6 +3,7 @@
 
 #include "libmesh/tensor_value.h"
 #include "SymmTensor.h"
+#include "SymmGenericElasticityTensor.h"
 
 namespace TensorHelpers {
   /// Converts a SymmTensor to a RealTensorValue with the respective symmetric elements.
@@ -117,7 +118,6 @@ namespace TensorHelpers {
   const inline SymmTensor scaledID(const Real &a) {
     return SymmTensor(a,a,a,0,0,0);
   }
-
 }
 
 #endif
