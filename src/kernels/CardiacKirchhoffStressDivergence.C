@@ -9,7 +9,7 @@ InputParameters validParams<CardiacKirchhoffStressDivergence>()
   InputParameters params = validParams<Kernel>();
   params.addRequiredParam<unsigned int>("component", "An integer corresponding to the direction the variable this kernel acts in. (0 for x, 1 for y, 2 for z)");
   params.addRequiredCoupledVar("displacements", "The x, y, and z displacement");
-
+  params.set<bool>("use_displaced_mesh") = false;
   return params;
 }
 
