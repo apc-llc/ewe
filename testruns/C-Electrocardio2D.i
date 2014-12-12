@@ -158,7 +158,7 @@
  
   [./conductivity]
    type = ElectrocardioConductivity
-   conductivity_coefficient = 0.006
+   conductivities = '0.006 0.006 0.006'
    block = all
   [../]
 []
