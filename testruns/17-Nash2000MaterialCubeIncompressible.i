@@ -1,8 +1,8 @@
 [Mesh]
       dim           = 3
-      nx            = 1
-      ny            = 1
-      nz            = 1
+      nx            = 5
+      ny            = 5
+      nz            = 5
       type          = GeneratedMesh
       xmax          =  1.0
       xmin          =  0.0
@@ -40,9 +40,7 @@
     use_displaced_mesh = false
     variable  = dispx
     component = 0
-    dispx     = dispx
-    dispy     = dispy
-    dispz     = dispz
+    displacements ='dispx dispy dispz'
   [../]
 
   [./stressdiv_dispy]
@@ -50,9 +48,7 @@
     use_displaced_mesh = false
     variable  = dispy
     component = 1
-    dispx     = dispx
-    dispy     = dispy
-    dispz     = dispz
+    displacements ='dispx dispy dispz'
   [../]
 
   [./stressdiv_dispz]
@@ -60,9 +56,7 @@
     use_displaced_mesh = false
     variable  = dispz
     component = 2
-    dispx     = dispx
-    dispy     = dispy
-    dispz     = dispz
+    displacements ='dispx dispy dispz'
   [../]
 []
 
@@ -90,9 +84,7 @@
     k_MN = '1.937 0.028 0.310 1.000 1.000 1.000'
     a_MN = '0.523 0.681 1.037 0.731 0.886 0.731'
     b_MN = '1.351 5.991 0.398 2.000 2.000 2.000'
-    dispx       = dispx
-    dispy       = dispy
-    dispz       = dispz
+    displacements ='dispx dispy dispz'
     outputs     = all
     output_properties = 'Kirchhoff_stress'
     Ta_function = active_tension

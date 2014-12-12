@@ -8,9 +8,7 @@ InputParameters validParams<CardiacKirchhoffStressDivergence>()
 {
   InputParameters params = validParams<Kernel>();
   params.addRequiredParam<unsigned int>("component", "An integer corresponding to the direction the variable this kernel acts in. (0 for x, 1 for y, 2 for z)");
-  params.addRequiredCoupledVar("dispx", "The x displacement");
-  params.addRequiredCoupledVar("dispy", "The y displacement");
-  params.addRequiredCoupledVar("dispz", "The z displacement");
+  params.addRequiredCoupledVar("displacements", "The x, y, and z displacement");
 
   return params;
 }
@@ -20,21 +18,17 @@ CardiacKirchhoffStressDivergence::CardiacKirchhoffStressDivergence(const std::st
   :Kernel(name, parameters),
    _stress(getMaterialProperty<RealTensorValue>("Kirchhoff_stress")),
    _stress_derivative(getMaterialProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
-   _component(getParam<unsigned int>("component")),
-   _xdisp_var(coupled("dispx")),
-   _ydisp_var(coupled("dispy")),
-   _zdisp_var(coupled("dispz"))
-{}
-
-Real CardiacKirchhoffStressDivergence::fullContraction(const RealTensorValue & t,
-                                                       const RealVectorValue & v1,
-                                                       const RealVectorValue & v2) const
+   _component(getParam<unsigned int>("component"))
 {
-  Real res(0);
-  for (unsigned int M=0;M<3;M++)
-    for (unsigned int N=0;N<3;N++)
-      res += v1(M)*t(M,N)*v2(N);
-  return res;
+  // see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top for details on this magic
+  _grad_disp.resize(coupledComponents("displacements"));
+
+  mooseAssert(_grad_disp.size() == 3, "CardiacKirchhoffStressDivergence: displacements must have exactly 3 components");
+
+  for (unsigned int i=0; i<_grad_disp.size(); ++i) {
+    _grad_disp[i] = &coupledGradient("displacements", i);
+    _disp_var[i]  = coupled("displacements", i);
+  }
 }
 
 Real
@@ -46,7 +40,7 @@ CardiacKirchhoffStressDivergence::computeQpResidual()
   grad_xi(_component) += 1;
 
   // compute _grad_test[_i][_qp] * _stress[_qp] * _grad_xi
-  return fullContraction(_stress[_qp], _grad_test[_i][_qp], grad_xi);
+  return _grad_test[_i][_qp]*(_stress[_qp]*grad_xi);
 }
 
 Real
@@ -57,26 +51,41 @@ CardiacKirchhoffStressDivergence::computeQpJacobian()
   RealVectorValue grad_xi(_grad_u[_qp]);
   grad_xi(_component) += 1;
 
-  return fullContraction(_stress[_qp], _grad_test[_i][_qp], _grad_phi[_j][_qp])
-    + _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(_grad_test[_i][_qp], grad_xi,
-                                                                   _grad_phi[_j][_qp], grad_xi );
+  SymmTensor dE(/* 00 */      _grad_phi[_j][_qp](0)*grad_xi(0),
+                /* 11 */      _grad_phi[_j][_qp](1)*grad_xi(1),
+                /* 22 */      _grad_phi[_j][_qp](2)*grad_xi(2),
+                /* 01 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xi(1) + grad_xi(0)*_grad_phi[_j][_qp](1)),
+                /* 12 */ 0.5*(_grad_phi[_j][_qp](1)*grad_xi(2) + grad_xi(1)*_grad_phi[_j][_qp](2)),
+                /* 02 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xi(2) + grad_xi(0)*_grad_phi[_j][_qp](2)));
+
+  return _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(_grad_test[_i][_qp], grad_xi, dE)
+    + _grad_test[_i][_qp]*(_stress[_qp]*_grad_phi[_j][_qp]);
 }
 
 Real
 CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
 {
-  mooseAssert( ~( jvar == _xdisp_var && _component==0
-               || jvar == _ydisp_var && _component==1
-               || jvar == _zdisp_var && _component==2), "CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian() called for a diagonal element. Presumably, _component is wrong here.");
+  int idx(-1);
 
-  if (jvar == _xdisp_var || jvar == _ydisp_var || jvar == _zdisp_var) {
-    // nonlinear variables are displacements u(i)=x(i)-X(i)
-    // However, we do need the deformation gradient here: dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
-    RealVectorValue grad_xi(_grad_u[_qp]);
-    grad_xi(_component) += 1;
+  if (jvar == _disp_var[0])      { idx=0; }
+  else if (jvar == _disp_var[1]) { idx=1; }
+  else if (jvar == _disp_var[2]) { idx=2; }
+  else return 0;
 
-    return _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(_grad_test[_i][_qp], grad_xi,
-                                                                        _grad_phi[_j][_qp], grad_xi );
-  } else
-    return 0;
+  // nonlinear variables are displacements u(i)=x(i)-X(i)
+  // However, we do need the deformation gradient here: dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
+  RealVectorValue grad_xi(_grad_u[_qp]);
+  grad_xi(_component) += 1;
+
+  RealVectorValue grad_xk( (*_grad_disp[idx])[_qp] );
+  grad_xk(idx) += 1;
+
+  SymmTensor dE(/* 00 */      _grad_phi[_j][_qp](0)*grad_xk(0),
+                /* 11 */      _grad_phi[_j][_qp](1)*grad_xk(1),
+                /* 22 */      _grad_phi[_j][_qp](2)*grad_xk(2),
+                /* 01 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(1) + grad_xk(0)*_grad_phi[_j][_qp](1)),
+                /* 12 */ 0.5*(_grad_phi[_j][_qp](1)*grad_xk(2) + grad_xk(1)*_grad_phi[_j][_qp](2)),
+                /* 02 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(2) + grad_xk(0)*_grad_phi[_j][_qp](2)));
+
+  return _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(_grad_test[_i][_qp], grad_xi, dE);
 }

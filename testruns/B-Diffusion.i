@@ -74,10 +74,10 @@ surface_to_volume = 800.0
 
 [Materials]
   [./cardiac_properties]
-   type = CardiacFibresMaterial
+    type = CardiacFibresMaterial
+    block = all
+    outputs = all
     fixed_R = '1 0 0 0 1 0 0 0 1'
-   block = all
-   outputs = all
   [../]
   
   [./electrocardio]

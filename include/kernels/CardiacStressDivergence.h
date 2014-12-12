@@ -35,8 +35,7 @@ protected:
 private:
   const unsigned int _component;
 
-  const unsigned int _xdisp_var;
-  const unsigned int _ydisp_var;
-  const unsigned int _zdisp_var;
+  /// indices of the three coupled displacement variables
+  unsigned int _disp_var[3];
 };
 #endif //CardiacStressDivergence_H

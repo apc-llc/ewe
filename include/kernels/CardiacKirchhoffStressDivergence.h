@@ -3,6 +3,9 @@
 
 #include "Kernel.h"
 #include "SymmGenericElasticityTensor.h"
+#include "TensorHelpers.h"
+
+using namespace TensorHelpers;
 
 //Forward Declarations
 class ColumnMajorMatrix;
@@ -38,16 +41,11 @@ protected:
   MaterialProperty<RealTensorValue> & _stress;                          ///< 2nd Piola-Kirchhoff stress tensor \f$T_{MN}\f$
   MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative;   ///< derivative of the 2nd Piola-Kirchhoff stress tensor \f$\frac{\partial T_{MN}}{\partial E_{PQ}}\f$
 
-  /// computes   SUM(M,N) [ t(M,N) v1(M) v2(N) ]
-  Real fullContraction(const RealTensorValue & t,
-                       const RealVectorValue & v1,
-                       const RealVectorValue & v2) const;
-
 private:
   const unsigned int _component;
 
-  const unsigned int _xdisp_var;
-  const unsigned int _ydisp_var;
-  const unsigned int _zdisp_var;
+  std::vector<VariableGradient *> _grad_disp;
+  /// indices of the three coupled displacement variables
+  unsigned int _disp_var[3];
 };
 #endif //CardiacKirchhoffStressDivergence_H

@@ -20,7 +20,7 @@ InputParameters validParams<VolumeNearestNodeDistanceAux>();
  * NearestNodeDistanceAux.C, and GeometricSearchData.C
  * and only had to be slightly modified to fit our needs.
  *
- * \todo TODO: Currently, all update functionality does not work.
+ * @todo TODO: Currently, all update functionality does not work.
  * Accordingly, changes in the mesh configuration, displacements, etc.
  * are ignored since findNodes() of the underlying
  * VolumeNearestNodeDistance object is only invoked in the

@@ -13,21 +13,21 @@
       ymin          = -0.5
       zmax          =  5.0
       zmin          = -5.0
-      displacements = 'disp_x disp_y disp_z'
+      displacements = 'dispx dispy dispz'
 []
 
 [Variables]
-  [./disp_x]
+  [./dispx]
     order = FIRST
     family = LAGRANGE
   [../]
 
-  [./disp_y]
+  [./dispy]
     order = FIRST
     family = LAGRANGE
   [../]
 
-  [./disp_z]
+  [./dispz]
     order = FIRST
     family = LAGRANGE
   [../]
@@ -36,28 +36,28 @@
 [SolidMechanics]
   # for every variable given, this sets up a StressDivergence kernel (see SolidMechanicsAction.C)  
   [./solid]
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    disp_x = dispx
+    disp_y = dispy
+    disp_z = dispz
   [../]
 []
 
 [Kernels]
   [./inertia_x]
     type     = SecondDerivativeNewmark
-    variable = disp_x
+    variable = dispx
     density  = 0.0
     lumping  = false
   [../]
   [./inertia_y]
     type     = SecondDerivativeNewmark
-    variable = disp_y
+    variable = dispy
     density  = 0.1
     lumping  = false
   [../]
   [./inertia_z]
     type     = SecondDerivativeNewmark
-    variable = disp_z
+    variable = dispz
     density  = 0.0
     lumping  = false
  # [../]
@@ -67,45 +67,45 @@
 [BCs]
   [./force_x]
     type = NeumannBC
-    variable = disp_x
+    variable = dispx
     boundary = 'front back'
     value = 0.0
   [../]
   [./force_y]
     type = NeumannBC
-    variable = disp_y
+    variable = dispy
     boundary = 'front back'
     value = 0.0
   [../]
   [./force_z]
     type = NeumannBC
-    variable = disp_z
+    variable = dispz
     boundary = 'front back'
     value = 0.0
   [../]
 
   [./fixed_x]
     type = DirichletBC
-    variable = disp_x
+    variable = dispx
     boundary = 'front'
     value = 0.0
   [../]
   [./fixed_z]
     type = DirichletBC
-    variable = disp_z
+    variable = dispz
     boundary = 'front'
     value = 0.0
   [../]
 
   [./pull]
     type = DirichletBC
-    variable = disp_y
+    variable = dispy
     boundary = 'front'
     value = 0.0
   [../]
   [./fixed]
     type = FunctionDirichletBC
-    variable = disp_y
+    variable = dispy
     boundary = 'back'
     function = pull
   [../]
@@ -117,25 +117,25 @@
     block = 0
     youngs_modulus = 1.e5
     poissons_ratio = 0.3
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    disp_x = dispx
+    disp_y = dispy
+    disp_z = dispz
   [../]
 
   [./newmarkx]
     type = NewmarkMaterial
     block = 0
-    disp  = disp_x
+    disp  = dispx
   [../]
   [./newmarky]
     type = NewmarkMaterial
     block = 0
-    disp  = disp_y
+    disp  = dispy
   [../]
   [./newmarkz]
     type = NewmarkMaterial
     block = 0
-    disp  = disp_z
+    disp  = dispz
   [../]
 
 []

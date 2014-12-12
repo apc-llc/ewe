@@ -2,73 +2,47 @@
 
 [Mesh]
   file = 07-heart_geometry_new.e
-  displacements = 'disp_x disp_y disp_z'
+  displacements = 'dispx dispy dispz'
 []
 
 [Variables]
-  [./disp_x]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./disp_y]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./disp_z]
-    order = FIRST
-    family = LAGRANGE
-  [../]
+  [./dispx] order = FIRST  family = LAGRANGE [../]
+  [./dispy] order = FIRST  family = LAGRANGE [../]
+  [./dispz] order = FIRST  family = LAGRANGE [../]
 []
 
 [SolidMechanics]
   # for every variable given, this sets up a StressDivergence kernel (see SolidMechanicsAction.C)  
   [./solid]
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    disp_x = dispx
+    disp_y = dispy
+    disp_z = dispz
   [../]
 []
 
 [Kernels]
-  [./inertia_x]
-    type     = SecondOrderImplicitEulerWithDensity
-    variable = disp_x
-    density  = 0.1
-    lumping  = false
-  [../]
-  [./inertia_y]
-    type     = SecondOrderImplicitEulerWithDensity
-    variable = disp_y
-    density  = 0.1
-    lumping  = false
-  [../]
-  [./inertia_z]
-    type     = SecondOrderImplicitEulerWithDensity
-    variable = disp_z
-    density  = 0.1
-    lumping  = false
-  [../]
+  [./inertia_x] type = SecondOrderImplicitEulerWithDensity  variable = dispx  density  = 0.1  lumping  = false [../]
+  [./inertia_y] type = SecondOrderImplicitEulerWithDensity  variable = dispy  density  = 0.1  lumping  = false [../]
+  [./inertia_z] type = SecondOrderImplicitEulerWithDensity  variable = dispz  density  = 0.1  lumping  = false [../]
 []
 
 
 [BCs]
   [./ring_x]
     type = DirichletBC
-    variable = disp_x
+    variable = dispx
     boundary = ns_LV_opening
     value    = 0.
   [../]
   [./ring_y]
     type = DirichletBC
-    variable = disp_y
+    variable = dispy
     boundary = ns_LV_opening
     value    = 0.
   [../]
   [./ring_z]
     type = DirichletBC
-    variable = disp_z
+    variable = dispz
     boundary = ns_LV_opening
     value    = 0.
   [../]
@@ -76,7 +50,7 @@
   [./Pressure_LV_x]
     type = Pressure
     boundary  = ss_LV_inner
-    variable  = disp_x
+    variable  = dispx
     component = 0
     factor    = 1.0
     function  = pressure_time
@@ -84,7 +58,7 @@
   [./Pressure_LV_y]
     type = Pressure
     boundary  = ss_LV_inner
-    variable  = disp_y
+    variable  = dispy
     component = 1
     factor    = 1.0
     function  = pressure_time
@@ -92,7 +66,7 @@
   [./Pressure_LV_z]
     type = Pressure
     boundary  = ss_LV_inner
-    variable  = disp_z
+    variable  = dispz
     component = 2
     factor    = 1.0
     function  = pressure_time
@@ -105,9 +79,9 @@
     block = 1
     youngs_modulus = 1.e5
     poissons_ratio = 0.3
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    disp_x = dispx
+    disp_y = dispy
+    disp_z = dispz
     # thermal properties
     # thermal_expansion = 1.0
     # t_ref = 0.0
@@ -296,8 +270,6 @@
   [./kinetic_energy]
     type = KineticEnergyAux
     variable = kinetic_energy
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    displacements = 'dispx dispy dispz'
   [../]
 [] # AuxKernels

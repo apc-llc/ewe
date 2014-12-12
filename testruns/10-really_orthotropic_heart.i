@@ -2,68 +2,51 @@
 
 [Mesh]
   file = 07-heart_geometry_new.e
-  displacements = 'disp_x disp_y disp_z'
+  displacements = 'dispx dispy dispz'
 []
 
 [Variables]
-  [./disp_x]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./disp_y]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./disp_z]
-    order = FIRST
-    family = LAGRANGE
-  [../]
+  [./dispx] order = FIRST  family = LAGRANGE [../]
+  [./dispy] order = FIRST  family = LAGRANGE [../]
+  [./dispz] order = FIRST  family = LAGRANGE [../]
 []
 
 [Kernels]
   [./stressdiv_x]
     type      = CardiacStressDivergence
-    variable  = disp_x
+    variable  = dispx
     component = 0
-    disp_x    = disp_x
-    disp_y    = disp_y
-    disp_z    = disp_z
+    displacements = 'dispx dispy dispz'
   [../]
   [./inertia_x]
     type     = SecondDerivativeNewmark
-    variable = disp_x
+    variable = dispx
     density  = 0.1
     lumping  = true
   [../]
 
   [./stressdiv_y]
     type      = CardiacStressDivergence
-    variable  = disp_y
+    variable  = dispy
     component = 1
-    disp_x    = disp_x
-    disp_y    = disp_y
-    disp_z    = disp_z
+    displacements = 'dispx dispy dispz'
   [../]
   [./inertia_y]
     type     = SecondDerivativeNewmark
-    variable = disp_y
+    variable = dispy
     density  = 0.1
     lumping  = true
   [../]
 
   [./stressdiv_z]
     type      = CardiacStressDivergence
-    variable  = disp_z
+    variable  = dispz
     component = 2
-    disp_x    = disp_x
-    disp_y    = disp_y
-    disp_z    = disp_z
+    displacements = 'dispx dispy dispz'
   [../]
   [./inertia_z]
     type     = SecondDerivativeNewmark
-    variable = disp_z
+    variable = dispz
     density  = 0.1
     lumping  = true
   [../]
@@ -73,19 +56,19 @@
 [BCs]
   [./ring_x]
     type = DirichletBC
-    variable = disp_x
+    variable = dispx
     boundary = ns_LV_opening
     value    = 0.
   [../]
   [./ring_y]
     type = DirichletBC
-    variable = disp_y
+    variable = dispy
     boundary = ns_LV_opening
     value    = 0.
   [../]
   [./ring_z]
     type = DirichletBC
-    variable = disp_z
+    variable = dispz
     boundary = ns_LV_opening
     value    = 0.
   [../]
@@ -93,7 +76,7 @@
   [./Pressure_LV_x]
     type = Pressure
     boundary  = ss_LV_inner
-    variable  = disp_x
+    variable  = dispx
     component = 0
     factor    = 1.0
     function  = pressure_time
@@ -101,7 +84,7 @@
   [./Pressure_LV_y]
     type = Pressure
     boundary  = ss_LV_inner
-    variable  = disp_y
+    variable  = dispy
     component = 1
     factor    = 1.0
     function  = pressure_time
@@ -109,7 +92,7 @@
   [./Pressure_LV_z]
     type = Pressure
     boundary  = ss_LV_inner
-    variable  = disp_z
+    variable  = dispz
     component = 2
     factor    = 1.0
     function  = pressure_time
@@ -118,9 +101,10 @@
 
 [Materials]
   [./cardiac_properties]
-   type = CardiacFibresMaterial
-   block = 1
-   outputs = all
+    type = CardiacFibresMaterial
+    block = 1
+    outputs = all
+    fixed_R = '1 0 0 0 1 0 0 0 1'
   [../]
 
   [./linear_orthotropic]
@@ -130,25 +114,23 @@
     poissons_ratios = '0.3 0.3 0.3'
     # linear isotropic: shear_modulus = youngs_modulus / (2 * (1+poissons_ratio) )
     shear_moduli    = '38461.538462 3846.1538462 3846.1538462'
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    displacements = 'dispx dispy dispz'
   [../]
 
    [./newmarkx]
      type = NewmarkMaterial
      block = 1
-     disp  = disp_x
+     disp  = dispx
    [../]
    [./newmarky]
      type = NewmarkMaterial
      block = 1
-     disp  = disp_y
+     disp  = dispy
    [../]
    [./newmarkz]
      type = NewmarkMaterial
      block = 1
-     disp  = disp_z
+     disp  = dispz
    [../]
 []
 
@@ -333,8 +315,6 @@
   [./kinetic_energy]
     type = KineticEnergyNewmarkAux
     variable = kinetic_energy
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    displacements = 'dispx dispy dispz'
   [../]
 [] # AuxKernels

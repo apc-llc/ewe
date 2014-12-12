@@ -27,11 +27,6 @@
     order = FIRST
     family = LAGRANGE
   [../]
-
-  [./hydrostatic_pressure]
-    order = FIRST
-    family = SCALAR
-  [../]
 []
 
 [Kernels]
@@ -40,9 +35,7 @@
     use_displaced_mesh = false
     variable  = dispx
     component = 0
-    dispx     = dispx
-    dispy     = dispy
-    dispz     = dispz
+    displacements = 'dispx dispy dispz'
   [../]
 
   [./stressdiv_dispy]
@@ -50,9 +43,7 @@
     use_displaced_mesh = false
     variable  = dispy
     component = 1
-    dispx     = dispx
-    dispy     = dispy
-    dispz     = dispz
+    displacements = 'dispx dispy dispz'
   [../]
 
   [./stressdiv_dispz]
@@ -60,17 +51,7 @@
     use_displaced_mesh = false
     variable  = dispz
     component = 2
-    dispx     = dispx
-    dispy     = dispy
-    dispz     = dispz
-  [../]
-[]
-
-[ScalarKernels]
-  [./incompressibility]
-    type = CardiacIncompressibilityLagrangeMultiplier
-    variable = hydrostatic_pressure
-    volume_ratio_postprocessor = volume_ratio
+    displacements = 'dispx dispy dispz'
   [../]
 []
 
@@ -82,58 +63,68 @@
   [../]
 
   [./cardiac_material]
-    type = CardiacNash2000Material
+    type = CardiacHolzapfel2009Material
     block = 0
     use_displaced_mesh = false
-    # material parameters in the order 11 22 33 12 23 31 (symmetric)
-    # taken from [Nash & Hunter, 2000], Table I
-    k_MN = '1.937 0.028 0.310 1.000 1.000 1.000'
-    a_MN = '0.523 0.681 1.037 0.731 0.886 0.731'
-    b_MN = '1.351 5.991 0.398 2.000 2.000 2.000'
-    dispx       = dispx
-    dispy       = dispy
-    dispz       = dispz
-    p = hydrostatic_pressure
+    # material parameters as given in Table 1 of [Holzapfel 2009] in following order: a, b, a_f, b_f, a_s, b_s, a_fs, b_fs
+    material_parameters = '0.059 8.023 18.472 16.026 2.481 11.120 0.216 11.436'
+    displacements ='dispx dispy dispz'
+    outputs    = all
+    output_properties = 'Kirchhoff_stress'
+  [../]
+[]
+
+[Functions]
+  [./pull]
+    type = PiecewiseLinear
+    x = '0.0  1.0'
+    y = '0.0 -1.0'
+    scale_factor = 2.5
   [../]
 []
 
 [BCs]
-   [./bc_pullx]
-     type = DirichletBC
-     boundary = 'right'
-     variable = dispx
-     value = -0.25
-   [../]
-
-   [./bc_dispx]
-     type = DirichletBC
+   [./bc_pull]
+     type = FunctionDirichletBC
      boundary = 'left'
      variable = dispx
-     value = 0.
+     function = pull
    [../]
-   [./bc_y]
+   [./bc_fixy]
      type = DirichletBC
      boundary = 'left'
      variable = dispy
      value = 0.
    [../]
-   [./bc_dispz]
+   [./bc_fixz]
      type = DirichletBC
      boundary = 'left'
      variable = dispz
      value = 0.
    [../]
-[]
 
-[Postprocessors]
-  [./volume_ratio]
-    type = CardiacMaterialVolumeRatioPostprocessor
-    execute_on = residual
-  [../]
+   [./bc_dispx]
+     type = DirichletBC
+     boundary = 'right'
+     variable = dispx
+     value = 0.
+   [../]
+   [./bc_y]
+     type = DirichletBC
+     boundary = 'right'
+     variable = dispy
+     value = 0.
+   [../]
+   [./bc_dispz]
+     type = DirichletBC
+     boundary = 'right'
+     variable = dispz
+     value = 0.
+   [../]
 []
 
 [Executioner]
-  type = Steady
+  type = Transient
 
   solve_type = PJFNK
   petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
@@ -143,6 +134,12 @@
 
   nl_rel_step_tol = 1.e-8
   l_max_its = 100
+
+  start_time = 0
+  end_time   = 0.7
+  #num_steps = 10
+  dtmax      = 0.005
+  dtmin      = 0.005
 []
 
 [Outputs]
@@ -151,6 +148,6 @@
   [./console]
     type = Console
     perf_log = false
-    linear_residuals = false
+    linear_residuals = true
   [../]
 []

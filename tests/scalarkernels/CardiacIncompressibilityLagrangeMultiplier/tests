@@ -1,12 +1,22 @@
 [Tests]
-  [./external_pull]
+  [./Nash2000-external_pull]
     type = 'Exodiff'
-    input = 'external_pull.i'
-    exodiff = 'external_pull_out.e'
+    input = 'Nash2000-external_pull.i'
+    exodiff = 'Nash2000-external_pull_out.e'
   [../]
-  [./active_tension]
+  [./Nash2000-active_tension]
     type = 'Exodiff'
-    input = 'active_tension.i'
-    exodiff = 'active_tension_out.e'
+    input = 'Nash2000-active_tension.i'
+    exodiff = 'Nash2000-active_tension_out.e'
+  [../]
+  [./Holzapfel2009-external_pull]
+    type = 'Exodiff'
+    input = 'Holzapfel2009-external_pull.i'
+    exodiff = 'Holzapfel2009-external_pull_out.e'
+  [../]
+  [./Holzapfel2009-active_tension]
+    type = 'Exodiff'
+    input = 'Holzapfel2009-active_tension.i'
+    exodiff = 'Holzapfel2009-active_tension_out.e'
   [../]
 []

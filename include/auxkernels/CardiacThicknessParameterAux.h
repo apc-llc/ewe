@@ -12,7 +12,7 @@ InputParameters validParams<CardiacThicknessParameterAux>();
  * AuxKernel for computing a thickness parameter for a cardiac model.
  *
  * This is esentially the same as given in Section II.A fo
- * [Potse 2006 (A comparison of..)] with the following differences:
+ * \ref Potse2006 with the following differences:
  * We compute \f$e=\frac{d_\mathrm{epi}}{d_\mathrm{endo}+d_\mathrm{epi}}\f$,
  * i.e. \f$e=0\f$ on the epicardium, \f$|e|=1\$ on the endocardium.
  * Furthermore, we switch signs of \f$e\f$: It is positive for

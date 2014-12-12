@@ -2,21 +2,21 @@
 
 [Mesh]
   file = 07-heart_geometry_new.e
-  displacements = 'disp_x disp_y disp_z'
+  displacements = 'dispx dispy dispz'
 []
 
 [Variables]
-  [./disp_x]
+  [./dispx]
     order = FIRST
     family = LAGRANGE
   [../]
 
-  [./disp_y]
+  [./dispy]
     order = FIRST
     family = LAGRANGE
   [../]
 
-  [./disp_z]
+  [./dispz]
     order = FIRST
     family = LAGRANGE
   [../]
@@ -36,15 +36,13 @@
   [./stressdiv_x]
     type      = CardiacKirchhoffStressDivergence
     use_displaced_mesh = false
-    variable  = disp_x
+    variable  = dispx
     component = 0
-    disp_x    = disp_x
-    disp_y    = disp_y
-    disp_z    = disp_z
+    displacements ='dispx dispy dispz'
   [../]
 #  [./inertia_x]
 #    type     = SecondDerivativeNewmark
-#    variable = disp_x
+#    variable = dispx
 #    density  = 0.0001
 #    lumping  = true
 #  [../]
@@ -52,15 +50,13 @@
   [./stressdiv_y]
     type      = CardiacKirchhoffStressDivergence
     use_displaced_mesh = false
-    variable  = disp_y
+    variable  = dispy
     component = 1
-    disp_x    = disp_x
-    disp_y    = disp_y
-    disp_z    = disp_z
+    displacements ='dispx dispy dispz'
   [../]
 #  [./inertia_y]
 #    type     = SecondDerivativeNewmark
-#    variable = disp_y
+#    variable = dispy
 #    density  = 0.0001
 #    lumping  = true
 #  [../]
@@ -68,15 +64,13 @@
   [./stressdiv_z]
     type      = CardiacKirchhoffStressDivergence
     use_displaced_mesh = false
-    variable  = disp_z
+    variable  = dispz
     component = 2
-    disp_x    = disp_x
-    disp_y    = disp_y
-    disp_z    = disp_z
+    displacements ='dispx dispy dispz'
   [../]
 #  [./inertia_z]
 #    type     = SecondDerivativeNewmark
-#    variable = disp_z
+#    variable = dispz
 #    density  = 0.0001
 #    lumping  = true
 #  [../]
@@ -86,19 +80,19 @@
 [BCs]
 #  [./ring_x]
 #    type = DirichletBC
-#    variable = disp_x
+#    variable = dispx
 #    boundary = ns_LV_opening
 #    value    = 0.
 #  [../]
 #  [./ring_y]
 #    type = DirichletBC
-#    variable = disp_y
+#    variable = dispy
 #    boundary = ns_LV_opening
 #    value    = 0.
 #  [../]
 #  [./ring_z]
 #    type = DirichletBC
-#    variable = disp_z
+#    variable = dispz
 #    boundary = ns_LV_opening
 #    value    = 0.
 #  [../]
@@ -106,7 +100,7 @@
 #  [./Pressure_LV_x]
 #    type = Pressure
 #    boundary  = ss_LV_inner
-#    variable  = disp_x
+#    variable  = dispx
 #    component = 0
 #    factor    = 1.0
 #    function  = pressure_time
@@ -114,7 +108,7 @@
 #  [./Pressure_LV_y]
 #    type = Pressure
 #    boundary  = ss_LV_inner
-#    variable  = disp_y
+#    variable  = dispy
 #    component = 1
 #    factor    = 1.0
 #    function  = pressure_time
@@ -122,7 +116,7 @@
 #  [./Pressure_LV_z]
 #    type = Pressure
 #    boundary  = ss_LV_inner
-#    variable  = disp_z
+#    variable  = dispz
 #    component = 2
 #    factor    = 1.0
 #    function  = pressure_time
@@ -145,9 +139,7 @@
     k_MN = '1.937 0.028 0.310 1.000 1.000 1.000'
     a_MN = '0.523 0.681 1.037 0.731 0.886 0.731'
     b_MN = '1.351 5.991 0.398 2.000 2.000 2.000'
-    disp_x = disp_x
-    disp_y = disp_y
-    disp_z = disp_z
+    displacements ='dispx dispy dispz'
     #TODO: Ta = Ta                          # .. active strain, i.e. strain that results from electrophysiology, default (if unset) = 0
     Ta_function = active_tension_function
     #TODO: p = pressure                     # .. p (pressure / Lagrange multiplier for incompressibility)
@@ -156,17 +148,17 @@
 #   [./newmarkx]
 #     type = NewmarkMaterial
 #     block = 1
-#     disp  = disp_x
+#     disp  = dispx
 #   [../]
 #   [./newmarky]
 #     type = NewmarkMaterial
 #     block = 1
-#     disp  = disp_y
+#     disp  = dispy
 #   [../]
 #   [./newmarkz]
 #     type = NewmarkMaterial
 #     block = 1
-#     disp  = disp_z
+#     disp  = dispz
 #   [../]
 []
 
@@ -231,8 +223,6 @@
 #  [./kinetic_energy]
 #    type = KineticEnergyNewmarkAux
 #    variable = kinetic_energy
-#    disp_x = disp_x
-#    disp_y = disp_y
-#    disp_z = disp_z
+#    displacements = 'dispx dispy dispz'
 #  [../]
 [] # AuxKernels

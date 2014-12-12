@@ -13,7 +13,7 @@ InputParameters validParams<ActiveTensionODE>();
 /**
  * Implementation of the relation of active tension \f$T_a\f$
  * to the potential \f$V\f$.
- * The approach follows [Nash2004, eqn (22c)]:
+ * The approach follows \ref Nash2004 "Nash, 2004, eqn (22c)":
  * \f$\dot{T}_a = \epsilon(\tilde{V})(k_{T_a}\tilde{V}-T_a)\f$
  * where
  * \f$\tilde{V}\$ is a normalized (to \f$[0;1]\f$) potential and
@@ -29,7 +29,7 @@ InputParameters validParams<ActiveTensionODE>();
  * This material is essentially the coupling facility from
  * Electrocardio to Cardiac mechanics effects.
  *
- * Note that [Nash2004] states that essentially all parameters
+ * Note that \ref Nash2004 states that essentially all parameters
  * in this approach are empiric. Thus, tune them to your needs
  * via the input file.
  */

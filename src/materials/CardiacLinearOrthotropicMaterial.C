@@ -58,17 +58,16 @@ CardiacLinearOrthotropicMaterial::computeProperties()
     _elasticity_tensor[_qp] = *_local_elasticity_tensor;
 
     // ...and rotate it to the outer coordinate system
-    const ColumnMajorMatrix R_f_3x3( _Rf[_qp] );
     ColumnMajorMatrix R_f_9x9(9,9);
-    _elasticity_tensor[_qp].form9x9Rotation( R_f_3x3, R_f_9x9 );
-    _elasticity_tensor[_qp].rotateFromGlobalToLocal( R_f_9x9);
+    _elasticity_tensor[_qp].form9x9Rotation( ColumnMajorMatrix(_Rf[_qp]), R_f_9x9 );
+    _elasticity_tensor[_qp].rotateFromLocalToGlobal( R_f_9x9);
 
-    SymmTensor strain( _grad_disp_x[_qp](0),
-                       _grad_disp_y[_qp](1),
-                       _grad_disp_z[_qp](2),
-                       0.5*(_grad_disp_x[_qp](1)+_grad_disp_y[_qp](0)),
-                       0.5*(_grad_disp_y[_qp](2)+_grad_disp_z[_qp](1)),
-                       0.5*(_grad_disp_z[_qp](0)+_grad_disp_x[_qp](2)) );
+    SymmTensor strain( (*_grad_disp[0])[_qp](0),
+                       (*_grad_disp[1])[_qp](1),
+                       (*_grad_disp[2])[_qp](2),
+                       0.5*((*_grad_disp[0])[_qp](1)+(*_grad_disp[1])[_qp](0)),
+                       0.5*((*_grad_disp[1])[_qp](2)+(*_grad_disp[2])[_qp](1)),
+                       0.5*((*_grad_disp[2])[_qp](0)+(*_grad_disp[0])[_qp](2)) );
 
     /* compute the stress */
     // Multiplier that zeros out stiffness
