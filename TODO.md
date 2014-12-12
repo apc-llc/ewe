@@ -1,4 +1,5 @@
-\page todolist Global TODO list
+Global TODO list
+================
 
 Electrocardio
 =============
@@ -84,23 +85,54 @@ P.S.: Notizen für mich darüber, wo interessante Anregungen zu finden sind:
                  set_default_substance(6,"His bundle",3.0,1.2,3.0,0.3);
                  set_default_substance(7,"AV node",3.0,1.2,3.0,0.3); 
 
-Cardiac Fibres
-==============
+Reading spatially varying parameters from Exodus files
+======================================================
+For the same reason as above German again - sorry.
+...brauchen wir für ortsabhängige
+ * Wahl von Zelltypen
+ * Leitfähigkeiten
+ * evtl. Faserrichtungen
+ * Auswahl der Stimulationsposition
+ * Weitere Eigenschaften ??
+
+Wird wohl funktionieren mit Hilfen von:
+ * moose/framework/include/userobject/SolutionUserObject.h / moose/framework/src/userobject/SolutionUserObject.C
+Zumindest stellt dieses Zugriff auf Variablen via
+ * `Real pointValue(Real t, const Point & p, const std::string & var_name)`
+ * `Real directValue(const Node * node, const std::string & var_name)`
+ * `Real directValue(const Elem * elem, const std::string & var_name)`
+zur Verfügung.
+
+Beispiele zur Verwendung finden sich in
+ * `moose/framework/src/auxkernels/SolutionAux.C`
+ * `moose/framework/src/functions/SolutionFunction.C`
+
+Fraglich bleibt: Wenn man ein komplettes System mit dem SolutionUserObject lädt, kann man dann auf die [Mesh] Section verzichten?
+
+
+CardiacFibresMaterial
+=====================
 * Find a good way to distinguish left and right ventricle elements in the computation of fibre directions. - Currently, CardiacThicknessParameter already supplies the necessary information (by means of the sign of e) but this is not interpreted correctly, yet.
 * I think, in our geometry the z-axis is pointing into the opposite direction compared to [Streeter,1969]
 
-Cardiac Mechanics
-=================
+CardiacMechanicsMaterial
+========================
 * ~~Couple to displacements through a coupled vector instead of individual disp_.. variables.~~
     * ~~For details see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top~~
 	* ~~A working example is found in CardiacMechanicsMaterial.C~~
 	* ~~All affected files can be found via `grepc -iR \"disp src/*`~~
-                 
-* Find out how Ta enters into the elastic energy.
+* Find out how Ta enters into the elastic energy
+
+SecondDerivativeNewmark
+=======================
 * Check and rework Newmark integrator, especially think about using declarePropertyOlder() and is_implict=true
-* Think about the Jacobian of the CardiacIncompressibilityLagrangeMultiplier kernel.
+
+CardiacIncompressibilityLagrangeMultiplier
+==========================================
+* Think about the Jacobian of this kernel
 
 General
 =======
 * Clean formatting of all *.i files that are around
-* Find a better way for including references in doxygen comments, see `documentation_cleanup` branch
+* ~~Find a better way for including references in doxygen comments, see `documentation_cleanup` branch~~ DONE
+* Further TODOs in the inline documentation, see the \ref todo "TODO list"
