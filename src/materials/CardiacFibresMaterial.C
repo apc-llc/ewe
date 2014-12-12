@@ -54,7 +54,7 @@ void CardiacFibresMaterial::computeQpProperties()
       en = VectorNormalize( RealVectorValue(_q_point[_qp]) );
     }
 
-    const Real ez_en( en(2) ); ///< \f$\hat{e}_z\cdot\har{e}_n\f$
+    const Real ez_en( en(2) ); ///< \f$\hat{e}_z\cdot\hat{e}_n\f$
     RealVectorValue ew;
     if (std::abs(ez_en) == 1.0) {
       // ez and en are (anti)parallel
