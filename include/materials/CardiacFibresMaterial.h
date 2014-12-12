@@ -13,7 +13,7 @@ InputParameters validParams<CardiacFibresMaterial>();
 *
  * Material properties are:
  *  - the local coordinate system's basis vectors \f$\hat{e}_f\f$, \f$\hat{e}_n\f$, \f$\hat{e}_s\f$
- *    (see notation in \ref Holzapfel2009 "[Holzapfel, 2009, Figure 1]")
+ *    (see notation in \ref Holzapfel2009 "Holzapfel, 2009, Figure 1")
  *  - an appropriate rotation matrix \f$\mathbf{R}=(\hat{e}_f, \hat{e}_n, \hat{e}_s)\f$, i.e.
  *    containing the unit vectors column-wise
  * For debugging purposes, the rotation matrix (and respective coordinate
@@ -41,7 +41,7 @@ private:
   /// Computes \f$\frac{\vec{v}}{|\vec{v}|}\f$.
   inline RealVectorValue VectorNormalize(const RealVectorValue &v) { return v / v.size(); }
 
-  MaterialProperty<RealVectorValue> & _Ef, & _Es, & _En; ///< unit vectors for fibre direction, sheet axis and sheet normal (all three are perpendicular to each other, see \ref Holzapfel2009 "[Holzapfel, 2009, Figure 1]" for details
+  MaterialProperty<RealVectorValue> & _Ef, & _Es, & _En; ///< unit vectors for fibre direction, sheet axis and sheet normal (all three are perpendicular to each other, see \ref Holzapfel2009 "Holzapfel, 2009, Figure 1" for details
   MaterialProperty<RealTensorValue> & _Rf;               ///< rotation matrix from cartesian to fibre coordinate system. contains row-wise \f$\hat{e}_f\f$, \f$\hat{e}_s\f$, \f$\hat{e}_n\f$
 
   const RealTensorValue _id;
