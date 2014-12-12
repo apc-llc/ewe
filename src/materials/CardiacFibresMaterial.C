@@ -38,13 +38,13 @@ void CardiacFibresMaterial::computeQpProperties()
     _Es[_qp] = _Rf[_qp].row(1);
     _En[_qp] = _Rf[_qp].row(2);
   } else if (_has_e) {
-    // initial angle for fibre angle as stated by [Potse 2006]
+    // initial angle for fibre angle as stated by \ref Potse2006
     // We follow the notation from this paper. Our e is defined slightly different, though.
     const Real pi(3.141592653589);
     const Real R( _e[_qp] < 0 ? /* RV */ pi/4. : /* LV */ pi/3.); ///< @todo TODO: we would need to distinguish LV and RV here, but have to use distinguishLVRV==false in the CardiacThicknessParameterAux to prevent _grad_e from being wrong. --> Need another way of distinguishing...
     const Real bracket(2. * _e[_qp] - 1.);
     const Real alpha(R * bracket * bracket * bracket); // We avoid the pow() call here. - Might not make a real performance difference, though.
-    // we already know the normal vector's direction (negative because of our e being (1-e) of [Potse 2006])
+    // we already know the normal vector's direction (negative because of our e being (1-e) of \ref Potse2006)
     RealVectorValue en;
     if (_grad_e[_qp].size() > 0) {
       en = VectorNormalize( -_grad_e[_qp] );

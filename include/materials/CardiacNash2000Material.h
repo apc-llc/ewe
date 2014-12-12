@@ -11,8 +11,8 @@ InputParameters validParams<CardiacNash2000Material>();
 
 /**
  * Implementation of the 'pole-free' hyperelastic material law
- * for cardiac tissue as given in [Nash, 2000] with
- * modifications and verifications as given by [Holzapfel, 2009].
+ * for cardiac tissue as given in \ref Nash2000 with
+ * modifications and verifications as given by \ref Holzapfel2009.
  *
  * Parameters are read via MaterialParameters from the
  * input file.

@@ -14,7 +14,8 @@ InputParameters validParams<CardiacMechanicsMaterial>();
  * Generic Material for Cadiac Mechanics.
  * It cares for inclusion of fibre directions,
  * active tension and pressure into the 2nd Piola-Kirchhoff
- * stress tensor.
+ * stress tensor, see \ref Whiteley2007 and \ref Holzapfel2009
+ * for details.
  *
  * The tensor itself has to be computed in a derived
  * class from the supplied rotated Lagrange-Green strain

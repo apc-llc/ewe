@@ -13,7 +13,7 @@ InputParameters validParams<ElectrocardioConductivity>();
  * Material for supplying a conductivity tensor.
  * \f$G=\sum_{i=f,s,n}\sigma_i(\vec{e}_i\otimes\vec{e}_i)\f$
  * Conductivities in fibre, sheet and sheet-normal directions are read from the input file.
- * For sensible values, see e.g. [Potse, 2006, Table I].
+ * For sensible values, see e.g. \ref Potse2006 "Potse, 2006, Table I".
  *
  * @todo Actually, we should distinguish different domains and substances as it is done
  * in propag (where in contrast to here only fibre-longitudinal and -transversal
@@ -81,7 +81,7 @@ protected:
 
 private:
 
-  MaterialProperty<RealVectorValue> & _Ef, & _En, & _Es; ///< unit vectors for fibre direction, sheet normal and sheet axis (all three are perpendicular to each other, see [Holzapfel 2009, Figure 1] for details
+  MaterialProperty<RealVectorValue> & _Ef, & _En, & _Es; ///< unit vectors for fibre direction, sheet normal and sheet axis (all three are perpendicular to each other, see \ref Holzapfel2009 "Holzapfel, 2009, Figure 1" for details
   
   std::vector<Real> _conductivities;
   

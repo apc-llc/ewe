@@ -12,7 +12,7 @@ InputParameters validParams<CardiacHolzapfel2009Material>();
 /**
  * Implementation of the 'constitutive-modelling' hyperelastic 
  * material for fibre-enforced tissue as given in
- * [Holzapfel, 2000].
+ * \ref Holzapfel2009.
  *
  * Parameters are read via MaterialParameters from the
  * input file.
