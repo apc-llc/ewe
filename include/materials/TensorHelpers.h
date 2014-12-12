@@ -118,7 +118,6 @@ namespace TensorHelpers {
   const inline SymmTensor scaledID(const Real &a) {
     return SymmTensor(a,a,a,0,0,0);
   }
-
 }
 
 #endif
