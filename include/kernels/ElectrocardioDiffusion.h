@@ -1,11 +1,8 @@
-/****************************************************************/
-/*                                                              */
-/****************************************************************/
-
 #ifndef ELECTROCARDIODIFFUSION_H
 #define ELECTROCARDIODIFFUSION_H
 
 #include "Kernel.h"
+#include "libmesh/tensor_value.h"
 
 class ElectrocardioDiffusion;
 
@@ -26,7 +23,7 @@ protected:
 private:
   Real _surface_to_volume;
   Real _capacitance;
-  MaterialProperty<Real> & _conductivity;
+  MaterialProperty<RealTensorValue> & _conductivity;
 };
 
 
