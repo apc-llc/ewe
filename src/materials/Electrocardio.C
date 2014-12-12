@@ -1,8 +1,3 @@
-/****************************************************************/
-/*                                                              */
-/*                                                              */
-/****************************************************************/
-
 #include "Electrocardio.h"
 
 template<>
@@ -11,6 +6,11 @@ InputParameters validParams<Electrocardio>()
   InputParameters params = validParams<Material>();
   params.addRequiredCoupledVar("vmem","Membrane potential needed as input for ion channel model");
   //! @todo: For ion channel models that need the diffusion current, have to fetch the value of Imem somehow
+
+  // we restrict output to Imem to avoid warnings about gates being impossible to be used in output
+  std::vector<std::string> output_properties;
+  output_properties.push_back("Iion");
+  params.set<std::vector<std::string> >("output_properties") = output_properties;
   return params;
 }
 
