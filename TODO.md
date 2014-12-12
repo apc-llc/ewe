@@ -101,3 +101,4 @@ Cardiac Mechanics
 General
 =======
 * Clean formatting of all *.i files that are around
+* Find a better way for including references in doxygen comments
