@@ -1,7 +1,3 @@
-/****************************************************************/
-/*                                                              */
-/****************************************************************/
-
 #include "ElectrocardioDiffusion.h"
 
 
@@ -19,7 +15,7 @@ ElectrocardioDiffusion::ElectrocardioDiffusion(const std::string & name, InputPa
     Kernel(name, parameters),
     _surface_to_volume(getParam<Real>("surface_to_volume")),
     _capacitance(getParam<Real>("capacitance")),
-    _conductivity(getMaterialProperty<Real>("conductivity"))
+    _conductivity(getMaterialProperty<RealTensorValue>("conductivity"))
 {
 }
 
@@ -35,11 +31,11 @@ ElectrocardioDiffusion::computeQpResidual()
   /// see #ElectrocardioConductivity - from there we should fetch a direction-dependent conductivity tensor
   
   // Note: The factor 1000 comes in from unit conversion, cf. docu of #ElectrocardioForcing.h
-  return 1000.0*(1.0/_surface_to_volume)*(1.0/_capacitance)*_conductivity[_qp]*(_grad_test[_i][_qp] * _grad_u[_qp]);
+  return 1000.0*(1.0/_surface_to_volume)*(1.0/_capacitance)*(_grad_test[_i][_qp] * (_conductivity[_qp]*_grad_u[_qp]));
 }
 
 Real
 ElectrocardioDiffusion::computeQpJacobian()
 {
-  return 1000.0*(1.0/_surface_to_volume)*(1.0/_capacitance)*_conductivity[_qp]*(_grad_test[_i][_qp] * _grad_phi[_j][_qp]);
+  return 1000.0*(1.0/_surface_to_volume)*(1.0/_capacitance)*(_grad_test[_i][_qp] * (_conductivity[_qp]*_grad_phi[_j][_qp]));
 }

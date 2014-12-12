@@ -1,14 +1,9 @@
-/****************************************************************/
-/*                                                              */
-/*                                                              */
-/****************************************************************/
-
 #ifndef ELECTROCARDIOCONDUCTIVITY_H
 #define ELECTROCARDIOCONDUCTIVITY_H
 
 #include "Material.h"
+#include "libmesh/tensor_value.h"
 
-//Forward Declarations
 class ElectrocardioConductivity;
 
 template<>
@@ -27,11 +22,12 @@ protected:
   virtual void computeQpProperties();
 
 private:
+
+  MaterialProperty<RealVectorValue> & _Ef, & _En, & _Es; ///< unit vectors for fibre direction, sheet normal and sheet axis (all three are perpendicular to each other, see [Holzapfel 2009, Figure 1] for details
   
-  double _conductivity_coefficient;
+  std::vector<Real> _conductivities;
   
-  // TODO: Have to make conductivity a tensor... - should be possible to construct using CardiacFibresMaterial
-  MaterialProperty<Real> & _conductivity;
+  MaterialProperty<RealTensorValue> & _conductivity;
 };
 
 #endif //ELECTROCARDIOCONDUCTIVITY_H
