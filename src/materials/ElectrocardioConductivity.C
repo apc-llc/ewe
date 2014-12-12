@@ -5,7 +5,7 @@ template<>
 InputParameters validParams<ElectrocardioConductivity>()
 {
   InputParameters params = validParams<Material>();
-  params.addRequiredParam<Real>("conductivities", "Conductivities in fibre, sheet and sheet-normal direction");
+  params.addRequiredParam<std::vector<Real> >("conductivities", "Conductivities in fibre, sheet and sheet-normal direction");
   return params;
 }
 
