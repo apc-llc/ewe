@@ -1,3 +1,5 @@
+\page todolist Global TODO list
+
 Electrocardio
 =============
 * Add (Boolean) material property that shows the de/repolarization status of the cells
@@ -101,4 +103,4 @@ Cardiac Mechanics
 General
 =======
 * Clean formatting of all *.i files that are around
-* Find a better way for including references in doxygen comments
+* Find a better way for including references in doxygen comments, see `documentation_cleanup` branch
