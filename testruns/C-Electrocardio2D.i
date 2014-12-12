@@ -106,14 +106,25 @@
   [../]
   
   [./ecforcing]
-      type = ElectrocardioForcing
-      variable = potential
-#ion_coeff = 0.0
+    type = ElectrocardioForcing
+    variable = potential
+    forcing_function = ElectrocardioForcing_function
+    #ion_coeff = 0.0
   [../]
 
   [./euler]
     type = ElectrocardioTimeDerivative
     variable = potential
+  [../]
+[]
+
+[Functions]
+  [./ElectrocardioForcing_function]
+    type = PiecewiseParsedFunction
+    default_function = '0'
+    functions = '-30.0*exp(-0.5*pow(x-0.0,2.0)/pow(0.25,2.0))  -30.0*exp(-0.5*pow(x-2.5,2.0)/pow(0.25,2.0)-0.5*pow(y-0.0,2.0)/pow(2.0,2.0))'
+    left      = ' 0.0                                           355.0'
+    right     = ' 2.0                                           360.0'
   [../]
 []
 
@@ -147,7 +158,7 @@
  
   [./conductivity]
    type = ElectrocardioConductivity
-   conductivity_coefficient = 0.006
+   conductivities = '0.006 0.006 0.006'
    block = all
   [../]
 []
@@ -183,6 +194,7 @@
 [Outputs]
   file_base = out
   exodus = true
+  interval = 16
   [./console]
     type = Console
     perf_log = false

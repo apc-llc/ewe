@@ -40,13 +40,23 @@ surface_to_volume = 800.0
   [./ecforcing]
       type = ElectrocardioForcing
       variable = potential
+      forcing_function = ElectrocardioForcing_function
       #ion_coeff = 0.0
   [../]
 
   [./euler]
     type = ElectrocardioTimeDerivative
     variable = potential
-    capacitance = 1.0
+  [../]
+[]
+
+[Functions]
+  [./ElectrocardioForcing_function]
+    type = PiecewiseParsedFunction
+    default_function = '0'
+    functions = '-30.0*exp(-0.5*pow(x-0.0,2.0)/pow(0.25,2.0))'
+    left      = ' 0.0'
+    right     = ' 0.1'
   [../]
 []
 
@@ -63,16 +73,23 @@ surface_to_volume = 800.0
 []
 
 [Materials]
+  [./cardiac_properties]
+   type = CardiacFibresMaterial
+    fixed_R = '1 0 0 0 1 0 0 0 1'
+   block = all
+   outputs = all
+  [../]
+
   [./electrocardio]
-  type = Electrocardio
-  vmem = 'potential'
-  block = all
-  outputs = all
+   type = Electrocardio
+   vmem = 'potential'
+   block = all
+   outputs = all
   [../]
  
   [./conductivity]
    type = ElectrocardioConductivity
-   conductivity_coefficient = 2.0
+   conductivities = '0.006 0.006 0.006'
    block = all
   [../]
 []

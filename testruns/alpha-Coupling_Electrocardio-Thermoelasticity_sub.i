@@ -50,6 +50,7 @@
   [./ecforcing]
       type = ElectrocardioForcing
       variable = potential
+      forcing_function = ElectrocardioForcing_function
       #ion_coeff = 0.0
   [../]
 
@@ -68,9 +69,18 @@
   [../]
 []
 
-[Materials]
+[Functions]
+  [./ElectrocardioForcing_function]
+    type = PiecewiseParsedFunction
+    default_function = '0'
+    functions = '-40.0*exp(-0.5*pow(x-0.0,2.0)/pow(0.25,2.0))'
+    left      = ' 0.0'
+    right     = ' 2.0'
+  [../]
+[]
 
- [./cardiac_properties]
+[Materials]
+  [./cardiac_properties]
     type = CardiacFibresMaterial
     fixed_R = '1 0 0 0 1 0 0 0 1'
     block = all
@@ -86,10 +96,9 @@
  
   [./conductivity]
     type = ElectrocardioConductivity
-    conductivity_coefficient = 0.006
+    conductivities = '0.006 0.006 0.006'
     block = all
   [../]
- 
 []
 
 [Executioner]

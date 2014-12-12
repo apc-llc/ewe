@@ -18,6 +18,7 @@
 #include "Kernel.h"
 
 class ElectrocardioForcing;
+class Function;
 
 template<>
 InputParameters validParams<ElectrocardioForcing>();
@@ -81,7 +82,9 @@ private:
   
   //! @todo docu
   MaterialProperty<Real> & _Iion;
-  
+
+  //! @todo docu
+  Function & _forcing_function;
 };
   
 #endif /* ELECTROCARDIOFORCING_H */
