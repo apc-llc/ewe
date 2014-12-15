@@ -3,13 +3,13 @@
 template<>
 InputParameters validParams<CardiacVolumeRatioPostprocessor>()
 {
-  InputParameters params = validParams<ElementIntegralPostprocessor>();
+  InputParameters params = validParams<CardiacVolumeRatioBase>();
   params.addRequiredCoupledVar("displacements", "The x, y, and z displacement");
   return params;
 }
 
 CardiacVolumeRatioPostprocessor::CardiacVolumeRatioPostprocessor(const std::string & name, InputParameters parameters) :
-    ElementIntegralPostprocessor(name, parameters)
+    CardiacVolumeRatioBase(name, parameters)
 {
   // see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top for details on this magic
   _grad_disp.resize(coupledComponents("displacements"));
