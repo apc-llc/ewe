@@ -4,7 +4,7 @@ Ewe - The experimental working environment {#mainpage}
 Introduction {#eweintro}
 =============================================
 
-Ewe is a MOOSE-based application for multiphysics simulations of cardiac activity
+Ewe is a MOOSE-based application for multiphysics simulations of cardiac activity. The recommended MOOSE version can be found on https://github.com/dasmy/moose .
 
 References {#ewerefs}
 =============================================
