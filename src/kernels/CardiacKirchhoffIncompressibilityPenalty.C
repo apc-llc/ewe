@@ -26,9 +26,8 @@ CardiacKirchhoffIncompressibilityPenalty::CardiacKirchhoffIncompressibilityPenal
   // see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top for details on this magic
   mooseAssert(coupledComponents("displacements") == 3, "CardiacStressDivergence: displacements must have exactly 3 components");
 
-  for (unsigned int i=0; i<coupledComponents("displacements"); ++i) {
+  for (unsigned int i=0; i<coupledComponents("displacements"); ++i)
     _disp_var[i]  = coupled("displacements", i);
-  }
 }
 
 Real
