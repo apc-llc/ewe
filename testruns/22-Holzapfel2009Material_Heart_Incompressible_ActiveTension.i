@@ -25,9 +25,9 @@
 []
 
 [AuxVariables]
-  [./distance_outer]    order=FIRST family=LAGRANGE [../]
-  [./distance_RV_inner] order=FIRST family=LAGRANGE [../]
-  [./distance_LV_inner] order=FIRST family=LAGRANGE [../]
+  [./distance_outer]      order=FIRST family=LAGRANGE [../]
+  [./distance_RV_inner]   order=FIRST family=LAGRANGE [../]
+  [./distance_LV_inner]   order=FIRST family=LAGRANGE [../]
   [./thickness_parameter] order=FIRST family=LAGRANGE [../]
 []
 
@@ -58,7 +58,8 @@
     type=CardiacHolzapfel2009Material
     block=1
     use_displaced_mesh=false
-    # material parameters as given in Table 1 of [Holzapfel 2009] in following order: a, b, a_f, b_f, a_s, b_s, a_fs, b_fs
+    # material parameters as given in Table 1 of [Holzapfel 2009]
+    #in following order:     a,    b,   a_f,   b_f,  a_s,   b_s, a_fs,  b_fs
     material_parameters='0.059 8.023 18.472 16.026 2.481 11.120 0.216 11.436'
     displacements ='dispx dispy dispz'
     outputs=all
@@ -78,9 +79,9 @@
 []
 
 [BCs]
-  [./dispx_fixed] type=PresetBC  variable=dispx  boundary='ss_LV_inner ss_RV_inner ss_outer'  value=0 [../]
-  [./dispy_fixed] type=PresetBC  variable=dispy  boundary='ss_LV_inner ss_RV_inner ss_outer'  value=0 [../]
-  [./dispz_fixed] type=PresetBC  variable=dispz  boundary='ss_LV_inner ss_RV_inner ss_outer'  value=0 [../]
+  [./dispx_fixed] type=PresetBC  variable=dispx  boundary='ns_apex ns_apex_neighbour'  value=0 [../]
+  [./dispy_fixed] type=PresetBC  variable=dispy  boundary='ns_apex ns_apex_neighbour'  value=0 [../]
+  [./dispz_fixed] type=PresetBC  variable=dispz  boundary='ns_apex ns_apex_neighbour'  value=0 [../]
 
 #  [./ns_lower_polar_point_x] type=DirichletBC  variable=dispx  boundary=ns_lower_polar_point  value=0 [../]
 #  [./ns_lower_polar_point_y] type=DirichletBC  variable=dispy  boundary=ns_lower_polar_point  value=0 [../]
@@ -102,15 +103,21 @@
   type=Transient
 
   solve_type=PJFNK
-  petsc_options_iname='-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  petsc_options_value=' 201                hypre    boomeramg      4                          '
+  petsc_options_iname='-pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
+  petsc_options_value=' hypre    boomeramg      8                          '
   petsc_options='-fp_trap -info -snes_monitor -snes_converged_reason -ksp_monitor -ksp_converged_reason  -ksp_monitor_true_residual -pc_svd_monitor'
 
-  nl_rel_tol=1e-3
+  nl_rel_tol=1e-8
   nl_abs_tol=1e-8
   nl_rel_step_tol=1e-8
+  nl_abs_step_tol=1e-8
+
   l_tol=1.e-8
+  l_max_its = 30
+  #l_abs_step_tol=1.e-12
   #l_max_its=20
+
+  #line_search = default  # TODO: what else?
 
   start_time=0
   end_time  =1.0
@@ -129,13 +136,13 @@
   [../]
 []
 
-#[Debug]
+[Debug]
 #  show_actions                   = 0                           # Print out the actions being executed
 #  show_material_props            = 1                           # Print out the material properties supplied for each block, face, neighbor, ...
 #                                                               # and/or sideset
 #  show_parser                    = 0                           # Shows parser block extraction and debugging information
-#  show_top_residuals             = 15                          # The number of top residuals to print out (0 = no output)
+#  show_top_residuals             =  5                          # The number of top residuals to print out (0 = no output)
 #  show_var_residual_norms        = 1                           # Print the residual norms of the individual solution variables at each ...
 #                                                               # nonlinear iteration
 #  #show_var_residual              = 'dispx dispy dispz hydrostatic_pressure' # Variables for which residuals will be sent to the output file
-#[]
+[]
