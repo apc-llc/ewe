@@ -46,8 +46,7 @@ private:
   const unsigned int _component;          ///< cartesian component this kernel works on (to extract correct components of _F in Jacobian computation)
   const Real _gamma;                      ///< Kernel prefactor for tuning penalty magnitude relative to other residuals
 
-  const unsigned int _xdisp_var;          ///< Moose-internal index of the `dispx` variable (to extract correct components of _F in Jacobian computation)
-  const unsigned int _ydisp_var;          ///< Moose-internal index of the `dispx` variable (to extract correct components of _F in Jacobian computation)
-  const unsigned int _zdisp_var;          ///< Moose-internal index of the `dispx` variable (to extract correct components of _F in Jacobian computation)
+  /// indices of the three coupled displacement variables
+  unsigned int _disp_var[3];
 };
 #endif //CardiacKirchhoffIncompressibilityPenalty_H

@@ -23,7 +23,8 @@ CardiacStressDivergence::CardiacStressDivergence(const std::string & name, Input
   :Kernel(name, parameters),
    _stress(getMaterialProperty<SymmTensor>("stress")),
    _Jacobian_mult(getMaterialProperty<SymmElasticityTensor>("Jacobian_mult")),
-   _component(getParam<unsigned int>("component")){
+   _component(getParam<unsigned int>("component"))
+{
   // see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top for details on this magic
   mooseAssert(coupledComponents("displacements") == 3, "CardiacStressDivergence: displacements must have exactly 3 components");
 
