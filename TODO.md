@@ -113,7 +113,8 @@ Fraglich bleibt: Wenn man ein komplettes System mit dem SolutionUserObject lädt
 CardiacFibresMaterial
 =====================
 * Find a good way to distinguish left and right ventricle elements in the computation of fibre directions. - Currently, CardiacThicknessParameter already supplies the necessary information (by means of the sign of e) but this is not interpreted correctly, yet.
-* I think, in our geometry the z-axis is pointing into the opposite direction compared to \ref Streeter1969
+* Ensure that the z-axis is always pointing from the apex to the left aortic valve commissure as in \ref Streeter1969 "[Streeter, 1969, Figure 1]"
+* In fact, the \ref Streeter1969 construction is only valid for the left ventricle. For the right ventricle it could for example be repeated accordingly with appropriately tilted z-axis. Currently, left and right ventricle are not distinguished at all, see also comments in ewe_notes.pdf.
 * Include regional fibre direction variability of up to 15 degrees \ref Karlon2000
 
 CardiacMechanicsMaterial
@@ -123,6 +124,7 @@ CardiacMechanicsMaterial
 	* ~~A working example is found in CardiacMechanicsMaterial.C~~
 	* ~~All affected files can be found via `grepc -iR \"disp src/*`~~
 * Find out how Ta enters into the elastic energy
+* Add material law from \ref Costa2001. Parameter values should be available in \ref Schmid2008 .
 
 SecondDerivativeNewmark
 =======================

@@ -58,6 +58,20 @@ Regional dysfunction correlates with myofiber disarray in transgenic mice with v
 *Am J Heart Circ Physiol*, 278(3), H898-H906.
 [PMID:10710359](www.ncbi.nlm.nih.gov/pubmed/10710359)
 
+Costa, 2001 {#Costa2001}
+---------------------------------------------
+**Costa, K. D., Holmes, J. W., & Mcculloch, A. D. (2001)**
+Modelling cardiac mechanical properties in three dimensions.
+*Philosophical Transactions of the Royal Society A: Mathematical, Physical and Engineering Sciences*, 359(1783), 1233–1250.
+[doi:10.1098/rsta.2001.0828](http://dx.doi.org/10.1098/rsta.2001.0828)
+
+Schmid, 2008 {#Schmid2008}
+---------------------------------------------
+**Schmid, H., O’Callaghan, P., Nash, M. P., Lin, W., LeGrice, I. J., Smaill, B. H., Young, A. A., Hunter, P. J. (2008)**
+Myocardial material parameter estimation: a non-homogeneous finite element study from simple shear tests.
+*Biomechanics and Modeling in Mechanobiology*, 7(3), 161–73.
+[doi:10.1007/s10237-007-0083-0](http://dx.doi.org/10.1007/s10237-007-0083-0)
+
 
 AUTHOR, YEAR {#AUTHORYEAR}
 ---------------------------------------------
