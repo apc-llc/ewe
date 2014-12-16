@@ -51,7 +51,12 @@ A computationally efficient electrophysiological model of human ventricular cell
 *American Journal of Physiology. Heart and Circulatory Physiology*, 282(6), H2296–308.
 [doi:10.1152/ajpheart.00731.2001](http://dx.doi.org/10.1152/ajpheart.00731.2001)
 
-
+Karlon, 2000 {#Karlon2000}
+---------------------------------------------
+**Karlon, W. J., McCulloch, A. D., Covell, J. W., Hunter, J. J., & Omens, J. H. (2000)**
+Regional dysfunction correlates with myofiber disarray in transgenic mice with ventricular expression of ras.
+*Am J Heart Circ Physiol*, 278(3), H898-H906.
+[PMID:10710359](www.ncbi.nlm.nih.gov/pubmed/10710359)
 
 
 AUTHOR, YEAR {#AUTHORYEAR}

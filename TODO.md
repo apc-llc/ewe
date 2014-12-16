@@ -113,7 +113,8 @@ Fraglich bleibt: Wenn man ein komplettes System mit dem SolutionUserObject lädt
 CardiacFibresMaterial
 =====================
 * Find a good way to distinguish left and right ventricle elements in the computation of fibre directions. - Currently, CardiacThicknessParameter already supplies the necessary information (by means of the sign of e) but this is not interpreted correctly, yet.
-* I think, in our geometry the z-axis is pointing into the opposite direction compared to [Streeter,1969]
+* I think, in our geometry the z-axis is pointing into the opposite direction compared to \ref Streeter1969
+* Include regional fibre direction variability of up to 15 degrees \ref Karlon2000
 
 CardiacMechanicsMaterial
 ========================
