@@ -7,9 +7,7 @@ template<>
 InputParameters validParams<CardiacKirchhoffIncompressibilityPenalty>()
 {
   InputParameters params = validParams<Kernel>();
-  params.addRequiredCoupledVar("dispx", "The x displacement");
-  params.addRequiredCoupledVar("dispy", "The y displacement");
-  params.addRequiredCoupledVar("dispz", "The z displacement");
+  params.addRequiredCoupledVar("displacements", "The x, y, and z displacement");
   params.addRequiredParam<unsigned int>("component", "An integer corresponding to the direction the variable this kernel acts in. (0 for x, 1 for y, 2 for z)");
   params.addParam<Real>("gamma", 1.0, "Factor in front of the incompressibility kernel. Default: 1.0");
 
@@ -22,11 +20,15 @@ CardiacKirchhoffIncompressibilityPenalty::CardiacKirchhoffIncompressibilityPenal
    _F(getMaterialProperty<RealTensorValue>("displacement_gradient")),
    _J(getMaterialProperty<Real>("det_displacement_gradient")),
    _component(getParam<unsigned int>("component")),
-   _gamma(getParam<Real>("gamma")),
-   _xdisp_var(coupled("dispx")),
-   _ydisp_var(coupled("dispy")),
-   _zdisp_var(coupled("dispz"))
-{}
+   _gamma(getParam<Real>("gamma"))
+{
+
+  // see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top for details on this magic
+  mooseAssert(coupledComponents("displacements") == 3, "CardiacStressDivergence: displacements must have exactly 3 components");
+
+  for (unsigned int i=0; i<coupledComponents("displacements"); ++i)
+    _disp_var[i]  = coupled("displacements", i);
+}
 
 Real
 CardiacKirchhoffIncompressibilityPenalty::computeQpResidual()
@@ -43,10 +45,11 @@ CardiacKirchhoffIncompressibilityPenalty::computeQpJacobian()
 Real
 CardiacKirchhoffIncompressibilityPenalty::computeQpOffDiagJacobian(unsigned int jvar)
 {
-       if (jvar == _xdisp_var) { return JacobianElement(0); }
-  else if (jvar == _ydisp_var) { return JacobianElement(1); }
-  else if (jvar == _zdisp_var) { return JacobianElement(2); }
-  else return 0.;
+  for (unsigned int i=0;i<3;i++)
+    if (jvar == _disp_var[i])
+      return JacobianElement(i);
+
+  return 0.;
 }
 
 Real

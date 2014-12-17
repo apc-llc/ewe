@@ -1,23 +1,27 @@
 [Mesh]
-#file = 07-heart_geometry_new.e
+ file = 07-heart_geometry_new.e
  
- block_id = '0'
+ block_id = '1'
  block_name = 'all'
  
 # uniform_refine = 3
- dim           = 2
- distribution  = DEFAULT
- nx            = 100
- ny            = 100
- nz            = 3
- type          = GeneratedMesh
- xmax          = 5.0
- xmin          = 0.0
- ymax          = 5.0
- ymin          = 0.0
- zmax          = 5.0
- zmin          = 0.0
+# dim           = 2
+# distribution  = DEFAULT
+# nx            = 100
+# ny            = 100
+# nz            = 3
+# type          = GeneratedMesh
+# xmax          = 5.0
+# xmin          = 0.0
+# ymax          = 5.0
+# ymin          = 0.0
+# zmax          = 5.0
+# zmin          = 0.0
  []
+
+[Debug]
+  show_actions=0
+[]
 
 [Variables]
   active = 'potential'
@@ -122,9 +126,12 @@
   [./ElectrocardioForcing_function]
     type = PiecewiseParsedFunction
     default_function = '0'
-    functions = '-30.0*exp(-0.5*pow(x-0.0,2.0)/pow(0.25,2.0))  -30.0*exp(-0.5*pow(x-2.5,2.0)/pow(0.25,2.0)-0.5*pow(y-0.0,2.0)/pow(2.0,2.0))'
-    left      = ' 0.0                                           355.0'
-    right     = ' 2.0                                           360.0'
+#functions = '-30.0*exp(-0.5*pow(x-0.,2.0)/pow(0.25,2.0))   -30.0*exp(-0.5*pow(x-2.5,2.0)/pow(0.25,2.0)-0.5*pow(y-0.0,2.0)/pow(2.0,2.0))'
+#   left      = ' 0.0                                           355.0'
+#    right     = ' 2.0                                           360.0'
+    functions = '-30.0*exp(-0.5*pow(x-0.541,2.0)/pow(0.15,2.0)-0.5*pow(y-0.457,2.0)/pow(0.15,2.0)-0.5*pow(z+0.124,2.0)/pow(0.15,2.0))'
+    left      = ' 0.0'
+    right     = ' 5.0'
   [../]
 []
 
@@ -170,8 +177,8 @@
 #l_tol = 1e-6
 #  l_max_its = 10
   nl_rel_tol = 1e-3
-  nl_abs_tol = 1e-8
-  nl_rel_step_tol = 1e-8
+  nl_abs_tol = 1e-6
+  nl_rel_step_tol = 1e-6
   nl_max_its = 2
 # num_steps = 10
   end_time = 500
@@ -179,7 +186,7 @@
 # scheme ='bdf2'
  [./TimeStepper]
   type = ConstantDT
-  dt = 0.1
+  dt = 0.2
  [../]
 []
 
@@ -194,7 +201,7 @@
 [Outputs]
   file_base = out
   exodus = true
-  interval = 16
+  interval = 2
   [./console]
     type = Console
     perf_log = false

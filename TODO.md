@@ -4,7 +4,7 @@ Global TODO list
 Electrocardio
 =============
 * Add (Boolean) material property that shows the de/repolarization status of the cells
-* ~~Make stimulation parameters adjustable from outside (e.g.. via user-defined functions)~~ DONE
+* <s>Make stimulation parameters adjustable from outside (e.g.. via user-defined functions)</s>
 * Use fibre directions for anisotropic conductivities
 * Add option for getting an ion model's resting potential. - Currently, it is fixed in ElectrocardioIC
 
@@ -113,15 +113,18 @@ Fraglich bleibt: Wenn man ein komplettes System mit dem SolutionUserObject lädt
 CardiacFibresMaterial
 =====================
 * Find a good way to distinguish left and right ventricle elements in the computation of fibre directions. - Currently, CardiacThicknessParameter already supplies the necessary information (by means of the sign of e) but this is not interpreted correctly, yet.
-* I think, in our geometry the z-axis is pointing into the opposite direction compared to [Streeter,1969]
+* Ensure that the z-axis is always pointing from the apex to the left aortic valve commissure as in \ref Streeter1969 "[Streeter, 1969, Figure 1]"
+* In fact, the \ref Streeter1969 construction is only valid for the left ventricle. For the right ventricle it could for example be repeated accordingly with appropriately tilted z-axis. Currently, left and right ventricle are not distinguished at all, see also comments in ewe_notes.pdf.
+* Include regional fibre direction variability of up to 15 degrees \ref Karlon2000
 
 CardiacMechanicsMaterial
 ========================
-* ~~Couple to displacements through a coupled vector instead of individual disp_.. variables.~~
-    * ~~For details see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top~~
-	* ~~A working example is found in CardiacMechanicsMaterial.C~~
-	* ~~All affected files can be found via `grepc -iR \"disp src/*`~~
+* <s>Couple to displacements through a coupled vector instead of individual disp_.. variables.</s>
+    * <s>For details see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top</s>
+	* <s>A working example is found in CardiacMechanicsMaterial.C</s>
+	* <s>All affected files can be found via `grepc -iR \"disp src/*`</s>
 * Find out how Ta enters into the elastic energy
+* Add material law from \ref Costa2001. Parameter values should be available in \ref Schmid2008 .
 
 SecondDerivativeNewmark
 =======================
@@ -134,5 +137,5 @@ CardiacIncompressibilityLagrangeMultiplier
 General
 =======
 * Clean formatting of all *.i files that are around
-* ~~Find a better way for including references in doxygen comments, see `documentation_cleanup` branch~~ DONE
+* <s>Find a better way for including references in doxygen comments, see `documentation_cleanup` branch</s>
 * Further TODOs in the inline documentation, see the \ref todo "TODO list"

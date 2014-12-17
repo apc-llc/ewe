@@ -25,6 +25,7 @@ CardiacMechanicsMaterial::CardiacMechanicsMaterial(const std::string  & name,
   :Material(name, parameters),
    _stress(declareProperty<RealTensorValue>("Kirchhoff_stress")),
    _stress_derivative(declareProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
+   _F(declareProperty<RealTensorValue>("displacement_gradient")),
    _J(declareProperty<Real>("det_displacement_gradient")),
    _W(declareProperty<Real>("elastic_energy_density")),
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
@@ -56,15 +57,15 @@ CardiacMechanicsMaterial::computeQpProperties()
 {
   // local deformation gradient tensor: F(ij) = dx(i)/dX(j)
   // Note that the nonlinear variables are displacements u(i)=x(i)-X(i), thus dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
-  RealTensorValue F((*_grad_disp[0])[_qp], (*_grad_disp[1])[_qp], (*_grad_disp[2])[_qp]);
-  F(0,0) += 1;
-  F(1,1) += 1;
-  F(2,2) += 1;
+  _F[_qp] = RealTensorValue((*_grad_disp[0])[_qp], (*_grad_disp[1])[_qp], (*_grad_disp[2])[_qp]);
+  _F[_qp](0,0) += 1;
+  _F[_qp](1,1) += 1;
+  _F[_qp](2,2) += 1;
    // ...its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
-  _J[_qp] = F.det();
+  _J[_qp] = _F[_qp].det();
   // From here on, we go over to fibre coordinates, i.e. for C, E, T
   // Cauchy-Green deformation tensor in fibre coordinates: C* = R^T F^T F R
-  const SymmTensor C(symmProd(_Rf[_qp], symmProd(F)));
+  const SymmTensor C(symmProd(_Rf[_qp], symmProd(_F[_qp])));
   // Lagrange-Green strain tensor
   const SymmTensor E( (C - _id) * 0.5 );
   // in the rotated system compute _stress[_qp], _stress_derivative[_qp], and _W[_qp]

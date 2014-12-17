@@ -18,19 +18,6 @@ namespace TensorHelpers {
     return B;
   }
 
-  /// Converts a SymmTensor \f$A\f$ to a SymmGenericElasticityTensor \f$C_{MNPQ}\f$.
-  /// assuming that \f$C_{MN**} = C_{**MN} = A_{MN}\f$.
-  const inline SymmGenericElasticityTensor STtoSGET(const SymmTensor & A) {
-    SymmGenericElasticityTensor B(0);
-    B(0,0,0,0) = A(0,0);
-    B(1,1,1,1) = A(1,1);
-    B(2,2,2,2) = A(2,2);
-    B(1,2,1,2) = A(1,2);
-    B(0,2,0,2) = A(0,2);
-    B(0,1,0,1) = A(0,1);
-    return B;
-  }
-
   /// Computes \f$\mathrm{outer}^\mathrm{T}\,\mathrm{inner}\,\mathrm{outer}\f$.
   const inline SymmTensor symmProd(const RealTensorValue & outer, const SymmTensor & inner) {
     /** @todo TODO: this would be much more efficient:
