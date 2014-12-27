@@ -5,7 +5,8 @@ Electrocardio
 =============
 * Add (Boolean) material property that shows the de/repolarization status of the cells
 * <s>Make stimulation parameters adjustable from outside (e.g.. via user-defined functions)</s>
-* Use fibre directions for anisotropic conductivities
+* <s>Use fibre directions for anisotropic conductivities</s>
+* Set appropriate parameter values for the anisotropic conductivity values, see e.g. \ref Potse2006 "Potse, 2006, Table I"
 * Add option for getting an ion model's resting potential. - Currently, it is fixed in ElectrocardioIC
 
 
@@ -23,10 +24,7 @@ Was wir ja mittelfristig im Vergleich zu propag bräuchten wären ortsabhängige
   * Leitfähigkeiten, i.e. Substances
 Letzteres ist sicherlich einfach, die ersten beiden brauchen noch etwas Interface-Unterstützung im Ionmodel.h - Ich habe bisher keine gute Idee um sowas ausreichend generisch (gegenüber einem potentiellen Austausch des Ionenmodells) zu machen...
 
-Viele Grüße,
-Mathias
-
-P.S.: Notizen für mich darüber, wo interessante Anregungen zu finden sind:
+Notizen darüber, wo interessante Anregungen zu finden sind:
 - Zelltypen:
    * bernus.h: 
 
@@ -113,7 +111,7 @@ Fraglich bleibt: Wenn man ein komplettes System mit dem SolutionUserObject lädt
 CardiacFibresMaterial
 =====================
 * Find a good way to distinguish left and right ventricle elements in the computation of fibre directions. - Currently, CardiacThicknessParameter already supplies the necessary information (by means of the sign of e) but this is not interpreted correctly, yet.
-* Ensure that the z-axis is always pointing from the apex to the left aortic valve commissure as in \ref Streeter1969 "[Streeter, 1969, Figure 1]"
+* Ensure that the z-axis is always pointing from the apex to the left aortic valve commissure as in \ref Streeter1969 "Streeter, 1969, Figure 1"
 * In fact, the \ref Streeter1969 construction is only valid for the left ventricle. For the right ventricle it could for example be repeated accordingly with appropriately tilted z-axis. Currently, left and right ventricle are not distinguished at all, see also comments in ewe_notes.pdf.
 * Include regional fibre direction variability of up to 15 degrees \ref Karlon2000
 
@@ -128,7 +126,10 @@ CardiacMechanicsMaterial
 
 SecondDerivativeNewmark
 =======================
-* Check and rework Newmark integrator, especially think about using declarePropertyOlder() and is_implict=true
+* Check and rework Newmark integrator, especially think about using 
+   * `declarePropertyOlder()`
+   * `parameters.set<bool>("implicit") = true`
+   * `kernel->isImplicit()`
 
 CardiacIncompressibilityLagrangeMultiplier
 ==========================================

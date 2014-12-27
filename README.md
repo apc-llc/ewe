@@ -72,6 +72,13 @@ Myocardial material parameter estimation: a non-homogeneous finite element study
 *Biomechanics and Modeling in Mechanobiology*, 7(3), 161–73.
 [doi:10.1007/s10237-007-0083-0](http://dx.doi.org/10.1007/s10237-007-0083-0)
 
+Streeter, 1969 {#Streeter1969}
+---------------------------------------------
+**Streeter, D. D., Spotnitz, H. M., Patel, D. P., Ross, J., & Sonnenblick, E. H. (1969)**
+Fiber Orientation in the Canine Left Ventricle during Diastole and Systole.
+*Circulation Research*, 24(3), 339–347.
+[doi:10.1161/01.RES.24.3.339](http://dx.doi.org/10.1161/01.RES.24.3.339)
+
 
 AUTHOR, YEAR {#AUTHORYEAR}
 ---------------------------------------------
