@@ -14,7 +14,7 @@ InputParameters validParams<CardiacThicknessParameterAux>();
  * This is esentially the same as given in Section II.A fo
  * \ref Potse2006 with the following differences:
  * We compute \f$e=\frac{d_\mathrm{epi}}{d_\mathrm{endo}+d_\mathrm{epi}}\f$,
- * i.e. \f$e=0\f$ on the epicardium, \f$|e|=1\$ on the endocardium.
+ * i.e. \f$e=0\f$ on the epicardium, \f$|e|=1\f$ on the endocardium.
  * Furthermore, we switch signs of \f$e\f$: It is positive for
  * nodes that are closer to the left ventricle's epicardium than
  * to the right ventricle's and negative otherwise.

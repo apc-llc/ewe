@@ -9,7 +9,7 @@ template<>
 InputParameters validParams<NeighborElementAverageAux>();
 
 /**
- * AuxKernel for computing the average of a variable over an elements the neighor elements.
+ * AuxKernel for computing the average of a variable over an elements the neighbor elements.
  */
 class NeighborElementAverageAux : public AuxKernel
 {
