@@ -1,7 +1,7 @@
 [Mesh]
  file = mug.e
  
- block_id = '0'
+ block_id = '1'
  block_name = 'all'
  
  []
@@ -51,7 +51,7 @@
   [./bc]
     type = NeumannBC
     variable = potential
-    boundary = '1 2 3'
+    boundary = '1 2'
     value = 0
   [../]
 []
