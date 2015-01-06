@@ -5,8 +5,8 @@ template<>
 InputParameters validParams<ElectrocardioDiffusion>()
 {
   InputParameters params = validParams<Kernel>();
-  params.addParam<Real>("surface_to_volume", 1000.0, "Surface-to-volume ratio");
-  params.addParam<Real>("capacitance", 1.0, "Capacitance of membrane");
+  params.addParam<Real>("surface_to_volume", 1000.0, "Surface-to-volume ratio in 1/cm. Default: 1000.0");
+  params.addParam<Real>("capacitance", 1.0, "Capacitance of membrane in muF/cm^2. Default: 1.0");
   return params;
 }
 

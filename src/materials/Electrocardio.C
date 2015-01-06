@@ -4,7 +4,7 @@ template<>
 InputParameters validParams<Electrocardio>()
 {
   InputParameters params = validParams<Material>();
-  params.addRequiredCoupledVar("vmem","Membrane potential needed as input for ion channel model");
+  params.addRequiredCoupledVar("vmem","Membrane potential needed as input for ion channel model. Unit: mV.");
   //! @todo: For ion channel models that need the diffusion current, have to fetch the value of Imem somehow
 
   // we restrict output to Imem to avoid warnings about gates being impossible to be used in output

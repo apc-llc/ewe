@@ -13,9 +13,9 @@ InputParameters validParams<CardiacMechanicsMaterial>()
   InputParameters params = validParams<Material>();
   params.addRequiredCoupledVar("displacements", "The x, y, and z displacement");
 
-  params.addCoupledVar("Ta", 0, "The (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley, 2007]. Default is Ta=0, i.e. no active tension anywhere.");
-  params.addParam<FunctionName>("Ta_function", "A function that describes the (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley, 2007].");
-  params.addCoupledVar("p", 0, "Hydrostatic pressure that acts as a Lagrange multiplier to ensure incompressibility. Works best with PressureLagrangeMultiplier kernel.");
+  params.addCoupledVar("Ta", 0, "The (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley, 2007]. Unit: kPa. Default is Ta=0, i.e. no active tension anywhere.");
+  params.addParam<FunctionName>("Ta_function", "A function that describes the (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley, 2007]. Unit: kPa.");
+  params.addCoupledVar("p", 0, "Hydrostatic pressure that acts as a Lagrange multiplier to ensure incompressibility. Unit: kPa. Works best with PressureLagrangeMultiplier kernel. Default: 0. (no hydrostatic pressure).");
   params.set<bool>("use_displaced_mesh") = false;
   return params;
 }

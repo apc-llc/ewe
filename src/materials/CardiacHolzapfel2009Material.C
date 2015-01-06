@@ -7,7 +7,7 @@ template<>
 InputParameters validParams<CardiacHolzapfel2009Material>()
 {
   InputParameters params = validParams<CardiacMechanicsMaterial>();
-  params.addRequiredParam<std::vector<Real> >("material_parameters", "Material parameters as given in Table 1 of [Holzapfel, 2009] in following order: a, b, a_f, b_f, a_s, b_s, a_fs, b_fs");
+  params.addRequiredParam<std::vector<Real> >("material_parameters", "Material parameters as given in Table 1 of [Holzapfel, 2009] in following order: a, b, a_f, b_f, a_s, b_s, a_fs, b_fs. Any a-parameter has to be given in kPa, any b is unitless.");
   return params;
 }
 

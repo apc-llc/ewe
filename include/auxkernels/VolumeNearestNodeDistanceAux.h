@@ -15,7 +15,7 @@ InputParameters validParams<VolumeNearestNodeDistanceAux>();
  * AuxKernel for computing for all volume nodes the nodes on
  * a given boundary that are closest to them (as well as their distance).
  *
- * This code works totally identical to the NearestNodeDistanceAux kernel.
+ * This code works totally identical to MOOSE's NearestNodeDistanceAux kernel.
  * In fact, most of the code here is taken from NearestNodeDistanceAux.h,
  * NearestNodeDistanceAux.C, and GeometricSearchData.C
  * and only had to be slightly modified to fit our needs.

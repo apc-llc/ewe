@@ -21,7 +21,7 @@ InputParameters validParams<CardiacKirchhoffIncompressibilityPenalty>();
  * the displaced coordinates \f$x_{M=1\ldots3}\f$ and 
  * the coordinates in the reference frame \f$X_{N=1\ldots3}\f$.
  *
- * The value for \f$J\f$ is fetched from a CardiacNash2000Material instance
+ * The value for \f$J\f$ is fetched from a #CardiacMechanicsMaterial instance
  * via its `det_displacement_gradient` MaterialProperty.
  * Furthermore, the `displacement_gradient` MaterialProperty is used in the
  * kernel's Jacobian computation.

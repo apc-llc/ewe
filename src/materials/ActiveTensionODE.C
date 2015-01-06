@@ -7,10 +7,10 @@ InputParameters validParams<ActiveTensionODE>()
   params.addRequiredCoupledVar("Vmem","Membrane potential as computed by the mono/bidomain equation.");
   params.addParam<Real>("epsilon_recovery", 0.01, "Tension recovery delay parameter.");
   params.addParam<Real>("epsilon_development", 0.04, "Tension development delay parameter.");
-  params.addParam<Real>("kTa", 47.9, "Potential to tension conversion factor (regulates maximum tension obtained).");
+  params.addParam<Real>("kTa", 47.9, "Potential to tension conversion factor (regulates maximum tension obtained). Unit: kPa.");
 
-  params.addParam<Real>("Vrest", -90.272, "Ion model resting potential (for normalization of Vmem).");
-  params.addParam<Real>("Vmax", 0., "Ion model maximum potential (for normalization of Vmem).");
+  params.addParam<Real>("Vrest", -90.272, "Ion model resting potential (for normalization of Vmem). Unit: mV.");
+  params.addParam<Real>("Vmax", 0., "Ion model maximum potential (for normalization of Vmem). Unit: mV.");
 
   return params;
 }
