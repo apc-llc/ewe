@@ -87,11 +87,11 @@ CardiacMechanicsMaterial::computeQpProperties()
        * that zero pressure as initial guess is not too bad anyway, we insert it directly in case
        * _p is not yet ready.
        * Just for reference: The current initialization order in Moose is as follows:
-       *   1) First initialization of regular nonlinear variables in line 533 of FEProblem.C (call to computeUserObjects() )
-       *      via line 167 in ComputeUserObjectsThread.C (call to _fe_problem.reinitElem(elem, _tid) )
-       *   2) First call to Material::computeProperties also in line 533 of FEProblem.C (call to computeUserObjects() )
-       *      via line 168 in ComputeUserObjectsThread.C ( call to _fe_problem.reinitMaterials(_subdomain, _tid) )
-       *   3) [Much later] First initialization of scalar variables in Line 571 of FEProblem.C ( call to reinitScalars() )
+       *   1. First initialization of regular nonlinear variables in line 533 of FEProblem.C (call to computeUserObjects() )
+       *     via line 167 in ComputeUserObjectsThread.C (call to _fe_problem.reinitElem(elem, _tid) )
+       *   2. First call to Material::computeProperties also in line 533 of FEProblem.C (call to computeUserObjects() )
+       *     via line 168 in ComputeUserObjectsThread.C ( call to _fe_problem.reinitMaterials(_subdomain, _tid) )
+       *   3. [Much later] First initialization of scalar variables in Line 571 of FEProblem.C ( call to reinitScalars() )
        */
       const Real p( _p.size() > 0 ? _p[0] : 0.);
 
