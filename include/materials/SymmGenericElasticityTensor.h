@@ -132,7 +132,7 @@ public:
 
 protected:
 
-  virtual void calculateEntries(unsigned int qp) {
+  virtual void calculateEntries(unsigned int /*qp*/) {
     mooseError("SymmGenericElasticityTensor::computeEntries() - should never be here.");
   };
 

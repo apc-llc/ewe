@@ -276,7 +276,7 @@ inline double bernus_functions::beta_f(double V)
 { return (0.069*exp(-0.11*(V+9.825))+0.011)/(1.0 + exp(-0.278*(V+9.825))) + 5.75e-4; }
 
 // f_Ca-gate
-inline double bernus_functions::f_ca(double V)
+inline double bernus_functions::f_ca(double /*V*/)
 { return 1.0/(1.0 + bernus_functions::ca_i/0.0006); }
 
 /*
@@ -344,7 +344,7 @@ inline double bernus_functions::f_nak(double V)
 double sigma = 0.1428*( exp(na_e/67.3) - 1.0 );
 return 1.0/(1.0 + 0.1245*exp(-0.0037*V) + 0.0365*sigma*exp(-0.0037*V)); }
 
-inline double bernus_functions::f_nak_a(double V)
+inline double bernus_functions::f_nak_a(double /*V*/)
 { return (1.0/(1.0 + pow( 10.0/na_i, 1.5 )))*( k_e/(k_e+1.5) ); }
 
 /*

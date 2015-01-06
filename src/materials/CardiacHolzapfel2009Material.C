@@ -21,22 +21,22 @@ CardiacHolzapfel2009Material::CardiacHolzapfel2009Material(const std::string  & 
 }
 
 void
-CardiacHolzapfel2009Material::computeQpStressProperties(const SymmTensor &C, const SymmTensor &E)
+CardiacHolzapfel2009Material::computeQpStressProperties(const SymmTensor &C, const SymmTensor & /*E*/)
 {
   const SymmTensor CC(square(C));
-  // invariants (We will not need all of them. However, defining them avoids to forget any. The compiler will optimize out the unused.)
+  // invariants (We will not need all of them. However, defining them avoids to forget any.)
   const Real I1(C.trace());
-  const Real I2(0.5*(I1*I1-CC.trace()));
-  const Real I3(_J[_qp]);
+  /*const Real I2(0.5*(I1*I1-CC.trace()));*/
+  /*const Real I3(_J[_qp]);               */
   const Real I4f(_Ef[_qp]*(C*_Ef[_qp]));
   const Real I4s(_Es[_qp]*(C*_Es[_qp]));
-  const Real I4n(_En[_qp]*(C*_En[_qp]));
-  const Real I5f(_Ef[_qp]*(CC*_Ef[_qp]));
-  const Real I5s(_Es[_qp]*(CC*_Es[_qp]));
-  const Real I5n(_En[_qp]*(CC*_En[_qp]));
+  /*const Real I4n(_En[_qp]*(C*_En[_qp])); */
+  /*const Real I5f(_Ef[_qp]*(CC*_Ef[_qp]));*/
+  /*const Real I5s(_Es[_qp]*(CC*_Es[_qp]));*/
+  /*const Real I5n(_En[_qp]*(CC*_En[_qp]));*/
   const Real I8fs(_Ef[_qp]*(C*_Es[_qp]));
-  const Real I8fn(_Ef[_qp]*(C*_En[_qp]));
-  const Real I8sn(_Es[_qp]*(C*_En[_qp]));
+  /*const Real I8fn(_Ef[_qp]*(C*_En[_qp]));*/
+  /*const Real I8sn(_Es[_qp]*(C*_En[_qp]));*/
 
   // the following will be needed in the stress as well as in the energy and stress_derivative
   const Real  i_term(   _p[A1 ]*std::exp(_p[B1 ]*(I1 -3)        ) );

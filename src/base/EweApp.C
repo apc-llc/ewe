@@ -112,6 +112,6 @@ EweApp::registerObjects(Factory & factory)
 }
 
 void
-EweApp::associateSyntax(Syntax & syntax, ActionFactory & action_factory)
+EweApp::associateSyntax(Syntax & /*syntax*/, ActionFactory & /*action_factory*/)
 {
 }
