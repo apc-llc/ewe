@@ -37,7 +37,7 @@
 [Materials]
   [./linear_isotropic]
     type = LinearIsotropicMaterial
-    block = 0
+    block = 1
     youngs_modulus = 1.e5
     poissons_ratio = 0.3
     disp_x = disp_x
@@ -52,7 +52,7 @@
    [./active_tension_material]
      type = ActiveTensionODE
      Vmem = potential_from_sub
-     block = 0
+     block = 1
     # these are the default parameter values, including them here to make sure they are not forgotten as tunable options
      epsilon_recovery = 0.01
      epsilon_development = 0.04

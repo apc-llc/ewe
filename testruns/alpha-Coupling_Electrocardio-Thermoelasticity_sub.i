@@ -64,7 +64,7 @@
   [./bc]
     type = NeumannBC
     variable = potential
-    boundary = '1 2 3'
+    boundary = '101 102 103'
     value = 0
   [../]
 []
