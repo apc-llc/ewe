@@ -67,7 +67,7 @@
   [./bc]
     type = NeumannBC
     variable = potential
-    boundary = '101 102 103'
+    boundary = 'ss_LV_inner ss_RV_inner ss_outer'
     value = 0
   [../]
 []
