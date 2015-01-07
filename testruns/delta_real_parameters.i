@@ -83,7 +83,7 @@
     # these are the default parameter values, including them here to make sure they are not forgotten as tunable options
     epsilon_recovery=0.01
     epsilon_development=0.04
-    kTa=2.0
+    kTa=47.9
     Vrest=-90.272
     Vmax=0.
   [../]
@@ -114,14 +114,13 @@
   type=Transient
 
   solve_type=PJFNK
-  petsc_options_iname='-pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  petsc_options_value=' hypre    boomeramg      8                          '
+  splitting = 'saddlepoint_fieldsplit'
   petsc_options='-fp_trap -info -snes_monitor -snes_converged_reason -ksp_monitor -ksp_converged_reason  -ksp_monitor_true_residual -pc_svd_monitor'
 
-  nl_rel_tol=1e-6
-  nl_abs_tol=1e-6
-  nl_rel_step_tol=1e-8
-  nl_abs_step_tol=1e-8
+  nl_rel_tol=1e-5
+  nl_abs_tol=1e-5
+  nl_rel_step_tol=1e-6
+  nl_abs_step_tol=1e-6
 
   l_tol=1.e-8
   l_max_its=30
@@ -132,8 +131,30 @@
 
   start_time=0
   end_time  =500.0
-  dtmin     =0.05
+  dtmin     =0.025
   dtmax     =0.5
+[]
+
+[Splits]
+  [./saddlepoint_fieldsplit]
+    splitting = 'disp pressure'
+    splitting_type  = schur
+    schur_type    = full
+    schur_pre     = S
+    petsc_options = '-dm_view'
+  [../]
+  [./disp]
+    vars = 'dispx dispy dispz'
+    petsc_options = '-dm_view'
+    petsc_options_iname = '-pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
+    petsc_options_value = '   hypre  boomeramg      8                          '
+  [../]
+  [./pressure]
+    vars = 'hydrostatic_pressure'
+    petsc_options = '-dm_view'
+    petsc_options_iname = '-pc_type'
+    petsc_options_value = '    none'
+  [../]
 []
 
 [Outputs]
@@ -153,7 +174,7 @@
     type=TransientMultiApp
     app_type=EweApp
     execute_on=timestep_begin
-    input_files=gamma_Coupling_Electrocardio-Holzapfel_displacements_sub.i
+    input_files=delta_real_parameters_sub.i
     positions='0.0 0.0 0.0'
   [../]
 []
