@@ -17,7 +17,7 @@ InputParameters validParams<CardiacKirchhoffIncompressibilityPenalty>();
  * Kernel for adding a penalty term to a variable's residual for enforcing incompressibility.
  *
  * The kernel implements \f$\gamma(\psi_i,J-1)\f$ with 
- * \f$J=\mathrm{det}\mathbf{F}=\mathrm{det}\frac{\partial x_M}{\partial X_M}\f$,
+ * \f$J=\mathrm{det}\mathbf{F}=\mathrm{det}\frac{\partial x_M}{\partial X_N}\f$,
  * the displaced coordinates \f$x_{M=1\ldots3}\f$ and 
  * the coordinates in the reference frame \f$X_{N=1\ldots3}\f$.
  *
