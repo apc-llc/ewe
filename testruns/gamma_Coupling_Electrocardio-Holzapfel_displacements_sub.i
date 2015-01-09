@@ -55,9 +55,14 @@
 
 [Functions]
   [./ElectrocardioForcing_function]
+    # we are pacing at the following "early activation sites" which were hand-picked in Paraview
+    # to closely match [Potse2006, Figure 1]:
+    #   0.8 6.4 -3.1
+    #  -1.4 6.4 -2.9
+    #   2.2 8.9 -4.2
     type = PiecewiseParsedFunction
     default_function = '0'
-    functions = '-30.0*exp(-0.5*pow(x-0.541,2.0)/pow(0.15,2.0)-0.5*pow(y-0.457,2.0)/pow(0.15,2.0)-0.5*pow(z-0.124,2.0)/pow(0.15,2.0))'
+    functions = '-30.0*(exp(-0.5*(pow(x-0.8,2)+pow(y-6.4,2)+pow(z+3.1,2))/pow(1.5,2))+exp(-0.5*(pow(x+1.4,2)+pow(y-6.4,2)+pow(z+2.9,2))/pow(1.5,2))+exp(-0.5*(pow(x-2.2,2)+pow(y-8.9,2)+pow(z+4.2,2))/pow(1.5,2)))'
     left      = ' 0.0'
     right     = ' 5.0'
   [../]
@@ -67,7 +72,7 @@
   [./bc]
     type = NeumannBC
     variable = potential
-    boundary = 'ss_LV_inner ss_RV_inner ss_outer'
+    boundary = '101 102 103'
     value = 0
   [../]
 []

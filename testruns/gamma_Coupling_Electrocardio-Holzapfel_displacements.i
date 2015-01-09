@@ -1,4 +1,4 @@
-[Mesh]
+ [Mesh]
   file=07-heart_geometry_new.e
   block_id='1'
   block_name='all'
@@ -116,24 +116,24 @@
   solve_type=PJFNK
   petsc_options_iname='-pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
   petsc_options_value=' hypre    boomeramg      8                          '
-  petsc_options='-fp_trap -info -snes_monitor -snes_converged_reason -ksp_monitor -ksp_converged_reason  -ksp_monitor_true_residual -pc_svd_monitor'
-
+  #petsc_options='-fp_trap -info -snes_monitor -snes_converged_reason -ksp_monitor -ksp_converged_reason  -ksp_monitor_true_residual -pc_svd_monitor'
+  petsc_options='-snes_linesearch_damping 0.7'
   nl_rel_tol=1e-6
   nl_abs_tol=1e-6
-  nl_rel_step_tol=1e-8
-  nl_abs_step_tol=1e-8
+  nl_rel_step_tol=1e-6
+  nl_abs_step_tol=1e-6
 
-  l_tol=1.e-8
+  l_tol=1.e-6
   l_max_its=30
   #l_abs_step_tol=1.e-12
   #l_max_its=20
 
-  #line_search=default  # TODO: what else?
+  line_search=basic  # TODO: what else?
 
   start_time=0
   end_time  =500.0
   dtmin     =0.05
-  dtmax     =0.5
+  dtmax     =2.5
 []
 
 [Outputs]

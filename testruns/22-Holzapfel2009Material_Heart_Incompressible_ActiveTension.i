@@ -141,7 +141,7 @@
 #  show_material_props            = 1                           # Print out the material properties supplied for each block, face, neighbor, ...
 #                                                               # and/or sideset
 #  show_parser                    = 0                           # Shows parser block extraction and debugging information
-#  show_top_residuals             =  5                          # The number of top residuals to print out (0 = no output)
+   show_top_residuals             = 15                          # The number of top residuals to print out (0 = no output)
 #  show_var_residual_norms        = 1                           # Print the residual norms of the individual solution variables at each ...
 #                                                               # nonlinear iteration
 #  #show_var_residual              = 'dispx dispy dispz hydrostatic_pressure' # Variables for which residuals will be sent to the output file
