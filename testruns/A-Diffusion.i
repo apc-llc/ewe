@@ -51,10 +51,15 @@ surface_to_volume = 800.0
 []
 
 [Functions]
+  [./pacing]
+    type = ParsedFunction
+    value = '-30.0*exp(-0.5*pow(x-0.0,2.0)/pow(0.25,2.0))'
+  [../]
+
   [./ElectrocardioForcing_function]
-    type = PiecewiseParsedFunction
+    type = PiecewiseFunction
     default_function = '0'
-    functions = '-30.0*exp(-0.5*pow(x-0.0,2.0)/pow(0.25,2.0))'
+    functions = 'pacing'
     left      = ' 0.0'
     right     = ' 0.1'
   [../]
@@ -68,8 +73,6 @@ surface_to_volume = 800.0
     boundary = '1 2 3'
     value = 0
   [../]
-
-
 []
 
 [Materials]

@@ -122,29 +122,41 @@
   [../]
 []
 
+
+[Functions]
+  [./s0] type=ParsedFunction value='-30.0*exp(-0.5*pow(x-0.541,2.0)/pow(0.15,2.0)-0.5*pow(y-0.457,2.0)/pow(0.15,2.0)-0.5*pow(z+0.124,2.0)/pow(0.15,2.0))' [../]
+  [./s1] type=ParsedFunction value='-30.0*exp(-0.5*pow(x-0.,2.0)/pow(0.25,2.0))' [../]
+  [./s2] type=ParsedFunction value='-30.0*exp(-0.5*pow(x-2.5,2.0)/pow(0.25,2.0)-0.5*pow(y-0.0,2.0)/pow(2.0,2.0))' [../]
+
+  [./ElectrocardioForcing_function]
+    type = PiecewiseFunction
+    default_function = '0'
+    functions = 'pacing'
+    left      = ' 0.0'
+    right     = ' 0.1'
+  [../]
+[]
+
 [Functions]
   [./ElectrocardioForcing_function]
-    type = PiecewiseParsedFunction
+    type = PiecewiseFunction
     default_function = '0'
-#functions = '-30.0*exp(-0.5*pow(x-0.,2.0)/pow(0.25,2.0))   -30.0*exp(-0.5*pow(x-2.5,2.0)/pow(0.25,2.0)-0.5*pow(y-0.0,2.0)/pow(2.0,2.0))'
-#   left      = ' 0.0                                           355.0'
-#    right     = ' 2.0                                           360.0'
-    functions = '-30.0*exp(-0.5*pow(x-0.541,2.0)/pow(0.15,2.0)-0.5*pow(y-0.457,2.0)/pow(0.15,2.0)-0.5*pow(z+0.124,2.0)/pow(0.15,2.0))'
+    #functions = '  s1      s2'
+    #left      = ' 0.0   355.0'
+    #right     = ' 2.0   360.0'
+    functions = '  s0'
     left      = ' 0.0'
     right     = ' 5.0'
   [../]
 []
 
 [BCs]
-
   [./bc]
     type = NeumannBC
     variable = potential
     boundary = '1 2 3'
     value = 0
   [../]
-
-
 []
 
 [Materials]

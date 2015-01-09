@@ -70,10 +70,15 @@
 []
 
 [Functions]
+  [./pacing]
+    type = ParsedFunction
+    value = '-40.0*exp(-0.5*pow(x-0.0,2.0)/pow(0.25,2.0))'
+  [../]
+
   [./ElectrocardioForcing_function]
-    type = PiecewiseParsedFunction
+    type = PiecewiseFunction
     default_function = '0'
-    functions = '-40.0*exp(-0.5*pow(x-0.0,2.0)/pow(0.25,2.0))'
+    functions = 'pacing'
     left      = ' 0.0'
     right     = ' 2.0'
   [../]
