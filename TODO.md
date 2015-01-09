@@ -107,9 +107,9 @@ Beispiele zur Verwendung finden sich in
 
 Fraglich bleibt: Wenn man ein komplettes System mit dem SolutionUserObject lädt, kann man dann auf die [Mesh] Section verzichten?
 
-PiecewiseParsedFunction
-=======================
- * give a list of function names instead of explicit function definitions in `functions` parameter to increase readability
+Function
+========
+ * <s>give a list of function names to PiecewiseParsedFunction instead of explicit function definitions in `functions` parameter to increase readability</s>
  * add a new function definition which is a sum of several spatial Gaussians (defined by a list of 3D-points) to simplify definition of
    several activation sites
 
