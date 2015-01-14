@@ -20,10 +20,10 @@
 #include "CardiacHolzapfel2009Material.h"
 #include "DisplacementAux.h"
 #include "AnisotropicGradientShift.h"
-#include "CardiacIncompressibilityLagrangeMultiplier.h"
 #include "CardiacMaterialVolumeRatio.h"
 #include "CardiacVolumeRatio.h"
 #include "CardiacKirchhoffIncompressibilityPenalty.h"
+#include "CardiacKirchhoffIncompressibilityLagrangeMultiplier.h"
 
 #include "ActiveTensionODE.h"
 
@@ -79,8 +79,7 @@ EweApp::registerObjects(Factory & factory)
   registerKernel(ElectrocardioForcing);
   registerKernel(AnisotropicGradientShift);
   registerKernel(CardiacKirchhoffIncompressibilityPenalty);
-
-  registerScalarKernel(CardiacIncompressibilityLagrangeMultiplier);
+  registerKernel(CardiacKirchhoffIncompressibilityLagrangeMultiplier);
 
   registerMaterial(NewmarkMaterial);
   registerMaterial(Electrocardio);

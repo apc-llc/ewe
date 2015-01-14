@@ -12,21 +12,19 @@
   [./dispy]  order=FIRST  family=LAGRANGE  [../]
   [./dispz]  order=FIRST  family=LAGRANGE  [../]
 
-  [./hydrostatic_pressure]  order=FIRST  family=SCALAR  [../]
+  [./hydrostatic_pressure]  order=CONSTANT  family=MONOMIAL  [../]
 []
 
 [Kernels]
   [./stressdiv_dispx]  type=CardiacKirchhoffStressDivergence  variable=dispx  component=0  displacements='dispx dispy dispz'  [../]
   [./stressdiv_dispy]  type=CardiacKirchhoffStressDivergence  variable=dispy  component=1  displacements='dispx dispy dispz'  [../]
   [./stressdiv_dispz]  type=CardiacKirchhoffStressDivergence  variable=dispz  component=2  displacements='dispx dispy dispz'  [../]
+  
+  [./incompressibility]  type=CardiacKirchhoffIncompressibilityLagrangeMultiplier  variable=hydrostatic_pressure  displacements='dispx dispy dispz'  [../]
 
   #[./inertia_x] type=SecondOrderImplicitEulerWithDensity  variable=dispx  density=0.0  lumping=false [../]
   #[./inertia_y] type=SecondOrderImplicitEulerWithDensity  variable=dispy  density=0.0  lumping=false [../]
   #[./inertia_z] type=SecondOrderImplicitEulerWithDensity  variable=dispz  density=0.0  lumping=false [../]
-[]
-
-[ScalarKernels]
-  [./incompressibility]  type=CardiacIncompressibilityLagrangeMultiplier  variable=hydrostatic_pressure  volume_ratio_postprocessor=volume_ratio  [../]
 []
 
 [AuxVariables]
@@ -52,6 +50,8 @@
 []
 
 [Materials]
+  active='fibres cardiac_material_holzapfel'
+
   [./fibres]
     type=CardiacFibresMaterial
     block=all
@@ -62,7 +62,7 @@
     output_properties='E_fibre_x E_fibre_y E_fibre_z E_sheet_x E_sheet_y E_sheet_z E_normal_x E_normal_y E_normal_z'
   [../]
 
-  [./cardiac_material]
+  [./cardiac_material_nash]
     type=CardiacHolzapfel2009Material
     block=all
     use_displaced_mesh=false
@@ -74,6 +74,21 @@
     output_properties='Kirchhoff_stress'
     Ta_function=active_tension
     p=hydrostatic_pressure
+  [../]
+  
+  [./cardiac_material_holzapfel]
+    type = CardiacNash2000Material
+    block = all
+    use_displaced_mesh = false
+    # material parameters in the order 11 22 33 12 23 31 (symmetric)
+    # taken from [Nash & Hunter, 2000], Table I
+    k_MN = '1.937 0.028 0.310 1.000 1.000 1.000'
+    a_MN = '0.523 0.681 1.037 0.731 0.886 0.731'
+    b_MN = '1.351 5.991 0.398 2.000 2.000 2.000'
+    displacements ='dispx dispy dispz'
+    outputs=all
+    output_properties='Kirchhoff_stress'
+    Ta_function=active_tension
   [../]
 []
 
@@ -120,12 +135,10 @@
   type=Transient
 
   solve_type=NEWTON
-  #splitting = 'saddlepoint_fieldsplit'
-  petsc_options_iname='-pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  petsc_options_value=' hypre    boomeramg      1                          '
-  #petsc_options='-fp_trap -info -snes_monitor -snes_converged_reason -ksp_monitor -ksp_converged_reason  -ksp_monitor_true_residual -pc_svd_monitor'
-  petsc_options=' -fp_trap -info -snes_monitor -snes_converged_reason  -ksp_monitor -ksp_converged_reason  -ksp_monitor_true_residual -pc_svd_monitor'
-  # -snes_linesearch_damping 0.7
+  #petsc_options_iname='-pc_type'
+  #petsc_options_value=' lu      '
+  petsc_options='-fp_trap -info -snes_converged_reason'
+
   nl_rel_tol=1e-5
   nl_abs_tol=1e-5
   nl_rel_step_tol=1e-6
@@ -181,7 +194,7 @@
   
   [./coupled]
      type=Exodus
-     output_on = 'timestep_end'
+     output_on = 'initial nonlinear timestep_begin timestep_end'
      hide = 'distance_outer distance_RV_inner distance_LV_inner'
   [../]
 []

@@ -15,7 +15,7 @@ InputParameters validParams<CardiacMechanicsMaterial>()
 
   params.addCoupledVar("Ta", 0, "The (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley, 2007]. Unit: kPa. Default is Ta=0, i.e. no active tension anywhere.");
   params.addParam<FunctionName>("Ta_function", "A function that describes the (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley, 2007]. Unit: kPa.");
-  params.addCoupledVar("p", 0, "Hydrostatic pressure that acts as a Lagrange multiplier to ensure incompressibility. Unit: kPa. Works best with PressureLagrangeMultiplier kernel. Default: 0. (no hydrostatic pressure).");
+  params.addCoupledVar("p", 0, "Hydrostatic pressure that acts as a Lagrange multiplier to ensure incompressibility. Unit: kPa. Works best with CardiacMechanicsIncompressibilityLagrangeMultiplier kernel. Default: 0. (no hydrostatic pressure).");
   params.set<bool>("use_displaced_mesh") = false;
   return params;
 }
@@ -36,8 +36,8 @@ CardiacMechanicsMaterial::CardiacMechanicsMaterial(const std::string  & name,
    _Ta(_has_Ta ? coupledValue("Ta") : _zero),
    _has_Ta_function(isParamValid("Ta_function")),
    _Ta_function( _has_Ta_function ? &getFunction("Ta_function") : NULL ),
-   _has_p(isCoupledScalar("p")),
-   _p(_has_p ? coupledScalarValue("p") : _zero),
+   _has_p(isCoupled("p")),
+   _p(_has_p ? coupledValue("p") : _zero),
    _id(scaledID(1))
 {
   if (_has_Ta && _has_Ta_function)
@@ -80,23 +80,8 @@ CardiacMechanicsMaterial::computeQpProperties()
 
     // Add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
     if (_has_p) {
-      /**
-       * @todo TODO: Well, this is a bit tricky. The following line tries to circumvent an issue in
-       * Moose's initialization order. ScalarVariables are initialized after the material. Thus, if we use
-       * _p in the very first attempt of callng computQPProperties(), this will fail. Since I assume
-       * that zero pressure as initial guess is not too bad anyway, we insert it directly in case
-       * _p is not yet ready.
-       * Just for reference: The current initialization order in Moose is as follows:
-       *   1. First initialization of regular nonlinear variables in line 533 of FEProblem.C (call to computeUserObjects() )
-       *     via line 167 in ComputeUserObjectsThread.C (call to _fe_problem.reinitElem(elem, _tid) )
-       *   2. First call to Material::computeProperties also in line 533 of FEProblem.C (call to computeUserObjects() )
-       *     via line 168 in ComputeUserObjectsThread.C ( call to _fe_problem.reinitMaterials(_subdomain, _tid) )
-       *   3. [Much later] First initialization of scalar variables in Line 571 of FEProblem.C ( call to reinitScalars() )
-       */
-      const Real p( _p.size() > 0 ? _p[0] : 0.);
-
       // _stress(MN) += p*Cinv(MN)
-      _stress[_qp] -= STtoRTV( Cinv * p );
+      _stress[_qp] -= STtoRTV( Cinv * _p[_qp] );
       // for the derivative of T, things do become slightly complicated as we have to do
       // _stress_derivative(MNPQ) += 2 * p * Cinv(M,P) * Cinv(Q,N)
       SymmGenericElasticityTensor sdp(0);
@@ -105,7 +90,7 @@ CardiacMechanicsMaterial::computeQpProperties()
         for (int N=M;N<3;N++)
           for (int P=M;P<3;P++)
             for (int Q=P;Q<3;Q++) {
-              sdp(M,N,P,Q) = 2 * p * Cinv(M,P) * Cinv(Q,N);
+              sdp(M,N,P,Q) = 2 * _p[_qp] * Cinv(M,P) * Cinv(Q,N);
             }
 
       _stress_derivative[_qp] += sdp;
