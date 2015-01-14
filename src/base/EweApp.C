@@ -19,6 +19,7 @@
 #include "CardiacNash2000Material.h"
 #include "CardiacHolzapfel2009Material.h"
 #include "CardiacCostaMaterial.h"
+#include "CardiacLinearMaterial.h"
 #include "DisplacementAux.h"
 #include "AnisotropicGradientShift.h"
 #include "CardiacMaterialVolumeRatio.h"
@@ -90,6 +91,7 @@ EweApp::registerObjects(Factory & factory)
   registerMaterial(CardiacNash2000Material);
   registerMaterial(CardiacHolzapfel2009Material);
   registerMaterial(CardiacCostaMaterial);
+  registerMaterial(CardiacLinearMaterial);
   registerMaterial(CardiacFibresMaterial);
 
   registerMaterial(ActiveTensionODE);
