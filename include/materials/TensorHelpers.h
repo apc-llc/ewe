@@ -105,6 +105,18 @@ namespace TensorHelpers {
   const inline SymmTensor scaledID(const Real &a) {
     return SymmTensor(a,a,a,0,0,0);
   }
+
+
+  /// element-wise product of two symmetric matrices
+  const inline SymmTensor elementwiseProduct(const SymmTensor &a, const SymmTensor &b) {
+    SymmTensor res;
+
+    for (unsigned int i=0;i<3;i++)
+      for (unsigned int j=i;j<3;j++)
+        res(i,j) = a(i,j)*b(i,j);
+
+    return res;
+  }
 }
 
 #endif
