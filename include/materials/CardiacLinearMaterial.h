@@ -10,7 +10,7 @@ template<>
 InputParameters validParams<CardiacLinearMaterial>();
 
 /**
- * @todo: documentation
+ * This Material implements Linear Isotropic Elasticity.
  *
  * Parameters are read via MaterialParameters from the
  * input file.
@@ -24,7 +24,10 @@ public:
 protected:
   virtual void computeQpStressProperties(const SymmTensor &C, const SymmTensor &E);
 
-  const Real _lambda, _mu; ///< Lame constants
+  Real _lambda; ///< 1st Lame constant
+  Real _mu; ///< 2nd Lame constant
+  Real _E; ///< Youngs modulus
+  Real _nu; ///< Poissons ratio
 };
 
 #endif //CardiacLinearMaterial_H
