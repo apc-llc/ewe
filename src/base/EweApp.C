@@ -14,7 +14,7 @@
 #include "NewmarkMaterial.h"
 #include "CardiacStressDivergence.h"
 #include "CardiacKirchhoffStressDivergence.h"
-\#include "CardiacLinearOrthotropicMaterial.h"
+#include "CardiacLinearOrthotropicMaterial.h"
 #include "CardiacNash2000Material.h"
 #include "CardiacHolzapfel2009Material.h"
 #include "CardiacCostaMaterial.h"
