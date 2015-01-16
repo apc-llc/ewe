@@ -27,6 +27,7 @@ protected:
   enum CardiacCostaMaterialParameters {C=0, bf, bt, bfs};
 
   const std::vector<Real> & _p; ///< material parameters, indexed via #CardiacCostaMaterialParameters
+  const Real _maxQ;
 };
 
 #endif //CardiacCostaMaterial_H
