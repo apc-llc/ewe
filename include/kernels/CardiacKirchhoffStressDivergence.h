@@ -42,6 +42,8 @@ protected:
   MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative;   ///< derivative of the 2nd Piola-Kirchhoff stress tensor \f$\frac{\partial T_{MN}}{\partial E_{PQ}}\f$
 
 private:
+  Real JacobianSecondOrderContribution(const RealVectorValue & grad_xi, const RealVectorValue & grad_xk);
+
   const unsigned int _component;
 
   std::vector<VariableGradient *> _grad_disp;

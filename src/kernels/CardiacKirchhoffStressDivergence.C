@@ -39,8 +39,22 @@ CardiacKirchhoffStressDivergence::computeQpResidual()
   RealVectorValue grad_xi(_grad_u[_qp]);
   grad_xi(_component) += 1;
 
-  // compute _grad_test[_i][_qp] * _stress[_qp] * _grad_xi
-  return _grad_test[_i][_qp]*(_stress[_qp]*grad_xi);
+  // compute _grad_xi * _stress[_qp] * _grad_test[_i][_qp]
+  return grad_xi*(_stress[_qp]*_grad_test[_i][_qp]);
+}
+
+/// This produces the second term in the notes for the Jacobian
+Real
+CardiacKirchhoffStressDivergence::JacobianSecondOrderContribution(const RealVectorValue & grad_xi, const RealVectorValue & grad_xk)
+{
+  SymmTensor dE(/* 00 */      _grad_phi[_j][_qp](0)*grad_xk(0),
+                /* 11 */      _grad_phi[_j][_qp](1)*grad_xk(1),
+                /* 22 */      _grad_phi[_j][_qp](2)*grad_xk(2),
+                /* 01 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(1) + grad_xk(0)*_grad_phi[_j][_qp](1)),
+                /* 12 */ 0.5*(_grad_phi[_j][_qp](1)*grad_xk(2) + grad_xk(1)*_grad_phi[_j][_qp](2)),
+                /* 02 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(2) + grad_xk(0)*_grad_phi[_j][_qp](2)));
+  // note: _grad_test[_i][_qp] and grad_xi are exchanged below compared to ewe_notes since we have to multiply with D_{NMPQ} but D.doubleLeftSymmDoubleRightContraction multiplies with D_{MNPQ}
+  return _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(grad_xi, _grad_test[_i][_qp], dE);
 }
 
 Real
@@ -51,15 +65,8 @@ CardiacKirchhoffStressDivergence::computeQpJacobian()
   RealVectorValue grad_xi(_grad_u[_qp]);
   grad_xi(_component) += 1;
 
-  SymmTensor dE(/* 00 */      _grad_phi[_j][_qp](0)*grad_xi(0),
-                /* 11 */      _grad_phi[_j][_qp](1)*grad_xi(1),
-                /* 22 */      _grad_phi[_j][_qp](2)*grad_xi(2),
-                /* 01 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xi(1) + grad_xi(0)*_grad_phi[_j][_qp](1)),
-                /* 12 */ 0.5*(_grad_phi[_j][_qp](1)*grad_xi(2) + grad_xi(1)*_grad_phi[_j][_qp](2)),
-                /* 02 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xi(2) + grad_xi(0)*_grad_phi[_j][_qp](2)));
-
-  return _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(_grad_test[_i][_qp], grad_xi, dE)
-    + _grad_test[_i][_qp]*(_stress[_qp]*_grad_phi[_j][_qp]);
+  return _grad_phi[_j][_qp]*(_stress[_qp]*_grad_test[_i][_qp])
+    + JacobianSecondOrderContribution(grad_xi, grad_xi);
 }
 
 Real
@@ -80,12 +87,5 @@ CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
   RealVectorValue grad_xk( (*_grad_disp[idx])[_qp] );
   grad_xk(idx) += 1;
 
-  SymmTensor dE(/* 00 */      _grad_phi[_j][_qp](0)*grad_xk(0),
-                /* 11 */      _grad_phi[_j][_qp](1)*grad_xk(1),
-                /* 22 */      _grad_phi[_j][_qp](2)*grad_xk(2),
-                /* 01 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(1) + grad_xk(0)*_grad_phi[_j][_qp](1)),
-                /* 12 */ 0.5*(_grad_phi[_j][_qp](1)*grad_xk(2) + grad_xk(1)*_grad_phi[_j][_qp](2)),
-                /* 02 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(2) + grad_xk(0)*_grad_phi[_j][_qp](2)));
-
-  return _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(_grad_test[_i][_qp], grad_xi, dE);
+  return JacobianSecondOrderContribution(grad_xi, grad_xk);
 }

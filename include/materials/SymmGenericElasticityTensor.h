@@ -71,21 +71,6 @@ public:
     return res;
   }
 
-  /// computes \f$\sum_{M,N,P,Q} t_{M,N,P,Q} v1_{M} v2_{N} \frac{1}{2}\left(v3_{P} v4_{Q} + v3_{Q} v4_{P}\right) \f$
-  inline Real doubleLeftSymmDoubleRightContraction(const RealVectorValue & v1,
-                                                   const RealVectorValue & v2,
-                                                   const RealVectorValue & v3,
-                                                   const RealVectorValue & v4) const
-  {
-    Real res(0);
-    for (unsigned int M=0;M<3;M++)
-      for (unsigned int N=0;N<3;N++)
-        for (unsigned int P=0;P<3;P++)
-          for (unsigned int Q=0;Q<3;Q++)
-            res += _val[convert_indices(M,N,P,Q)] * v1(M) * v2(N) * 0.5*(v3(P)*v4(Q)+v3(Q)*v4(P));
-    return res;
-  }
-
   /// computes \f$\sum_{M,N,P,Q} t_{M,N,P,Q} v1_{M} v2_{N} r_{P,Q} \f$
   inline Real doubleLeftSymmDoubleRightContraction(const RealVectorValue & v1,
                                                    const RealVectorValue & v2,
