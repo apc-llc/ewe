@@ -38,7 +38,7 @@ protected:
   virtual Real computeQpResidual();
   virtual Real computeQpJacobian();
   virtual Real computeQpOffDiagJacobian(unsigned int jvar);
-  MaterialProperty<RealTensorValue> & _stress;                          ///< 2nd Piola-Kirchhoff stress tensor \f$T_{MN}\f$
+  MaterialProperty<SymmTensor> & _stress;                          ///< 2nd Piola-Kirchhoff stress tensor \f$T_{MN}\f$
   MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative;   ///< derivative of the 2nd Piola-Kirchhoff stress tensor \f$\frac{\partial T_{MN}}{\partial E_{PQ}}\f$
 
 private:

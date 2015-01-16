@@ -55,7 +55,7 @@ CardiacHolzapfel2009Material::computeQpStressProperties(const SymmTensor &C, con
   const SymmTensor EsEs(kron(_Es[_qp]));
   const SymmTensor EfEs(kronSym(_Ef[_qp],_Es[_qp]));
 
-  _stress[_qp] = STtoRTV( scaledID(i_term) + EfEf*(I4f-1)*f_term + EsEs*(I4s-1)*s_term + EfEs*I8fs*fs_term );
+  _stress[_qp] = scaledID(i_term) + EfEf*(I4f-1)*f_term + EsEs*(I4s-1)*s_term + EfEs*I8fs*fs_term;
 
   for (int M=0;M<3;M++)
     for (int N=M;N<3;N++)

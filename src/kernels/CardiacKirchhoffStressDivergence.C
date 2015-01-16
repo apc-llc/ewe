@@ -16,7 +16,7 @@ InputParameters validParams<CardiacKirchhoffStressDivergence>()
 
 CardiacKirchhoffStressDivergence::CardiacKirchhoffStressDivergence(const std::string & name, InputParameters parameters)
   :Kernel(name, parameters),
-   _stress(getMaterialProperty<RealTensorValue>("Kirchhoff_stress")),
+   _stress(getMaterialProperty<SymmTensor>("Kirchhoff_stress")),
    _stress_derivative(getMaterialProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
    _component(getParam<unsigned int>("component"))
 {

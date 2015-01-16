@@ -60,7 +60,7 @@ CardiacLinearMaterial::computeQpStressProperties(const SymmTensor & /*C*/, const
   _W[_qp] =  0.; ///< \todo: add energy
 
   // stress
-  _stress[_qp] = STtoRTV( _id * _lambda*E.trace() + E * 2.*_mu);
+  _stress[_qp] = _id * _lambda*E.trace() + E * 2.*_mu;
 
   // stress derivative
   for (int M=0;M<3;M++)

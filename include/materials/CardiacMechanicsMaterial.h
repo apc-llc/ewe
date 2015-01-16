@@ -39,7 +39,7 @@ protected:
 
   std::vector<VariableGradient *> _grad_disp;
 
-  MaterialProperty<RealTensorValue> & _stress; ///< 2nd Piola-Kirchhoff stress tensor T_MN
+  MaterialProperty<SymmTensor> & _stress; ///< 2nd Piola-Kirchhoff stress tensor T_MN
   MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative; ///< derivative of T_MN wrt E_PQ
 
   MaterialProperty<RealTensorValue> & _F; ///< displacement gradient

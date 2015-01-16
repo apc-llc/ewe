@@ -61,7 +61,7 @@ CardiacNash2000Material::computeQpStressProperties(const SymmTensor & /*C*/, con
       W += fact * g * e*e;
     }
 
-  _stress[_qp] = STtoRTV(T);
+  _stress[_qp] = T;
   _stress_derivative[_qp] = D;
   _W[_qp] = W;
 }

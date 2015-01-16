@@ -38,7 +38,7 @@ CardiacCostaMaterial::computeQpStressProperties(const SymmTensor & /*C*/, const 
 
 
   // stress
-  _stress[_qp] = STtoRTV( bE * 2.*_W[_qp]);
+  _stress[_qp] = bE * 2.*_W[_qp];
 
   // stress derivative
   for (int M=0;M<3;M++)

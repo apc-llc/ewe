@@ -23,7 +23,7 @@ InputParameters validParams<CardiacMechanicsMaterial>()
 CardiacMechanicsMaterial::CardiacMechanicsMaterial(const std::string  & name,
                                                  InputParameters parameters)
   :Material(name, parameters),
-   _stress(declareProperty<RealTensorValue>("Kirchhoff_stress")),
+   _stress(declareProperty<SymmTensor>("Kirchhoff_stress")),
    _stress_derivative(declareProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
    _F(declareProperty<RealTensorValue>("displacement_gradient")),
    _J(declareProperty<Real>("det_displacement_gradient")),
@@ -81,7 +81,7 @@ CardiacMechanicsMaterial::computeQpProperties()
     // Add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
     if (_has_p) {
       // _stress(MN) += p*Cinv(MN)
-      _stress[_qp] -= STtoRTV( Cinv * _p[_qp] );
+      _stress[_qp] -= Cinv * _p[_qp];
       // for the derivative of T, things do become slightly complicated as we have to do
       // _stress_derivative(MNPQ) += 2 * p * Cinv(M,P) * Cinv(Q,N)
       SymmGenericElasticityTensor sdp(0);
@@ -123,7 +123,7 @@ CardiacMechanicsMaterial::computeQpProperties()
   }
 
   // rotate back into the outer coordinate system
-  _stress[_qp] = _Rf[_qp] * _stress[_qp] * _Rf[_qp].transpose();
+  _stress[_qp] = symmProd(_Rf[_qp].transpose(), _stress[_qp]);
   _stress_derivative[_qp] = _stress_derivative[_qp].quadProduct(_Rf[_qp]);
 }
 
