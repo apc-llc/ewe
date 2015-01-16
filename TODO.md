@@ -146,3 +146,4 @@ General
 * <s>Find a better way for including references in doxygen comments, see `documentation_cleanup` branch</s>
 * Further TODOs in the inline documentation, see the \ref todo "TODO list"
 * Add `execute_on=timestep` to all diagnostic variables, add `execute_on='initial timestep_end'` to all `[Outputs]` blocks to include the 0th timestep in the Exodus files.
+* Improve error messages. In particular do not only include class names but object names via their attribute `name`, e.g. as in `CardiacMechanicsPressureBC`

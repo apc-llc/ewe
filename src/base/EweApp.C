@@ -26,6 +26,7 @@
 #include "CardiacVolumeRatio.h"
 #include "CardiacKirchhoffIncompressibilityPenalty.h"
 #include "CardiacKirchhoffIncompressibilityLagrangeMultiplier.h"
+#include "CardiacMechanicsPressureBC.h"
 
 #include "ActiveTensionODE.h"
 
@@ -100,7 +101,9 @@ EweApp::registerObjects(Factory & factory)
   registerKernel(ElectrocardioDiffusion);
 
   registerInitialCondition(ElectrocardioIC);
-  
+
+  registerBoundaryCondition(CardiacMechanicsPressureBC);
+
   registerAux(KineticEnergyNewmarkAux);
   registerAux(KineticEnergyAux);
   registerAux(DisplacementAux);

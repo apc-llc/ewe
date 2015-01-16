@@ -35,6 +35,10 @@
   [./displacement_y]  type=DirichletBC  variable=dispy  boundary=left  value=0.0  [../]
   [./displacement_z]  type=DirichletBC  variable=dispz  boundary=left  value=0.0  [../]
 
+  [./pressure_x]  type=Pressure  variable=dispx  component=0  boundary='right top bottom front back'  factor=0.0  [../]
+  [./pressure_y]  type=Pressure  variable=dispy  component=1  boundary='      top bottom front back'  factor=0.0  [../]
+  [./pressure_z]  type=Pressure  variable=dispz  component=2  boundary='right top bottom front back'  factor=0.0  [../]
+
   [./moving_z]
     type = FunctionDirichletBC
     variable = dispy

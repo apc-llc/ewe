@@ -97,6 +97,10 @@
   [./displacement_y]  type=DirichletBC  variable=dispy  boundary=left  value=0.0  [../]
   [./displacement_z]  type=DirichletBC  variable=dispz  boundary=left  value=0.0  [../]
 
+  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary='right top bottom front back'  value=0.0  [../]
+  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary='      top bottom front back'  value=0.0  [../]
+  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary='right top bottom front back'  value=0.0  [../]
+
   [./moving_z]
     type = FunctionDirichletBC
     variable = dispy
