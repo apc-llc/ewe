@@ -9,6 +9,7 @@ InputParameters validParams<CardiacKirchhoffStressDivergence>()
   InputParameters params = validParams<Kernel>();
   params.addRequiredParam<unsigned int>("component", "An integer corresponding to the direction the variable this kernel acts in. (0 for x, 1 for y, 2 for z)");
   params.addRequiredCoupledVar("displacements", "The x, y, and z displacement");
+  params.addCoupledVar("p", "The hydrostatic pressure (if using an incompressible material)");
   params.set<bool>("use_displaced_mesh") = false;
   return params;
 }
@@ -18,7 +19,10 @@ CardiacKirchhoffStressDivergence::CardiacKirchhoffStressDivergence(const std::st
   :Kernel(name, parameters),
    _stress(getMaterialProperty<SymmTensor>("Kirchhoff_stress")),
    _stress_derivative(getMaterialProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
-   _component(getParam<unsigned int>("component"))
+   _Cinv(getMaterialProperty<SymmTensor>("Cinv")),
+   _component(getParam<unsigned int>("component")),
+   _has_p(isCoupled("p")),
+   _p_var(_has_p ? coupled("p") : 0)
 {
   // see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top for details on this magic
   _grad_disp.resize(coupledComponents("displacements"));
@@ -73,6 +77,15 @@ Real
 CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
 {
   int idx(-1);
+
+  if (_has_p && jvar == _p_var) {
+    // nonlinear variables are displacements u(i)=x(i)-X(i)
+    // However, we do need the deformation gradient here: dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
+    RealVectorValue grad_xi(_grad_u[_qp]);
+    grad_xi(_component) += 1;
+
+    return -2.*_phi[_j][_qp]*grad_xi*(_Cinv[_qp]*_grad_test[_i][_qp]);
+  }
 
   if (jvar == _disp_var[0])      { idx=0; }
   else if (jvar == _disp_var[1]) { idx=1; }

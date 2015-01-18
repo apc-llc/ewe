@@ -27,6 +27,7 @@ CardiacMechanicsMaterial::CardiacMechanicsMaterial(const std::string  & name,
    _stress_derivative(declareProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
    _F(declareProperty<RealTensorValue>("displacement_gradient")),
    _J(declareProperty<Real>("det_displacement_gradient")),
+   _Cinv(declareProperty<SymmTensor>("Cinv")),
    _W(declareProperty<Real>("elastic_energy_density")),
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
    _Ef(getMaterialProperty<RealVectorValue>("E_fibre")),
@@ -96,6 +97,9 @@ CardiacMechanicsMaterial::computeQpProperties()
       _stress_derivative[_qp] += sdp;
       // no energy contribution from a Lagrange multiplier
       // _W[_qp] += 0
+
+      // the inverse of C in outer coordinates is required for the kernel's Jacobian matrix element wrt. pressure
+      _Cinv[_qp] = symmProd(_Rf[_qp].transpose(), Cinv);
     }
 
     // Add active tension in fibre direction
