@@ -3,7 +3,7 @@
   block_id = '1'
   block_name = 'all'
   #displacements = 'dispx dispy dispz'
-  # uniform_refine = 1
+  uniform_refine = 1
 []
 
 [Variables]
@@ -80,7 +80,7 @@
                 +exp(-0.5*(pow(x+1.4,2)+pow(y-6.4,2)+pow(z+2.9,2))/pow(w,2))
                 +exp(-0.5*(pow(x-2.2,2)+pow(y-8.9,2)+pow(z+4.2,2))/pow(w,2)))'
     vars = '  A   w' # amplitude and spatial width of the Gaussians
-    vals = '-30 3.0'
+    vals = '-30 1.5'
   [../]
 
   [./ElectrocardioForcing_function]
@@ -109,7 +109,7 @@
     #fixed_R='0 0 1 1 0 0 0 1 0'
     outputs = all
     block = all
-    outputs = all
+    output_properties='E_fibre_x E_fibre_y E_fibre_z E_sheet_x E_sheet_y E_sheet_z E_normal_x E_normal_y E_normal_z'
   [../]
   
   [./electrocardio]
@@ -153,7 +153,7 @@
   #nl_max_its = 2
 
   start_time = 0
-  end_time   = 50.0
+  end_time   = 500.0
   dtmin = 0.05
   dtmax = 0.25
   scheme = 'implicit-euler'
