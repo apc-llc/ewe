@@ -53,7 +53,7 @@ CardiacKirchhoffStressDivergence::JacobianSecondOrderContribution(const RealVect
                 /* 01 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(1) + grad_xk(0)*_grad_phi[_j][_qp](1)),
                 /* 12 */ 0.5*(_grad_phi[_j][_qp](1)*grad_xk(2) + grad_xk(1)*_grad_phi[_j][_qp](2)),
                 /* 02 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(2) + grad_xk(0)*_grad_phi[_j][_qp](2)));
-  // note: _grad_test[_i][_qp] and grad_xi are exchanged below compared to ewe_notes since we have to multiply with D_{NMPQ} but D.doubleLeftSymmDoubleRightContraction multiplies with D_{MNPQ}
+
   return _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(grad_xi, _grad_test[_i][_qp], dE);
 }
 
