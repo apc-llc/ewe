@@ -11,6 +11,7 @@
 #include "VolumeNearestNodeDistanceAux.h"
 #include "CardiacThicknessParameterAux.h"
 #include "NeighborElementAverageAux.h"
+#include "MaterialSymmTensorAux.h"
 #include "NewmarkMaterial.h"
 #include "CardiacStressDivergence.h"
 #include "CardiacKirchhoffStressDivergence.h"
@@ -110,6 +111,7 @@ EweApp::registerObjects(Factory & factory)
   registerAux(VolumeNearestNodeDistanceAux);
   registerAux(CardiacThicknessParameterAux);
   registerAux(NeighborElementAverageAux);
+  registerAux(MaterialSymmTensorAux);
 
   registerPostprocessor(CardiacMaterialVolumeRatioPostprocessor);
   registerPostprocessor(CardiacVolumeRatioPostprocessor);
