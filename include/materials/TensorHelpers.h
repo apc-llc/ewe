@@ -18,6 +18,16 @@ namespace TensorHelpers {
     return B;
   }
 
+
+  /// Computes \f$A:B=\sum{MN}A_MN\cdot B_MN\f$
+  const inline Real fullContraction(const SymmTensor &A, const SymmTensor &B) {
+    Real res(0);
+    for (unsigned int M=0;M<3;M++)
+      for (unsigned int N=0;N<3;N++)
+        res += A(M,N)*B(M,N);
+    return res;
+  }
+
   /// Computes \f$\mathrm{outer}^\mathrm{T}\,\mathrm{inner}\,\mathrm{outer}\f$.
   const inline SymmTensor symmProd(const RealTensorValue & outer, const SymmTensor & inner) {
     /** @todo TODO: this would be much more efficient:

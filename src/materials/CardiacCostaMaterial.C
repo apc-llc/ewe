@@ -36,7 +36,6 @@ CardiacCostaMaterial::computeQpStressProperties(const SymmTensor & /*C*/, const 
   // elastic energy contribution
   _W[_qp] =  _p[C]/2. * ( exp(Q) - 1. );
 
-
   // stress
   _stress[_qp] = bE * 2.*_W[_qp];
 

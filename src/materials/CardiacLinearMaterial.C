@@ -56,8 +56,10 @@ CardiacLinearMaterial::CardiacLinearMaterial(const std::string  & name,
 void
 CardiacLinearMaterial::computeQpStressProperties(const SymmTensor & /*C*/, const SymmTensor & E)
 {
+  const Real trE(E.trace());
+
   // elastic energy contribution
-  _W[_qp] =  0.; ///< \todo: add energy
+  _W[_qp] =  0.5*_lambda*trE*trE+_mu*fullContraction(E,E);
 
   // stress
   _stress[_qp] = _id * _lambda*E.trace() + E * 2.*_mu;
