@@ -18,9 +18,10 @@ InputParameters validParams<CardiacMechanicsMaterial>()
   params.addCoupledVar("hydrostatic_pressure", "Hydrostatic pressure that acts as a Lagrange multiplier to ensure incompressibility. Unit: kPa. Works best with CardiacMechanicsIncompressibilityLagrangeMultiplier kernel. Default: 0. (no hydrostatic pressure).");
   params.set<bool>("use_displaced_mesh") = false;
 
-  // we restrict output to Imem to avoid warnings about KirchhoffStress being impossible to be used in output
+  // we restrict output to avoid warnings about KirchhoffStress being impossible to be used in output
   std::vector<std::string> output_properties;
-  output_properties.push_back("displacement_gradient det_displacement_gradient");
+  output_properties.push_back("displacement_gradient");
+  output_properties.push_back("det_displacement_gradient");
   params.set<std::vector<std::string> >("output_properties") = output_properties;
 
   return params;
