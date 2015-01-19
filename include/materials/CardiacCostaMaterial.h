@@ -28,6 +28,7 @@ protected:
 
   const std::vector<Real> & _p; ///< material parameters, indexed via #CardiacCostaMaterialParameters
   const Real _maxQ;
+  const SymmTensor _b;
 };
 
 #endif //CardiacCostaMaterial_H
