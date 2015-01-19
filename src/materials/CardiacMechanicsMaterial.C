@@ -13,10 +13,16 @@ InputParameters validParams<CardiacMechanicsMaterial>()
   InputParameters params = validParams<Material>();
   params.addRequiredCoupledVar("displacements", "The x, y, and z displacement");
 
-  params.addCoupledVar("Ta", 0, "The (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley, 2007]. Unit: kPa. Default is Ta=0, i.e. no active tension anywhere.");
-  params.addParam<FunctionName>("Ta_function", "A function that describes the (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley, 2007]. Unit: kPa.");
-  params.addCoupledVar("p", 0, "Hydrostatic pressure that acts as a Lagrange multiplier to ensure incompressibility. Unit: kPa. Works best with CardiacMechanicsIncompressibilityLagrangeMultiplier kernel. Default: 0. (no hydrostatic pressure).");
+  params.addCoupledVar("active_tension", "The (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley, 2007]. Unit: kPa. Default is Ta=0, i.e. no active tension anywhere.");
+  params.addParam<FunctionName>("active_tension_function", "A function that describes the (position dependent) active tension in fibre direction that will finally drive contraction, see (8) in [Whiteley, 2007]. Unit: kPa.");
+  params.addCoupledVar("hydrostatic_pressure", "Hydrostatic pressure that acts as a Lagrange multiplier to ensure incompressibility. Unit: kPa. Works best with CardiacMechanicsIncompressibilityLagrangeMultiplier kernel. Default: 0. (no hydrostatic pressure).");
   params.set<bool>("use_displaced_mesh") = false;
+
+  // we restrict output to Imem to avoid warnings about KirchhoffStress being impossible to be used in output
+  std::vector<std::string> output_properties;
+  output_properties.push_back("displacement_gradient det_displacement_gradient");
+  params.set<std::vector<std::string> >("output_properties") = output_properties;
+
   return params;
 }
 
@@ -33,12 +39,12 @@ CardiacMechanicsMaterial::CardiacMechanicsMaterial(const std::string  & name,
    _Ef(getMaterialProperty<RealVectorValue>("E_fibre")),
    _Es(getMaterialProperty<RealVectorValue>("E_sheet")),
    _En(getMaterialProperty<RealVectorValue>("E_normal")),
-   _has_Ta(isCoupled("Ta")),
-   _Ta(_has_Ta ? coupledValue("Ta") : _zero),
-   _has_Ta_function(isParamValid("Ta_function")),
-   _Ta_function( _has_Ta_function ? &getFunction("Ta_function") : NULL ),
-   _has_p(isCoupled("p")),
-   _p(_has_p ? coupledValue("p") : _zero),
+   _has_Ta(isCoupled("active_tension")),
+   _Ta(_has_Ta ? coupledValue("active_tension") : _zero),
+   _has_Ta_function(isParamValid("active_tension_function")),
+   _Ta_function( _has_Ta_function ? &getFunction("active_tension_function") : NULL ),
+   _has_p(isCoupled("hydrostatic_pressure")),
+   _p(_has_p ? coupledValue("hydrostatic_pressure") : _zero),
    _id(scaledID(1))
 {
   if (_has_Ta && _has_Ta_function)
@@ -72,9 +78,6 @@ CardiacMechanicsMaterial::computeQpProperties()
   // in the rotated system compute _stress[_qp], _stress_derivative[_qp], and _W[_qp]
   computeQpStressProperties(C, E);
   // Add hydrostatic pressure and active tension
-  // The following steps render
-  //    T asymmetric, i.e. we need a general (non-symmetric) tensor here
-  //    D asymmetric wrt. (MN)<->(PQ), i.e. we need the full fourth order tensor here.
   if (_has_p || _has_Ta || _has_Ta_function) {
     // Inverse of the Cauchy Green deformation tensor (note that det(C_fibre) = det(C) = det(F^T)*det(F) = det(F)^2, since det(R)==1 )
     const SymmTensor Cinv( symmInv(C, _J[_qp]*_J[_qp]) );
