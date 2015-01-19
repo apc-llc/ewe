@@ -7,17 +7,11 @@ InputParameters validParams<CardiacFibresMaterial>()
   params.addParam<RealTensorValue>("fixed_R", "Externally fixed fibre rotation matrix (unit vectors row-wise: e_f, e_s, e_n). Primarily meant for debugging purposes.");
   params.addCoupledVar("thickness_parameter", "Aux variable with the thickness parameter (normalized mural position), will most often be produced with a CardiacThicknessParameterAux kernel. Make sure that its distinguishLVRV==false.");
 
-  // we restrict output to avoid warnings about KirchhoffStress being impossible to be used in output (and nobody wants to see R_fibre)
+  // we restrict output because nobody wants to see R_fibre
   std::vector<std::string> output_properties;
-  output_properties.push_back("E_fibre_x");
-  output_properties.push_back("E_fibre_y");
-  output_properties.push_back("E_fibre_z");
-  output_properties.push_back("E_sheet_x");
-  output_properties.push_back("E_sheet_y");
-  output_properties.push_back("E_sheet_z");
-  output_properties.push_back("E_normal_x");
-  output_properties.push_back("E_normal_y");
-  output_properties.push_back("E_normal_z");
+  output_properties.push_back("E_fibre");
+  output_properties.push_back("E_sheet");
+  output_properties.push_back("E_normal");
   params.set<std::vector<std::string> >("output_properties") = output_properties;
 
   return params;

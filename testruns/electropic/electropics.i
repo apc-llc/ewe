@@ -109,7 +109,6 @@
     #fixed_R='0 0 1 1 0 0 0 1 0'
     outputs = all
     block = all
-    output_properties='E_fibre_x E_fibre_y E_fibre_z E_sheet_x E_sheet_y E_sheet_z E_normal_x E_normal_y E_normal_z'
   [../]
   
   [./electrocardio]
