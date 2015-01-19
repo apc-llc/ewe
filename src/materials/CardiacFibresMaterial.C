@@ -9,9 +9,15 @@ InputParameters validParams<CardiacFibresMaterial>()
 
   // we restrict output to avoid warnings about KirchhoffStress being impossible to be used in output (and nobody wants to see R_fibre)
   std::vector<std::string> output_properties;
-  output_properties.push_back("E_fibre");
-  output_properties.push_back("E_sheet");
-  output_properties.push_back("E_normal");
+  output_properties.push_back("E_fibre_x");
+  output_properties.push_back("E_fibre_y");
+  output_properties.push_back("E_fibre_z");
+  output_properties.push_back("E_sheet_x");
+  output_properties.push_back("E_sheet_y");
+  output_properties.push_back("E_sheet_z");
+  output_properties.push_back("E_normal_x");
+  output_properties.push_back("E_normal_y");
+  output_properties.push_back("E_normal_z");
   params.set<std::vector<std::string> >("output_properties") = output_properties;
 
   return params;
