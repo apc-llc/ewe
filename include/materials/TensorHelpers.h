@@ -20,7 +20,7 @@ namespace TensorHelpers {
 
 
   /// Computes \f$A:B=\sum{MN}A_MN\cdot B_MN\f$
-  const inline Real fullContraction(const SymmTensor &A, const SymmTensor &B) {
+  inline Real fullContraction(const SymmTensor &A, const SymmTensor &B) {
     Real res(0);
     for (unsigned int M=0;M<3;M++)
       for (unsigned int N=0;N<3;N++)
@@ -55,17 +55,6 @@ namespace TensorHelpers {
                       /* 0 2 */ A(0,0)*A(0,2) + A(1,0)*A(1,2) + A(2,0)*A(2,2));
   }
 
-  /// Computes \f$C^{-1}\f$ using if \f$\mathrm{det}C\f$ is already known.
-  const inline SymmTensor symmInv(const SymmTensor & C, const Real det) {
-    SymmTensor Cinv(/* 00 */ C(0,0)*C(1,1)-C(1,2)*C(1,2),
-                    /* 11 */ C(0,0)*C(0,0)-C(0,2)*C(0,2),
-                    /* 22 */ C(0,0)*C(1,1)-C(0,1)*C(0,1),
-                    /* 01 */ C(0,2)*C(1,2)-C(0,0)*C(0,1),
-                    /* 12 */ C(0,1)*C(0,2)-C(0,0)*C(1,2),
-                    /* 02 */ C(0,1)*C(1,2)-C(0,2)*C(1,1));
-    return Cinv * (1./det);
-  }
-
   /// Computes \f$\mathbf{A}\cdot\mathbf{B}\f$ for symmetric tensors (result is not necessarily symmetric any more !)
   const inline RealTensorValue prod(const SymmTensor & A, const SymmTensor & B) {
     RealTensorValue res;
@@ -73,6 +62,16 @@ namespace TensorHelpers {
       for (int N=0;N<3;N++)
         res(M,N) = A(M,0)*B(0,N) + A(M,1)*B(1,N) + A(M,2)*B(2,N);
     return res;
+  }
+
+  /// Computes \f$C^{-1}\f$ using if \f$\mathrm{det}C\f$ is already known.
+  const inline SymmTensor symmInv(const SymmTensor & C, const Real det) {
+    return SymmTensor(/* 00 */ C(0,0)*C(1,1)-C(1,2)*C(1,2),
+                      /* 11 */ C(0,0)*C(0,0)-C(0,2)*C(0,2),
+                      /* 22 */ C(0,0)*C(1,1)-C(0,1)*C(0,1),
+                      /* 01 */ C(0,2)*C(1,2)-C(0,0)*C(0,1),
+                      /* 12 */ C(0,1)*C(0,2)-C(0,0)*C(1,2),
+                      /* 02 */ C(0,1)*C(1,2)-C(0,2)*C(1,1) / det);
   }
 
   /// Computes \f$\mathbf{A}\cdot\mathbf{A}\f$ for symmetric tensors
