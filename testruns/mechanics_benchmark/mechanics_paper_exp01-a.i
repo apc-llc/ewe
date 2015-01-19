@@ -1,9 +1,9 @@
 [Mesh]
       dim           = 3
       distribution  = DEFAULT
-      nx            = 30
+      nx            = 5
       ny            = 3
-      nz            = 3
+      nz            = 2
       type          = GeneratedMesh
       xmax          =  1.0
       xmin          =  0.0
@@ -18,17 +18,17 @@
 []
 
 [Variables]
-  [./dispx]  order=FIRST  family=LAGRANGE  [../]
-  [./dispy]  order=FIRST  family=LAGRANGE  [../]
-  [./dispz]  order=FIRST  family=LAGRANGE  [../]
+  [./dispx]  order=SECOND  family=LAGRANGE  [../]
+  [./dispy]  order=SECOND  family=LAGRANGE  [../]
+  [./dispz]  order=SECOND  family=LAGRANGE  [../]
 
-  [./pressure]  order=CONSTANT  family=MONOMIAL  [../]
+  [./pressure]  order=FIRST  family=LAGRANGE  [../]
 []
 
 [Kernels]
-  [./stressdiv_dispx]  type=CardiacKirchhoffStressDivergence  variable=dispx  component=0  displacements='dispx dispy dispz'  [../]
-  [./stressdiv_dispy]  type=CardiacKirchhoffStressDivergence  variable=dispy  component=1  displacements='dispx dispy dispz'  [../]
-  [./stressdiv_dispz]  type=CardiacKirchhoffStressDivergence  variable=dispz  component=2  displacements='dispx dispy dispz'  [../]
+  [./stressdiv_dispx]  type=CardiacKirchhoffStressDivergence  variable=dispx  component=0  displacements='dispx dispy dispz'  p=pressure  [../]
+  [./stressdiv_dispy]  type=CardiacKirchhoffStressDivergence  variable=dispy  component=1  displacements='dispx dispy dispz'  p=pressure  [../]
+  [./stressdiv_dispz]  type=CardiacKirchhoffStressDivergence  variable=dispz  component=2  displacements='dispx dispy dispz'  p=pressure  [../]
   
   [./incompressibility]  type=CardiacKirchhoffIncompressibilityLagrangeMultiplier  variable=pressure  displacements='dispx dispy dispz'  [../]
 []
@@ -84,8 +84,34 @@
     nu = 0.3
     displacements ='dispx dispy dispz'
     outputs=all
+    hydrostatic_pressure=pressure
   [../]
 
+  [./cardiac_material_holzapfel]
+    type=CardiacHolzapfel2009Material
+    block=all
+    use_displaced_mesh=false
+    # material parameters as given in Table 1 of [Holzapfel 2009]
+    #in following order:     a,    b,   a_f,   b_f,  a_s,   b_s, a_fs,  b_fs
+    material_parameters='0.059 8.023 18.472 16.026 2.481 11.120 0.216 11.436'
+    displacements ='dispx dispy dispz'
+    outputs=all
+    hydrostatic_pressure=pressure
+  [../]
+  
+  [./cardiac_material_nash]
+    type = CardiacNash2000Material
+    block = all
+    use_displaced_mesh = false
+    # material parameters in the order 11 22 33 12 23 31 (symmetric)
+    # taken from [Nash & Hunter, 2000], Table I
+    k_MN = '1.937 0.028 0.310 1.000 1.000 1.000'
+    a_MN = '0.523 0.681 1.037 0.731 0.886 0.731'
+    b_MN = '1.351 5.991 0.398 2.000 2.000 2.000'
+    displacements ='dispx dispy dispz'
+    outputs=all
+    hydrostatic_pressure=pressure
+  [../]
 []
 
 
@@ -94,24 +120,9 @@
   [./displacement_y]  type=PresetBC  variable=dispy  boundary=left  value=0.0  [../]
   [./displacement_z]  type=PresetBC  variable=dispz  boundary=left  value=0.0  [../]
 
-  [./no_pressure_xr]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary=right  value=0.0  [../]
-  [./no_pressure_xt]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary=top    value=0.0  [../]
-  [./no_pressure_xf]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary=front  value=0.0  [../]
-  [./no_pressure_xb]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary=back   value=0.0  [../]
-
-  [./no_pressure_yr]  type=CardiacMechanicsPressureBC  variable=dispy  component=0  boundary=right  value=0.0  [../]
-  [./no_pressure_yt]  type=CardiacMechanicsPressureBC  variable=dispy  component=0  boundary=top    value=0.0  [../]
-  [./no_pressure_yf]  type=CardiacMechanicsPressureBC  variable=dispy  component=0  boundary=front  value=0.0  [../]
-  [./no_pressure_yb]  type=CardiacMechanicsPressureBC  variable=dispy  component=0  boundary=back   value=0.0  [../]
-
-  [./no_pressure_zr]  type=CardiacMechanicsPressureBC  variable=dispz  component=0  boundary=right  value=0.0  [../]
-  [./no_pressure_zt]  type=CardiacMechanicsPressureBC  variable=dispz  component=0  boundary=top    value=0.0  [../]
-  [./no_pressure_zf]  type=CardiacMechanicsPressureBC  variable=dispz  component=0  boundary=front  value=0.0  [../]
-  [./no_pressure_zb]  type=CardiacMechanicsPressureBC  variable=dispz  component=0  boundary=back   value=0.0  [../]
-
-  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary='bottom'  value=100.004  [../]
-  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary='bottom'  value=100.004  [../]
-  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary='bottom'  value=100.004  [../]
+  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary='bottom'  value=0.004  [../]
+  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary='bottom'  value=0.004  [../]
+  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary='bottom'  value=0.004  [../]
 []
 
 [Postprocessors]
@@ -122,15 +133,68 @@
 [Executioner]
   type = Steady
 
-  solve_type = PJFNK
-  petsc_options_iname='-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  petsc_options_value=' 201                hypre    boomeramg      4'
-  petsc_options='-fp_trap -info -snes_monitor -snes_converged_reason -ksp_monitor -ksp_converged_reason  -ksp_monitor_true_residual -pc_svd_monitor'
-  #line_search = 'cubic'
+  solve_type = NEWTON
+  splitting = saddlepoint_fieldsplit
+  #petsc_options_iname='-pc_type'
+  #petsc_options_value=' svd    '
+  #petsc_options      ='-pc_svd_monitor -ksp_converged_reason -ksp_monitor_true_residual'
 
+    petsc_options_iname = '-pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter -dm_view -mat_view -viewer_binary_filename'
+    petsc_options_value = '   hypre  boomeramg      8                                draw   binary    split_pressure'
+
+
+  #petsc_options_iname='-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
+  #petsc_options_value=' 201                hypre    boomeramg      8'
+  #petsc_options='-fp_trap                  # stop on floating point errors (does not seem to work)
+                 #-snes_ksp_ew_conv         # use variable tolerance in linear solver to avoid over-solving the linear system
+                 #-info                     # print general petsc information
+                 #-snes_converged_reason    # show reason for finishing the nonlinear iterations
+                 #-ksp_converged_reason     # show reason for finishing the linear iterations
+                 #-snes_linesearch_monitor  # show info on linesearch
+  #               -pc_svd_monitor
+  #               ' 
+  #line_search = 'cubic'
+  
   nl_rel_step_tol = 1.e-8
   #l_max_its = 10
 []
+
+[Preconditioning]
+  active = my_smp
+  [./my_smp]
+    # since we are using solve_type=NEWTON instead of PJFNK, this block should be ignored but it isn't:
+    # it still determines how the Jacobian looks like when evaluated by PETSc. The default is to only
+    # include the diagonal block elements which will for sure be wrong if the Jacobian is directly
+    # used for finding the Newton search direction instead of as a preconditioner as it is originally intended
+    type = SMP
+    #                   lower left Jacobian block       upper right Jacobian block
+    #off_diag_row =    'pressure  pressure  pressure    dispx     dispy     dispz'
+    #off_diag_column = 'dispx     dispy     dispz       pressure  pressure  pressure'
+    full = true
+  [../]
+[]
+
+[Splits]
+  [./saddlepoint_fieldsplit]
+    splitting = 'disp pressure'
+    splitting_type  = schur
+    schur_type    = full
+    schur_pre     = S
+  [../]
+  [./disp]
+    vars = 'dispx dispy dispz'
+    petsc_options = ''
+    petsc_options_iname = '-pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter -dm_view -mat_view -viewer_binary_filename'
+    petsc_options_value = '   hypre  boomeramg      8                                draw   binary    split_pressure'
+  [../]
+  [./pressure]
+    vars = 'pressure'
+    petsc_options = ''
+    petsc_options_iname = '-pc_type'
+    petsc_options_value = '    none'
+  [../]
+[]
+
 
 [Outputs]
  [./console]
