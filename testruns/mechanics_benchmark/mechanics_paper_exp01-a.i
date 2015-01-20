@@ -136,8 +136,8 @@
   solve_type = NEWTON
   #splitting = saddlepoint_fieldsplit
 
-  petsc_options_iname='-ksp_type -pc_type -pc_factor_shift_type '
-  petsc_options_value=' preonly   lu       NONZERO'
+  petsc_options_iname='-snes_type -ksp_type -pc_type -pc_factor_shift_type '
+  petsc_options_value=' newtontr   preonly   lu       NONZERO'
   petsc_options='-fp_trap
                  -info
                  -snes_converged_reason
