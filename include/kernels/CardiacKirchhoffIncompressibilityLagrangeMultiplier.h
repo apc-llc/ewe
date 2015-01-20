@@ -38,6 +38,7 @@ protected:
   virtual Real computeQpOffDiagJacobian(unsigned int jvar);
 
   MaterialProperty<RealTensorValue> & _F; ///< `displacement_gradient` of the corresponding CardiacNash2000Material
+  MaterialProperty<RealTensorValue> & _invF; ///< `inv_displacement_gradient` of the corresponding CardiacNash2000Material
   MaterialProperty<Real> & _J;            ///< `det_displacement_gradient` of the corresponding CardiacNash2000Material
 
 private:

@@ -16,6 +16,7 @@ InputParameters validParams<CardiacKirchhoffIncompressibilityLagrangeMultiplier>
 CardiacKirchhoffIncompressibilityLagrangeMultiplier::CardiacKirchhoffIncompressibilityLagrangeMultiplier(const std::string & name, InputParameters parameters)
   :Kernel(name, parameters),
    _F(getMaterialProperty<RealTensorValue>("displacement_gradient")),
+   _invF(getMaterialProperty<RealTensorValue>("inv_displacement_gradient")),
    _J(getMaterialProperty<Real>("det_displacement_gradient"))
 {
 
@@ -43,13 +44,9 @@ CardiacKirchhoffIncompressibilityLagrangeMultiplier::computeQpOffDiagJacobian(un
 {
   for (unsigned int i=0;i<3;i++)
     if (jvar == _disp_var[i]) {
-      RealTensorValue modF(_F[_qp]);
-
-      // replace the ith row with grad_phi
-      for (unsigned int k=0;k<3;k++)
-        modF(i,k) = _grad_phi[_j][_qp](k);
-
-      return _test[_i][_qp]*modF.det();
+      return _test[_i][_qp]*_J[_qp]*(_grad_phi[_j][_qp](0)*_invF[_qp](0,i)
+                                    +_grad_phi[_j][_qp](1)*_invF[_qp](1,i)
+                                    +_grad_phi[_j][_qp](2)*_invF[_qp](2,i));
     }
 
   return 0.;

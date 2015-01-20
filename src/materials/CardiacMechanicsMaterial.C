@@ -20,7 +20,7 @@ InputParameters validParams<CardiacMechanicsMaterial>()
 
   // we restrict output to avoid warnings about KirchhoffStress being impossible to be used in output
   std::vector<std::string> output_properties;
-  output_properties.push_back("displacement_gradient");
+  //output_properties.push_back("displacement_gradient");
   output_properties.push_back("det_displacement_gradient");
   params.set<std::vector<std::string> >("output_properties") = output_properties;
 
@@ -35,6 +35,7 @@ CardiacMechanicsMaterial::CardiacMechanicsMaterial(const std::string  & name,
    _F(declareProperty<RealTensorValue>("displacement_gradient")),
    _J(declareProperty<Real>("det_displacement_gradient")),
    _Cinv(declareProperty<SymmTensor>("Cinv")),
+   _Finv(declareProperty<RealTensorValue>("inv_displacement_gradient")),
    _W(declareProperty<Real>("elastic_energy_density")),
    _Rf(getMaterialProperty<RealTensorValue>("R_fibre")),
    _Ef(getMaterialProperty<RealVectorValue>("E_fibre")),
@@ -69,8 +70,10 @@ CardiacMechanicsMaterial::computeQpProperties()
   _F[_qp](0,0) += 1;
   _F[_qp](1,1) += 1;
   _F[_qp](2,2) += 1;
-   // ...its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
+  // ...its determinant is a measure for local volume changes (is needed in kernel that ensures incompressibility via hydrostatic pressure/Lagrange multiplier p)
   _J[_qp] = _F[_qp].det();
+  // ...its inverse is needed for the Jacobian of the incompressibility PDE and for boundary conditions in the deformed configuration
+  _Finv[_qp] = mat_inv(_F[_qp], _J[_qp]);
   // From here on, we go over to fibre coordinates, i.e. for C, E, T
   // Cauchy-Green deformation tensor in fibre coordinates: C* = R^T F^T F R
   const SymmTensor C(symmProd(_Rf[_qp], symmProd(_F[_qp])));

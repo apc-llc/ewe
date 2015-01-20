@@ -45,6 +45,7 @@ protected:
   MaterialProperty<RealTensorValue> & _F; ///< displacement gradient
   MaterialProperty<Real> & _J; ///< det F, i.e. volume change
   MaterialProperty<SymmTensor> & _Cinv; ///< inverse of the Cauchy-Green deformation tensor in the outer coordinate system (only computed if the hydrostatic pressure p is given)
+  MaterialProperty<RealTensorValue> & _Finv; ///< inverse of the displacement gradient
   MaterialProperty<Real> & _W; ///< elastic energy
   MaterialProperty<RealTensorValue> & _Rf; ///< fibre orientation rotation matrix
   MaterialProperty<RealVectorValue> & _Ef, & _Es, & _En; ///< fibre basis vectors
