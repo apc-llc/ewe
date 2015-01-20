@@ -1,7 +1,7 @@
 [Mesh]
       dim           = 3
       distribution  = DEFAULT
-      nx            = 5
+      nx            = 4
       ny            = 3
       nz            = 2
       type          = GeneratedMesh
@@ -120,42 +120,37 @@
   [./displacement_y]  type=PresetBC  variable=dispy  boundary=left  value=0.0  [../]
   [./displacement_z]  type=PresetBC  variable=dispz  boundary=left  value=0.0  [../]
 
-  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary='bottom'  value=0.004  [../]
-  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary='bottom'  value=0.004  [../]
-  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary='bottom'  value=0.004  [../]
+  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary='bottom'  value=0.004  use_current_configuration=true  [../]
+  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary='bottom'  value=0.004  use_current_configuration=true  [../]
+  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary='bottom'  value=0.004  use_current_configuration=true  [../]
 []
 
 [Postprocessors]
   [./volume_ratio]  type=CardiacMaterialVolumeRatioPostprocessor  [../]
-  [./timestep]      type=TimestepSize                             execute_on='timestep_end'  [../]
+  [./timestep]      type=TimestepSize execute_on='timestep_end'  [../]
 []
 
 [Executioner]
   type = Steady
 
   solve_type = NEWTON
-  splitting = saddlepoint_fieldsplit
-  #petsc_options_iname='-pc_type'
-  #petsc_options_value=' svd    '
-  #petsc_options      ='-pc_svd_monitor -ksp_converged_reason -ksp_monitor_true_residual'
+  #splitting = saddlepoint_fieldsplit
 
-    petsc_options_iname = '-pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter -dm_view -mat_view -viewer_binary_filename'
-    petsc_options_value = '   hypre  boomeramg      8                                draw   binary    split_pressure'
-
-
-  #petsc_options_iname='-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
-  #petsc_options_value=' 201                hypre    boomeramg      8'
-  #petsc_options='-fp_trap                  # stop on floating point errors (does not seem to work)
-                 #-snes_ksp_ew_conv         # use variable tolerance in linear solver to avoid over-solving the linear system
-                 #-info                     # print general petsc information
-                 #-snes_converged_reason    # show reason for finishing the nonlinear iterations
-                 #-ksp_converged_reason     # show reason for finishing the linear iterations
-                 #-snes_linesearch_monitor  # show info on linesearch
-  #               -pc_svd_monitor
-  #               ' 
+  petsc_options_iname='-ksp_type  -pc_type    -pc_fieldsplit_type -pc_fieldsplit_block_size -pc_fieldsplit_schur_factorization_type -fieldsplit_0_ksp_type -fieldsplit_0_pc_type -fieldsplit_1_ksp_type -fieldsplit_1_ksp_max_its'
+  petsc_options_value=' fgmres     fieldsplit  schur               2                         upper                                   preonly                lu                    richardson             1'
+  petsc_options='-fp_trap -pc_fieldsplit_detect_saddle_point
+                 -info
+                 -snes_converged_reason
+                 -ksp_converged_reason
+                 -ksp_monitor_true_residual
+                 -snes_linesearch_monitor
+                 -pc_svd_monitor
+                 -snes_test_display
+                 '
+#                 -help
   #line_search = 'cubic'
   
-  nl_rel_step_tol = 1.e-8
+  #nl_rel_tol = 1.e-12
   #l_max_its = 10
 []
 
@@ -167,33 +162,45 @@
     # include the diagonal block elements which will for sure be wrong if the Jacobian is directly
     # used for finding the Newton search direction instead of as a preconditioner as it is originally intended
     type = SMP
-    #                   lower left Jacobian block       upper right Jacobian block
-    #off_diag_row =    'pressure  pressure  pressure    dispx     dispy     dispz'
-    #off_diag_column = 'dispx     dispy     dispz       pressure  pressure  pressure'
+    #                                                        lower left Jacobian block    upper right Jacobian block
+    #off_diag_row =    'dispx dispx dispy dispy dispz dispz   pressure pressure pressure   dispx    dispy    dispz'
+    #off_diag_column = 'dispy dispz dispx dispz dispx dispy   dispx    dispy    dispz      pressure pressure pressure'
     full = true
   [../]
 []
 
-[Splits]
-  [./saddlepoint_fieldsplit]
-    splitting = 'disp pressure'
-    splitting_type  = schur
-    schur_type    = full
-    schur_pre     = S
-  [../]
-  [./disp]
-    vars = 'dispx dispy dispz'
-    petsc_options = ''
-    petsc_options_iname = '-pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter -dm_view -mat_view -viewer_binary_filename'
-    petsc_options_value = '   hypre  boomeramg      8                                draw   binary    split_pressure'
-  [../]
-  [./pressure]
-    vars = 'pressure'
-    petsc_options = ''
-    petsc_options_iname = '-pc_type'
-    petsc_options_value = '    none'
-  [../]
-[]
+#[Splits]
+#  [./saddlepoint_fieldsplit]
+#    splitting = 'disp pressure'
+#    splitting_type  = schur
+#    schur_type    = full
+#    schur_pre     = S
+#  [../]
+#  [./disp]
+#    vars = 'dispx dispy dispz'
+#    petsc_options='-fp_trap
+#                 -info
+#                 -snes_converged_reason
+#                 -ksp_converged_reason
+#                 -ksp_monitor_true_residual
+#                 -snes_linesearch_monitor
+#                 '
+#    petsc_options_iname = '-pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
+#    petsc_options_value = '   hypre  boomeramg      8'
+#  [../]
+#  [./pressure]
+#    vars = 'pressure'
+#    petsc_options='-fp_trap
+#                 -info
+#                 -snes_converged_reason
+#                 -ksp_converged_reason
+#                 -ksp_monitor_true_residual
+#                 -snes_linesearch_monitor
+#                 '
+#    petsc_options_iname = '-pc_type'
+#    petsc_options_value = '    none'
+#  [../]
+#[]
 
 
 [Outputs]
