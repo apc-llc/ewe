@@ -33,6 +33,10 @@ protected:
   const Real _value;
 
   Function * const _function;
+  const bool _current_config;
+
+  MaterialProperty<Real> & _J; ///< det F, i.e. volume change
+  MaterialProperty<RealTensorValue> & _Finv; ///< inverse of the displacement gradient
 
 };
 
