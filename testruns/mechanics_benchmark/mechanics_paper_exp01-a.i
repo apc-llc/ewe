@@ -136,9 +136,9 @@
   solve_type = NEWTON
   #splitting = saddlepoint_fieldsplit
 
-  petsc_options_iname='-ksp_type  -pc_type    -pc_fieldsplit_type -pc_fieldsplit_block_size -pc_fieldsplit_schur_factorization_type -fieldsplit_0_ksp_type -fieldsplit_0_pc_type -fieldsplit_1_ksp_type -fieldsplit_1_ksp_max_its'
-  petsc_options_value=' fgmres     fieldsplit  schur               2                         upper                                   preonly                lu                    richardson             1'
-  petsc_options='-fp_trap -pc_fieldsplit_detect_saddle_point
+  petsc_options_iname='-ksp_type -pc_type -pc_factor_shift_type '
+  petsc_options_value=' preonly   lu       NONZERO'
+  petsc_options='-fp_trap
                  -info
                  -snes_converged_reason
                  -ksp_converged_reason
@@ -166,6 +166,7 @@
     #off_diag_row =    'dispx dispx dispy dispy dispz dispz   pressure pressure pressure   dispx    dispy    dispz'
     #off_diag_column = 'dispy dispz dispx dispz dispx dispy   dispx    dispy    dispz      pressure pressure pressure'
     full = true
+    pc_side = left
   [../]
 []
 
