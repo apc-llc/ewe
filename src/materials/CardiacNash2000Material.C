@@ -52,10 +52,9 @@ CardiacNash2000Material::computeQpStressProperties(const SymmTensor & /*C*/, con
 
       T(M,N) = fact * g * e * ( 2+f );
 
-      // insane loop to cover all elements of the symmetric 4th order tensor exactly once. The if-construct avoids douple-counting for major-symmetry pairs of MN<->PQ
+      // loop to cover all elements of the symmetric 4th order tensor, major-symmetry pairs of MN<->PQ are traversed twice, which avoids an if-construct inside the loop
       for (unsigned int P=M;P<3;P++)
         for (unsigned int Q=P;Q<3;Q++)
-          if (P != M || Q >= N)
             D(M,N,P,Q) = fact * g * ( 2 + (4+e/d+f)*f );
 
       W += fact * g * e*e;
