@@ -55,15 +55,16 @@ CardiacHolzapfel2009Material::computeQpStressProperties(const SymmTensor &C, con
   const SymmTensor EsEs(kron(_Es[_qp]));
   const SymmTensor EfEs(kronSym(_Ef[_qp],_Es[_qp]));
 
+  // stress
   _stress[_qp] = scaledID(i_term) + EfEf*(I4f-1)*f_term + EsEs*(I4s-1)*s_term + EfEs*I8fs*fs_term;
 
-  for (int M=0;M<3;M++)
-    for (int N=M;N<3;N++)
-      for (int P=0;P<3;P++)
-        for (int Q=P;Q<3;Q++)
-          _stress_derivative[_qp](M,N,P,Q) =                         _p[B1 ]  *  i_term *  _id(M,N)  * _id(P,Q)
-                                            + (1 + (I4f-1)*(I4f-1)*2*_p[Bf ]) *  f_term * EfEf(M,N) * EfEf(P,Q)
-                                            + (1 + (I4f-1)*(I4f-1)*2*_p[Bf ]) *  s_term * EsEs(M,N) * EsEs(P,Q)
-                                            + (1 +  I8fs          *2*_p[Bfs]) * fs_term * EfEs(M,N) * EfEs(P,Q);
+  // stress derivative                          /* fancy lambda function syntax makes things much easier here */
+  _stress_derivative[_qp].fill_from_minor_iter( [&](const unsigned int M,
+                                                    const unsigned int N,
+                                                    const unsigned int P,
+                                                    const unsigned int Q) -> Real { return                          _p[B1 ]  *  i_term *  _id(M,N)  * _id(P,Q)
+                                                                                           + (1 + (I4f-1)*(I4f-1)*2*_p[Bf ]) *  f_term * EfEf(M,N) * EfEf(P,Q)
+                                                                                           + (1 + (I4f-1)*(I4f-1)*2*_p[Bf ]) *  s_term * EsEs(M,N) * EsEs(P,Q)
+                                                                                           + (1 +  I8fs          *2*_p[Bfs]) * fs_term * EfEs(M,N) * EfEs(P,Q); } );
 }
 

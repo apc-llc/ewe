@@ -64,11 +64,10 @@ CardiacLinearMaterial::computeQpStressProperties(const SymmTensor & /*C*/, const
   // stress
   _stress[_qp] = _id * _lambda * trE + E * 2.*_mu;
 
-  // stress derivative
-  for (int M=0;M<3;M++)
-    for (int N=M;N<3;N++)
-      for (int P=0;P<3;P++)
-        for (int Q=P;Q<3;Q++)
-          _stress_derivative[_qp](M,N,P,Q) = _lambda*_id(P,Q)*_id(M,N) + 2.*_mu*_id(M,P)*_id(N,Q);
+  // stress derivative                          /* fancy lambda function syntax makes things much easier here */
+  _stress_derivative[_qp].fill_from_minor_iter( [&](const unsigned int M,
+                                                    const unsigned int N,
+                                                    const unsigned int P,
+                                                    const unsigned int Q) -> Real { return _lambda*_id(P,Q)*_id(M,N) + 2.*_mu*_id(M,P)*_id(N,Q); } );
 }
 
