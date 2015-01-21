@@ -61,6 +61,6 @@ operator<<(std::ostream & stream, const CardiacElasticityTensor & obj)
          << std::setw(13) << obj._val[10] << "\n"
          //
          << "\t\t\t\t\t\t\t\t\t\t"
-         << std::setw(13) << obj._val[15] << std::endl;
+         << std::setw(13) << obj._val[ 5] << std::endl;
   return stream;
 }
