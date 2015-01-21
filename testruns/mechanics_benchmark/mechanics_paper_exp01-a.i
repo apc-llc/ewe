@@ -137,7 +137,7 @@
   #splitting = saddlepoint_fieldsplit
 
   petsc_options_iname='-snes_type -ksp_type -pc_type -pc_factor_shift_type '
-  petsc_options_value=' newtontr   preonly   lu       NONZERO'
+  petsc_options_value=' newtonls   preonly   lu       NONZERO'
   petsc_options='-fp_trap
                  -info
                  -snes_converged_reason
@@ -152,6 +152,7 @@
   
   #nl_rel_tol = 1.e-12
   #l_max_its = 10
+  nl_max_its = 1000
 []
 
 [Preconditioning]

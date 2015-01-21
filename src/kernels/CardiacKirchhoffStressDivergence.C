@@ -63,24 +63,20 @@ CardiacKirchhoffStressDivergence::JacobianSecondOrderContribution(const unsigned
   const SymmTensor dE(/* 00 */ _grad_phi[_j][_qp](0)*grad_xk(0) + grad_xk(0)*_grad_phi[_j][_qp](0),
                       /* 11 */ _grad_phi[_j][_qp](1)*grad_xk(1) + grad_xk(1)*_grad_phi[_j][_qp](1),
                       /* 22 */ _grad_phi[_j][_qp](2)*grad_xk(2) + grad_xk(2)*_grad_phi[_j][_qp](2),
-                      /* 01 */ _grad_phi[_j][_qp](0)*grad_xk(1) + grad_xk(0)*_grad_phi[_j][_qp](1),
-                      /* 12 */ _grad_phi[_j][_qp](1)*grad_xk(2) + grad_xk(1)*_grad_phi[_j][_qp](2),
-                      /* 02 */ _grad_phi[_j][_qp](0)*grad_xk(2) + grad_xk(0)*_grad_phi[_j][_qp](2));
+                      /* 01 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(1) + grad_xk(0)*_grad_phi[_j][_qp](1)),
+                      /* 12 */ 0.5*(_grad_phi[_j][_qp](1)*grad_xk(2) + grad_xk(1)*_grad_phi[_j][_qp](2)),
+                      /* 02 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(2) + grad_xk(0)*_grad_phi[_j][_qp](2)));
 
-  Real res (0.5*_stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(grad_xi, _grad_test[_i][_qp], dE));
-  std::cout << grad_xi << std::endl << grad_xk << std::endl << _grad_phi[_j][_qp] << std::endl << dE << std::endl << _stress_derivative[_qp] << std::endl << res;
-  return res;
+  /// \todo : TODO: I do not have any idea why there should be a 0.5 in the expressions above but it solves the Jacobian comparison issue
+
+  return 0.5*_stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(grad_xi, _grad_test[_i][_qp], dE);
 }
 
 Real
 CardiacKirchhoffStressDivergence::computeQpJacobian()
 {
-  Real res( _grad_phi[_j][_qp]*(_stress[_qp]*_grad_test[_i][_qp])
-    + JacobianSecondOrderContribution(_component, _component) );
-
-  std::cout << _qp << " " << _q_point[_qp] << " " << res << std::endl;
-
-  return res;
+  return _grad_phi[_j][_qp]*(_stress[_qp]*_grad_test[_i][_qp])
+    + JacobianSecondOrderContribution(_component, _component);
 }
 
 Real
