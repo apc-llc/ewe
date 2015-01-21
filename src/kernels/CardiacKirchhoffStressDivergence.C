@@ -84,7 +84,7 @@ CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
     RealVectorValue grad_xi(_grad_u[_qp]);
     grad_xi(_component) += 1;
 
-    return -2.*_phi[_j][_qp]*grad_xi*(_Cinv[_qp]*_grad_test[_i][_qp]);
+    return -_phi[_j][_qp]*grad_xi*(_Cinv[_qp]*_grad_test[_i][_qp]);
   }
 
   if (jvar == _disp_var[0])      { idx=0; }
