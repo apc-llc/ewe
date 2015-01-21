@@ -165,6 +165,16 @@ public:
     return res;
   }
 
+  /// computes \f$\sum_{m,n,p,q} A_{Mm} A_{Nn} A_{Pp} A_{Qq} t_{m,n,p,q}\f$
+  inline void fill_from_minor_iter( std::function<Real (int,int,int,int)> elementfunction )
+  {
+    for (unsigned int v=0;v<21;v++) {
+      unsigned int minor[4];
+      idx_inv_minor(v, minor);
+      _val[v] = elementfunction(minor[0], minor[1], minor[2], minor[3]);
+    }
+  }
+
 protected:
   /// table for converting minor indices to major block indices
   static unsigned int const tbl_minor[3][3];
