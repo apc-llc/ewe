@@ -2,7 +2,6 @@
 #define CardiacKirchhoffIncompressibilityLagrangeMultiplier_H
 
 #include "Kernel.h"
-#include "SymmGenericElasticityTensor.h"
 
 //Forward Declarations
 class ColumnMajorMatrix;

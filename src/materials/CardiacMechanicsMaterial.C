@@ -31,7 +31,7 @@ CardiacMechanicsMaterial::CardiacMechanicsMaterial(const std::string  & name,
                                                  InputParameters parameters)
   :Material(name, parameters),
    _stress(declareProperty<SymmTensor>("Kirchhoff_stress")),
-   _stress_derivative(declareProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
+   _stress_derivative(declareProperty<CardiacElasticityTensor>("Kirchhoff_stress_derivative")),
    _F(declareProperty<RealTensorValue>("displacement_gradient")),
    _J(declareProperty<Real>("det_displacement_gradient")),
    _Cinv(declareProperty<SymmTensor>("Cinv")),
@@ -92,7 +92,7 @@ CardiacMechanicsMaterial::computeQpProperties()
       _stress[_qp] -= Cinv * _p[_qp];
       // for the derivative of T, things do become slightly complicated as we have to do
       // _stress_derivative(MNPQ) += 2 * p * Cinv(M,P) * Cinv(Q,N)
-      SymmGenericElasticityTensor sdp(0);
+      CardiacElasticityTensor sdp;
 
       for (int M=0;M<3;M++)
         for (int N=M;N<3;N++)
@@ -122,7 +122,7 @@ CardiacMechanicsMaterial::computeQpProperties()
       const int N(0);
       _stress[_qp](M,N) += Ta*Cinv(M,N);
       // _stress_derivative(MNPQ) += -2 * _Ta * delta(M1) delta(N1) * invC(M,P) * invC(Q,N);
-      SymmGenericElasticityTensor sda(0);
+      CardiacElasticityTensor sda;
       for (int P=0;P<3;P++)
         for (int Q=P;Q<3;Q++)
           sda(M,N,P,Q) = -2 * Ta * Cinv(M,P) * Cinv(Q,N);

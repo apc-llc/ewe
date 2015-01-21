@@ -13,7 +13,6 @@
 #include "NeighborElementAverageAux.h"
 #include "MaterialSymmTensorAux.h"
 #include "NewmarkMaterial.h"
-#include "CardiacStressDivergence.h"
 #include "CardiacKirchhoffStressDivergence.h"
 #include "CardiacLinearOrthotropicMaterial.h"
 #include "CardiacNash2000Material.h"
@@ -78,7 +77,6 @@ EweApp::registerObjects(Factory & factory)
   registerKernel(SecondOrderImplicitEulerWithDensity);
   registerKernel(SecondDerivativeNewmark);
   registerKernel(FirstDerivativeNewmark);
-  registerKernel(CardiacStressDivergence);
   registerKernel(CardiacKirchhoffStressDivergence);
   registerKernel(ElectrocardioForcing);
   registerKernel(AnisotropicGradientShift);

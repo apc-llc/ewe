@@ -32,7 +32,7 @@ CardiacNash2000Material::computeQpStressProperties(const SymmTensor & /*C*/, con
   // We make use of dW/dE(MN) == dW/dE(NM) and will add active tension and pressure terms outside (see #CardiacMechanicsMaterial)
   SymmTensor T(0);
   // Derivative of T: D(MNPQ) = dT(MN)/dE(PQ)
-  SymmGenericElasticityTensor D(0);
+  CardiacElasticityTensor D;
   // We will sum up the elastic energy contributions inside the loop
   Real W(0);
 

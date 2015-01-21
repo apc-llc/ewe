@@ -3,7 +3,7 @@
 
 #include "Material.h"
 #include "SymmTensor.h"
-#include "SymmGenericElasticityTensor.h"
+#include "CardiacElasticityTensor.h"
 
 class CardiacMechanicsMaterial;
 
@@ -40,7 +40,7 @@ protected:
   std::vector<VariableGradient *> _grad_disp;
 
   MaterialProperty<SymmTensor> & _stress; ///< 2nd Piola-Kirchhoff stress tensor T_MN
-  MaterialProperty<SymmGenericElasticityTensor> & _stress_derivative; ///< derivative of T_MN wrt E_PQ
+  MaterialProperty<CardiacElasticityTensor> & _stress_derivative; ///< derivative of T_MN wrt E_PQ
 
   MaterialProperty<RealTensorValue> & _F; ///< displacement gradient
   MaterialProperty<Real> & _J; ///< det F, i.e. volume change

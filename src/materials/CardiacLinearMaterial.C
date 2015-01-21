@@ -62,7 +62,7 @@ CardiacLinearMaterial::computeQpStressProperties(const SymmTensor & /*C*/, const
   _W[_qp] =  0.5*_lambda*trE*trE+_mu*fullContraction(E,E);
 
   // stress
-  _stress[_qp] = _id * _lambda*E.trace() + E * 2.*_mu;
+  _stress[_qp] = _id * _lambda * trE + E * 2.*_mu;
 
   // stress derivative
   for (int M=0;M<3;M++)

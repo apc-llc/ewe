@@ -18,7 +18,7 @@ InputParameters validParams<CardiacKirchhoffStressDivergence>()
 CardiacKirchhoffStressDivergence::CardiacKirchhoffStressDivergence(const std::string & name, InputParameters parameters)
   :Kernel(name, parameters),
    _stress(getMaterialProperty<SymmTensor>("Kirchhoff_stress")),
-   _stress_derivative(getMaterialProperty<SymmGenericElasticityTensor>("Kirchhoff_stress_derivative")),
+   _stress_derivative(getMaterialProperty<CardiacElasticityTensor>("Kirchhoff_stress_derivative")),
    _Cinv(getMaterialProperty<SymmTensor>("Cinv")),
    _component(getParam<unsigned int>("component")),
    _has_p(isCoupled("p")),
@@ -49,35 +49,43 @@ CardiacKirchhoffStressDivergence::computeQpResidual()
 
 /// This produces the second term in the notes for the Jacobian
 Real
-CardiacKirchhoffStressDivergence::JacobianSecondOrderContribution(const RealVectorValue & grad_xi, const RealVectorValue & grad_xk)
+CardiacKirchhoffStressDivergence::JacobianSecondOrderContribution(const unsigned int i, const unsigned int k)
 {
-  SymmTensor dE(/* 00 */      _grad_phi[_j][_qp](0)*grad_xk(0),
-                /* 11 */      _grad_phi[_j][_qp](1)*grad_xk(1),
-                /* 22 */      _grad_phi[_j][_qp](2)*grad_xk(2),
-                /* 01 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(1) + grad_xk(0)*_grad_phi[_j][_qp](1)),
-                /* 12 */ 0.5*(_grad_phi[_j][_qp](1)*grad_xk(2) + grad_xk(1)*_grad_phi[_j][_qp](2)),
-                /* 02 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(2) + grad_xk(0)*_grad_phi[_j][_qp](2)));
+  // nonlinear variables are displacements u(i)=x(i)-X(i)
+  // However, we do need the deformation gradient here: dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
+  RealVectorValue grad_xi( (*_grad_disp[i])[_qp] );
+  grad_xi(i) += 1;
 
-  return _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(grad_xi, _grad_test[_i][_qp], dE);
+  RealVectorValue grad_xk( (*_grad_disp[k])[_qp] );
+  grad_xk(k) += 1;
+
+
+  const SymmTensor dE(/* 00 */ _grad_phi[_j][_qp](0)*grad_xk(0) + grad_xk(0)*_grad_phi[_j][_qp](0),
+                      /* 11 */ _grad_phi[_j][_qp](1)*grad_xk(1) + grad_xk(1)*_grad_phi[_j][_qp](1),
+                      /* 22 */ _grad_phi[_j][_qp](2)*grad_xk(2) + grad_xk(2)*_grad_phi[_j][_qp](2),
+                      /* 01 */ _grad_phi[_j][_qp](0)*grad_xk(1) + grad_xk(0)*_grad_phi[_j][_qp](1),
+                      /* 12 */ _grad_phi[_j][_qp](1)*grad_xk(2) + grad_xk(1)*_grad_phi[_j][_qp](2),
+                      /* 02 */ _grad_phi[_j][_qp](0)*grad_xk(2) + grad_xk(0)*_grad_phi[_j][_qp](2));
+
+  Real res (0.5*_stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(grad_xi, _grad_test[_i][_qp], dE));
+  std::cout << grad_xi << std::endl << grad_xk << std::endl << _grad_phi[_j][_qp] << std::endl << dE << std::endl << _stress_derivative[_qp] << std::endl << res;
+  return res;
 }
 
 Real
 CardiacKirchhoffStressDivergence::computeQpJacobian()
 {
-  // nonlinear variables are displacements u(i)=x(i)-X(i)
-  // However, we do need the deformation gradient here: dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
-  RealVectorValue grad_xi(_grad_u[_qp]);
-  grad_xi(_component) += 1;
+  Real res( _grad_phi[_j][_qp]*(_stress[_qp]*_grad_test[_i][_qp])
+    + JacobianSecondOrderContribution(_component, _component) );
 
-  return _grad_phi[_j][_qp]*(_stress[_qp]*_grad_test[_i][_qp])
-    + JacobianSecondOrderContribution(grad_xi, grad_xi);
+  std::cout << _qp << " " << _q_point[_qp] << " " << res << std::endl;
+
+  return res;
 }
 
 Real
 CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
 {
-  int idx(-1);
-
   if (_has_p && jvar == _p_var) {
     // nonlinear variables are displacements u(i)=x(i)-X(i)
     // However, we do need the deformation gradient here: dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
@@ -87,18 +95,10 @@ CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
     return -_phi[_j][_qp]*grad_xi*(_Cinv[_qp]*_grad_test[_i][_qp]);
   }
 
-  if (jvar == _disp_var[0])      { idx=0; }
-  else if (jvar == _disp_var[1]) { idx=1; }
-  else if (jvar == _disp_var[2]) { idx=2; }
-  else return 0;
+  // d R^[component k] / d_disp_j
+  if (jvar == _disp_var[0]) return JacobianSecondOrderContribution(_component, 0);
+  if (jvar == _disp_var[1]) return JacobianSecondOrderContribution(_component, 1);
+  if (jvar == _disp_var[2]) return JacobianSecondOrderContribution(_component, 2);
 
-  // nonlinear variables are displacements u(i)=x(i)-X(i)
-  // However, we do need the deformation gradient here: dx(i)/dX(j) = du(i)/dX(j) + delta(ij)
-  RealVectorValue grad_xi(_grad_u[_qp]);
-  grad_xi(_component) += 1;
-
-  RealVectorValue grad_xk( (*_grad_disp[idx])[_qp] );
-  grad_xk(idx) += 1;
-
-  return JacobianSecondOrderContribution(grad_xi, grad_xk);
+  return 0;
 }
