@@ -1,9 +1,9 @@
 [Mesh]
       dim           = 3
       distribution  = DEFAULT
-      nx            = 4
+      nx            = 30
       ny            = 3
-      nz            = 2
+      nz            = 3
       type          = GeneratedMesh
       xmax          =  1.0
       xmin          =  0.0
@@ -120,9 +120,9 @@
   [./displacement_y]  type=PresetBC  variable=dispy  boundary=left  value=0.0  [../]
   [./displacement_z]  type=PresetBC  variable=dispz  boundary=left  value=0.0  [../]
 
-  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary='bottom'  value=0.004  use_current_configuration=true  [../]
-  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary='bottom'  value=0.004  use_current_configuration=true  [../]
-  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary='bottom'  value=0.004  use_current_configuration=true  [../]
+  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary=front  value=0.004  use_current_configuration=true  [../]
+  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary=front  value=0.004  use_current_configuration=true  [../]
+  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary=front  value=0.004  use_current_configuration=true  [../]
 []
 
 [Postprocessors]
@@ -212,19 +212,8 @@
     output_on = 'initial nonlinear linear timestep_begin timestep_end'
   [../]
   
-  [./coupled]
+  [./out]
      type=Exodus
      output_on = 'initial nonlinear timestep_end'
   [../]
-[]
-
-[Debug]
-  show_actions                   = 0                           # Print out the actions being executed
-  show_material_props            = 0                           # Print out the material properties supplied for each block, face, neighbor, ...
-                                                               # and/or sideset
-  show_parser                    = 0                           # Shows parser block extraction and debugging information
-  #show_top_residuals             = 15                          # The number of top residuals to print out (0 = no output)
-  show_var_residual_norms        = 1                           # Print the residual norms of the individual solution variables at each ...
-                                                               # nonlinear iteration
-  show_var_residual              = 'dispx dispy dispz' # Variables for which residuals will be sent to the output file
 []
