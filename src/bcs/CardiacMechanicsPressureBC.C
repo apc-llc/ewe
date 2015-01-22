@@ -37,9 +37,9 @@ CardiacMechanicsPressureBC::computeQpResidual()
     pressure *= _function->value(_t, _q_point[_qp]);
 
   if (_current_config)
-    return - _test[_i][_qp] * pressure * _J[_qp] * (_normals[_qp](0)*_Finv[_qp](0,_component)
-                                                   +_normals[_qp](1)*_Finv[_qp](1,_component)
-                                                   +_normals[_qp](2)*_Finv[_qp](2,_component));
+    return _test[_i][_qp] * pressure * _J[_qp] * (_normals[_qp](0)*_Finv[_qp](0,_component)
+                                                 +_normals[_qp](1)*_Finv[_qp](1,_component)
+                                                 +_normals[_qp](2)*_Finv[_qp](2,_component));
   else
-    return - _test[_i][_qp] * pressure * _normals[_qp](_component);
+    return _test[_i][_qp] * pressure * _normals[_qp](_component);
 }
