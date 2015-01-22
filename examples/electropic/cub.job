@@ -1,0 +1,6 @@
+#!/bin/bash
+#SBATCH --time 8:00:00
+#SBATCH --nodes=8
+#SBATCH -pbatch
+
+mpiexec ewe-opt --no-color -i electropics.i
