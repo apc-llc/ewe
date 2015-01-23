@@ -20,6 +20,7 @@ CardiacKirchhoffStressDivergence::CardiacKirchhoffStressDivergence(const std::st
    _stress(getMaterialProperty<SymmTensor>("Kirchhoff_stress")),
    _stress_derivative(getMaterialProperty<CardiacElasticityTensor>("Kirchhoff_stress_derivative")),
    _Cinv(getMaterialProperty<SymmTensor>("Cinv")),
+   _J(getMaterialProperty<Real>("det_displacement_gradient")),
    _component(getParam<unsigned int>("component")),
    _has_p(isCoupled("p")),
    _p_var(_has_p ? coupled("p") : 0)
@@ -88,7 +89,7 @@ CardiacKirchhoffStressDivergence::computeQpOffDiagJacobian(unsigned int jvar)
     RealVectorValue grad_xi(_grad_u[_qp]);
     grad_xi(_component) += 1;
 
-    return -_phi[_j][_qp]*grad_xi*(_Cinv[_qp]*_grad_test[_i][_qp]);
+    return -_J[_qp]*_phi[_j][_qp]*grad_xi*(_Cinv[_qp]*_grad_test[_i][_qp]);
   }
 
   // d R^[component k] / d_disp_j
