@@ -94,12 +94,11 @@ CardiacMechanicsMaterial::computeQpProperties()
       // _stress_derivative(MNPQ) += 2 * p * Cinv(M,P) * Cinv(Q,N)
       CardiacElasticityTensor sdp;
 
-      for (int M=0;M<3;M++)
-        for (int N=M;N<3;N++)
-          for (int P=M;P<3;P++)
-            for (int Q=P;Q<3;Q++) {
-              sdp(M,N,P,Q) = 2 * _p[_qp] * Cinv(M,P) * Cinv(Q,N);
-            }
+                                 /* fancy lambda function syntax makes things much easier here */
+      sdp.fill_from_minor_iter( [&](const unsigned int M,
+                                    const unsigned int N,
+                                    const unsigned int P,
+                                    const unsigned int Q) -> Real { return 2. * _p[_qp] * Cinv(M,P)*Cinv(Q,N); } );
 
       _stress_derivative[_qp] += sdp;
       // no energy contribution from a Lagrange multiplier
