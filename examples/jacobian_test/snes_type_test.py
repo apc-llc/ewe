@@ -27,6 +27,9 @@ addmat = 0
 fig=plt.figure(figsize=(16,12))
 fig.subplots_adjust(left=0.06,bottom=0.06,top=0.975,right=0.975)
 
+cmap = cm.jet
+cmap.set_bad(alpha = 0.0)
+
 while currline < len(lines):
   line = lines[currline]
   
@@ -52,11 +55,14 @@ while currline < len(lines):
         val = float(match.group(2))
         mat[M,col] = val
     
+    if (mat_index % 3 == 0):
+      mat = np.ma.array(mat, mask=abs(mat)<1.e-6)
+    
     matlist.append(mat)
     ax = plt.subplot(3,4,mat_index+addmat)
     ax.set_title(mat_name)
     absmat = mat
-    plt.imshow(absmat,interpolation='nearest',norm=Normalize(vmin=absmat.min(), vmax=absmat.max()), cmap='jet')
+    plt.imshow(absmat,interpolation='nearest',norm=Normalize(vmin=absmat.min(), vmax=absmat.max()), cmap=cmap)
     plt.colorbar()
     
     #print np.min(mat[np.nonzero(mat)]), np.max(mat[np.nonzero(mat)])
@@ -65,14 +71,12 @@ while currline < len(lines):
     
     if mat_index % 3 == 0:
       # add quotient of the matrices
-      absmat = matlist[mat_index]/matlist[mat_index-2]
+      absmat = np.ma.array(matlist[mat_index-1] / matlist[mat_index-1]-matlist[mat_index-2], mask=(abs(matlist[mat_index-1]-matlist[mat_index-2])<1e-6))
       addmat += 1
       ax = plt.subplot(3,4,mat_index+addmat)
       ax.set_title('Jacobian difference / Finite differences Jacobian')
       
       absmat = np.ma.array(absmat, mask=np.logical_or(np.isnan(absmat), abs(absmat)<1e-6))
-      cmap = cm.jet
-      cmap.set_bad(alpha = 0.0)
 
       plt.imshow(absmat,interpolation='nearest',norm=Normalize(vmin=np.min(absmat[np.nonzero(absmat)]), vmax=absmat.max()), cmap=cmap)
       plt.colorbar()

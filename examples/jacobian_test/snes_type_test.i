@@ -120,9 +120,9 @@
   [./displacement_y]  type=PresetBC  variable=dispy  boundary=left  value=0.0  [../]
   [./displacement_z]  type=PresetBC  variable=dispz  boundary=left  value=0.0  [../]
 
-  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary='bottom'  value=0.004  use_current_configuration=true  [../]
-  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary='bottom'  value=0.004  use_current_configuration=true  [../]
-  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary='bottom'  value=0.004  use_current_configuration=true  [../]
+  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary='bottom'  value=0.004  use_current_configuration=false  displacements='dispx dispy dispz'  [../]
+  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary='bottom'  value=0.004  use_current_configuration=false  displacements='dispx dispy dispz'  [../]
+  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary='bottom'  value=0.004  use_current_configuration=false  displacements='dispx dispy dispz'  [../]
 []
 
 [Postprocessors]
