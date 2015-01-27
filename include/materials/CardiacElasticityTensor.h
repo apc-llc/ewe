@@ -2,6 +2,7 @@
 #define CardiacElasticityTensor_H
 
 #include "SymmTensor.h"
+#include <functional>
 
 
 /**
