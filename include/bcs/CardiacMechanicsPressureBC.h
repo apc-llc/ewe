@@ -27,6 +27,9 @@ public:
 protected:
 
   virtual Real computeQpResidual();
+  virtual Real computeQpJacobian();
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar);
+  Real JacobianEntry(unsigned int i, unsigned int k);
 
   const int _component;
 
@@ -34,7 +37,7 @@ protected:
 
   Function * const _function;
   const bool _current_config;
-
+  unsigned int _disp_var[3]; ///< indices of the three coupled displacement variables
   MaterialProperty<Real> & _J; ///< det F, i.e. volume change
   MaterialProperty<RealTensorValue> & _Finv; ///< inverse of the displacement gradient
 
