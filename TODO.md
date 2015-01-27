@@ -4,11 +4,7 @@ Global TODO list
 Electrocardio
 =============
 * Add (Boolean) material property that shows the de/repolarization status of the cells
-* <s>Make stimulation parameters adjustable from outside (e.g.. via user-defined functions)</s>
-* <s>Use fibre directions for anisotropic conductivities</s>
-* Set appropriate parameter values for the anisotropic conductivity values, see e.g. \ref Potse2006 "Potse, 2006, Table I"
 * Add option for getting an ion model's resting potential. - Currently, it is fixed in ElectrocardioIC
-
 
 Electrocardio: Celltypes in the ion model
 =========================================
@@ -109,7 +105,6 @@ Fraglich bleibt: Wenn man ein komplettes System mit dem SolutionUserObject lädt
 
 Function
 ========
- * <s>give a list of function names to PiecewiseParsedFunction instead of explicit function definitions in `functions` parameter to increase readability</s>
  * add a new function definition which is a sum of several spatial Gaussians (defined by a list of 3D-points) to simplify definition of
    several activation sites
 
@@ -122,12 +117,8 @@ CardiacFibresMaterial
 
 CardiacMechanicsMaterial
 ========================
-* <s>Couple to displacements through a coupled vector instead of individual disp_.. variables.</s>
-    * <s>For details see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top</s>
-	* <s>A working example is found in CardiacMechanicsMaterial.C</s>
-	* <s>All affected files can be found via `grepc -iR \"disp src/*`</s>
 * Find out how Ta enters into the elastic energy
-* Add material law from \ref Costa2001. Parameter values should be available in \ref Schmid2008 .
+* Add material parameters for the exponential law of \ref Costa2001. They should be available in \ref Schmid2008 .
 
 SecondDerivativeNewmark
 =======================
@@ -136,14 +127,9 @@ SecondDerivativeNewmark
    * `parameters.set<bool>("implicit") = true`
    * `kernel->isImplicit()`
 
-CardiacIncompressibilityLagrangeMultiplier
-==========================================
-* Think about the Jacobian of this kernel
-
 General
 =======
 * Clean formatting of all *.i files that are around
-* <s>Find a better way for including references in doxygen comments, see `documentation_cleanup` branch</s>
 * Further TODOs in the inline documentation, see the \ref todo "TODO list"
 * Add `execute_on=timestep` to all diagnostic variables, add `execute_on='initial timestep_end'` to all `[Outputs]` blocks to include the 0th timestep in the Exodus files.
 * Improve error messages. In particular do not only include class names but object names via their attribute `name`, e.g. as in `CardiacMechanicsPressureBC`
