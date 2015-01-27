@@ -1,7 +1,3 @@
-/****************************************************************/
-/*                                                              */
-/****************************************************************/
-
 #ifndef DisplacementAux_H
 #define DisplacementAux_H
 
@@ -12,6 +8,10 @@ class DisplacementAux;
 template<>
 InputParameters validParams<DisplacementAux>();
 
+/**
+ * This kernel converts from displaced coordinates \f$x\f$ to
+ * displacements \f$u=x-X\f$.
+ */
 class DisplacementAux : public AuxKernel
 {
 public:
