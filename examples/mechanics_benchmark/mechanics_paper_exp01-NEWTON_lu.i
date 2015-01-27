@@ -120,9 +120,9 @@
   [./displacement_y]  type=PresetBC  variable=dispy  boundary=left  value=0.0  [../]
   [./displacement_z]  type=PresetBC  variable=dispz  boundary=left  value=0.0  [../]
 
-  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary=back  value=0.004  use_current_configuration=true  [../]
-  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary=back  value=0.004  use_current_configuration=true  [../]
-  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary=back  value=0.004  use_current_configuration=true  [../]
+  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary=back  value=0.004  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
+  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary=back  value=0.004  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
+  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary=back  value=0.004  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
 []
 
 [Postprocessors]
@@ -146,6 +146,7 @@
                  -snes_linesearch_monitor
                  -pc_svd_monitor
                  -snes_test_display
+                 -snes_ksp_ew_conv
                  '
 #                 -help
   #line_search = 'cubic'
@@ -214,6 +215,6 @@
   
   [./out]
      type=Exodus
-     output_on = 'initial nonlinear timestep_end'
+     output_on = 'initial nonlinear linear timestep_end'
   [../]
 []
