@@ -2,8 +2,6 @@
 #define CardiacTestsMaterial_H
 
 #include "Material.h"
-#include "Iionmodel.h"
-#include "IionmodelFactory.h"
 
 class CardiacTestsMaterial;
 
@@ -11,7 +9,9 @@ template<>
 InputParameters validParams<CardiacTestsMaterial>();
 
 /**
- * \todo document
+ * This material is solely intended for testing purposes:
+ * Using some selected cases, it verifies that CardiacElasticityTensor
+ * and TensorHelpers do not compute complete garbage.
  */
 class CardiacTestsMaterial : public Material
 {
