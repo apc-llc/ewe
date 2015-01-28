@@ -1,0 +1,7 @@
+[Tests]
+  [./test]
+     type = RunApp
+     input = CardiacTestMaterial.i
+     expect_out = "SUCCESSFULL !!"
+  [../]
+[]
