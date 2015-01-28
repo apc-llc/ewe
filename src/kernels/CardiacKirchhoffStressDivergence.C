@@ -60,16 +60,14 @@ CardiacKirchhoffStressDivergence::JacobianSecondOrderContribution(const unsigned
   grad_xk(k) += 1;
 
 
-  const SymmTensor dE(/* 00 */ _grad_phi[_j][_qp](0)*grad_xk(0) + grad_xk(0)*_grad_phi[_j][_qp](0),
-                      /* 11 */ _grad_phi[_j][_qp](1)*grad_xk(1) + grad_xk(1)*_grad_phi[_j][_qp](1),
-                      /* 22 */ _grad_phi[_j][_qp](2)*grad_xk(2) + grad_xk(2)*_grad_phi[_j][_qp](2),
+  const SymmTensor dE(/* 00 */      _grad_phi[_j][_qp](0)*grad_xk(0),
+                      /* 11 */      _grad_phi[_j][_qp](1)*grad_xk(1),
+                      /* 22 */      _grad_phi[_j][_qp](2)*grad_xk(2),
                       /* 01 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(1) + grad_xk(0)*_grad_phi[_j][_qp](1)),
                       /* 12 */ 0.5*(_grad_phi[_j][_qp](1)*grad_xk(2) + grad_xk(1)*_grad_phi[_j][_qp](2)),
                       /* 02 */ 0.5*(_grad_phi[_j][_qp](0)*grad_xk(2) + grad_xk(0)*_grad_phi[_j][_qp](2)));
 
-  /// \todo : TODO: I do not have any idea why there should be a 0.5 in the expressions above but it solves the Jacobian comparison issue
-
-  return 0.5*_stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(grad_xi, _grad_test[_i][_qp], dE);
+  return _stress_derivative[_qp].doubleLeftSymmDoubleRightContraction(grad_xi, _grad_test[_i][_qp], dE);
 }
 
 Real

@@ -44,6 +44,8 @@ CardiacCostaMaterial::computeQpStressProperties(const SymmTensor & /*C*/, const 
   _stress_derivative[_qp].fill_from_minor_iter( [&](const unsigned int M,
                                                     const unsigned int N,
                                                     const unsigned int P,
-                                                    const unsigned int Q) -> Real { return CExpQ * ( 2.*bE(M,N)*bE(P,Q) + _b(M,N)*_id(M,P)*_id(N,Q) ); } );
+                                                    const unsigned int Q) -> Real { return (P==Q ? 1. : 0.5) * CExpQ * ( 2.*bE(M,N)*bE(P,Q) + _b(M,N)*_id(M,P)*_id(N,Q) ); } );
+  /// \todo : TODO: I do not have any idea why there should be a 0.5 for P!=Q in the stress derivative of the Costa Material but it solves the Jacobian comparison issue
+
 }
 
