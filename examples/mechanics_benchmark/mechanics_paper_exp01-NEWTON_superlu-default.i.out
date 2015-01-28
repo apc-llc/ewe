@@ -1,0 +1,621 @@
+Framework Information:
+MOOSE version:           git commit da64446 on 2015-01-28
+PETSc Version:           3.5.1
+Current Time:            Wed Jan 28 23:53:13 2015
+Executable Timestamp:    Wed Jan 28 21:27:31 2015
+
+LEGACY MODES ENABLED:
+  Computing EXEC_LINEAR AuxKernel types when any UserObject type is executed.
+  Computing all UserObjects during initial setup.
+
+Parallelism:
+  Num Processors:        4
+  Num Threads:           1
+
+Mesh: 
+  Distribution:          serial
+  Mesh Dimension:        3
+  Spatial Dimension:     3
+  Nodes:                 
+    Total:               1720
+    Local:               473
+  Elems:                 
+    Total:               270
+    Local:               69
+  Num Subdomains:        1
+  Num Partitions:        4
+  Partitioner:           metis
+
+Nonlinear System:
+  Num DOFs:              5656
+  Num Local DOFs:        1559
+  Variables:             { "dispx" "dispy" "dispz" } "pressure" 
+  Finite Element Types:  "LAGRANGE" "LAGRANGE" 
+  Approximation Orders:  "SECOND" "FIRST" 
+
+Auxiliary System:
+  Num DOFs:              4320
+  Num Local DOFs:        1104
+  Variables:             { "stress_xx" "stress_yy" "stress_zz" "stress_xy" "stress_yz" "stress_xz" "E_fibre_x" 
+                           "E_fibre_y" "E_fibre_z" "E_normal_x" "E_normal_y" "E_normal_z" "E_sheet_x" 
+                           "E_sheet_y" "E_sheet_z" "det_displacement_gradient" } 
+  Finite Element Types:  "MONOMIAL" 
+  Approximation Orders:  "CONSTANT" 
+
+Execution Information:
+  Executioner:           Steady
+  Solver Mode:           NEWTON
+
+Outputs:
+  out                    "INITIAL LINEAR NONLINEAR TIMESTEP_END"
+  console                "INITIAL LINEAR NONLINEAR TIMESTEP_BEGIN TIMESTEP_END"
+
+
+ 0 Nonlinear |R| = 3.986603e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 7.893767569123e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.554649170267e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.976031354457e-05 lambda=1.3619368238448398e-02
+ 1 Nonlinear |R| = 3.976031e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 7.756250287726e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.537711983515e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.964925167752e-05 lambda=1.3104528831475270e-02
+ 2 Nonlinear |R| = 3.964925e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 7.629751248107e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.519279925116e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.953345540548e-05 lambda=1.2692782919546976e-02
+ 3 Nonlinear |R| = 3.953346e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 7.511940252207e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.499767010719e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.941349932592e-05 lambda=1.2358218608226789e-02
+ 4 Nonlinear |R| = 3.941350e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 7.401176080502e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.479449986208e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.928987985546e-05 lambda=1.2083056069251205e-02
+ 5 Nonlinear |R| = 3.928988e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 7.296258071470e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.458520332788e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.916301281302e-05 lambda=1.1854694802814364e-02
+ 6 Nonlinear |R| = 3.916301e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 7.196280353881e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.437114396234e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.903324291625e-05 lambda=1.1663957115691770e-02
+ 7 Nonlinear |R| = 3.903324e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 7.100541801244e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.415331637685e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.890085553451e-05 lambda=1.1503999946012946e-02
+ 8 Nonlinear |R| = 3.890086e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 7.008487992326e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.393246117151e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.876608755373e-05 lambda=1.1369616774145275e-02
+ 9 Nonlinear |R| = 3.876609e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.919672434816e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.370913958251e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.862913653138e-05 lambda=1.1256775985542254e-02
+10 Nonlinear |R| = 3.862914e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.833729858154e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.348378340575e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.849016812730e-05 lambda=1.1162307362078449e-02
+11 Nonlinear |R| = 3.849017e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.750357325126e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.325672921856e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.834932204218e-05 lambda=1.1083684113262356e-02
+12 Nonlinear |R| = 3.834932e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.669300565160e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.302824236072e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.820671673936e-05 lambda=1.1018868130802568e-02
+13 Nonlinear |R| = 3.820672e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.590343882808e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.279853406547e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.806245319983e-05 lambda=1.0966198059568831e-02
+14 Nonlinear |R| = 3.806245e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.513302572398e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.256777391195e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.791661791725e-05 lambda=1.0924306966673231e-02
+15 Nonlinear |R| = 3.791662e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.438017124666e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.233609901776e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.776928529786e-05 lambda=1.0892060857933650e-02
+16 Nonlinear |R| = 3.776929e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.364348738500e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.210362092089e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.762051959341e-05 lambda=1.0868512126783803e-02
+17 Nonlinear |R| = 3.762052e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.292175798541e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.187043079681e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.747037646700e-05 lambda=1.0852863866540429e-02
+18 Nonlinear |R| = 3.747038e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.221391077903e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.163660345831e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.731890426851e-05 lambda=1.0844442197494412e-02
+19 Nonlinear |R| = 3.731890e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.151899494274e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.140220045659e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.716614507948e-05 lambda=1.0842674581616219e-02
+20 Nonlinear |R| = 3.716615e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.083616290578e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.116727250509e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.701213557356e-05 lambda=1.0847072669487073e-02
+21 Nonlinear |R| = 3.701214e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.016465548070e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.093186139292e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.685690772876e-05 lambda=1.0857218609934778e-02
+22 Nonlinear |R| = 3.685691e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.950378960322e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.069600150604e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.670048941976e-05 lambda=1.0872754036991263e-02
+23 Nonlinear |R| = 3.670049e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.885294814466e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.045972104469e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.654290491267e-05 lambda=1.0893371145330892e-02
+24 Nonlinear |R| = 3.654290e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.821157140398e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 4.022304300771e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.638417527993e-05 lambda=1.0918805405030391e-02
+25 Nonlinear |R| = 3.638418e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.757914991387e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.998598598438e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.622431874937e-05 lambda=1.0948829589539940e-02
+26 Nonlinear |R| = 3.622432e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.695521839549e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.974856481025e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.606335099902e-05 lambda=1.0983248829773416e-02
+27 Nonlinear |R| = 3.606335e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.633935054303e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.951079109000e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.590128540626e-05 lambda=1.1021896535687426e-02
+28 Nonlinear |R| = 3.590129e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.573115461473e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.927267364039e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.573813325921e-05 lambda=1.1064630972429167e-02
+29 Nonlinear |R| = 3.573813e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.513026960503e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.903421884809e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.557390393615e-05 lambda=1.1111332413586484e-02
+30 Nonlinear |R| = 3.557390e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.453636194203e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.879543096788e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.540860505771e-05 lambda=1.1161900746730170e-02
+31 Nonlinear |R| = 3.540861e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.394912261182e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.855631236823e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.524224261608e-05 lambda=1.1216253462374207e-02
+32 Nonlinear |R| = 3.524224e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.336826466202e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.831686373752e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.507482108448e-05 lambda=1.1274323957284355e-02
+33 Nonlinear |R| = 3.507482e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.279352099612e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.807708425150e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.490634350954e-05 lambda=1.1336060108328572e-02
+34 Nonlinear |R| = 3.490634e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.222464246170e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.783697171754e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.473681158904e-05 lambda=1.1401423063377505e-02
+35 Nonlinear |R| = 3.473681e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.166139610838e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.759652268254e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.456622573650e-05 lambda=1.1470386243060245e-02
+36 Nonlinear |R| = 3.456623e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.110356372996e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.735573253931e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.439458513492e-05 lambda=1.1542934473261586e-02
+37 Nonlinear |R| = 3.439459e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.055094047471e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.711459559410e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.422188778009e-05 lambda=1.1619063296644899e-02
+38 Nonlinear |R| = 3.422189e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 5.000333367351e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.687310513461e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.404813051527e-05 lambda=1.1698778379995819e-02
+39 Nonlinear |R| = 3.404813e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.946056175996e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.663125347789e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.387330905770e-05 lambda=1.1782095042014563e-02
+40 Nonlinear |R| = 3.387331e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.892245330974e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.638903200890e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.369741801802e-05 lambda=1.1869037872951240e-02
+41 Nonlinear |R| = 3.369742e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.838884617612e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.614643120943e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.352045091301e-05 lambda=1.1959640439434477e-02
+42 Nonlinear |R| = 3.352045e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.785958670329e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.590344067697e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.334240017219e-05 lambda=1.2053945069295321e-02
+43 Nonlinear |R| = 3.334240e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.733452902152e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.566004913759e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.316325713886e-05 lambda=1.2152002702130182e-02
+44 Nonlinear |R| = 3.316326e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.681353440261e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.541624445092e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.298301206569e-05 lambda=1.2253872807850298e-02
+45 Nonlinear |R| = 3.298301e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.629647067088e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.517201360846e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.280165410537e-05 lambda=1.2359623366177150e-02
+46 Nonlinear |R| = 3.280165e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.578321166944e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.492734272715e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.261917129628e-05 lambda=1.2469330901175850e-02
+47 Nonlinear |R| = 3.261917e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.527363676554e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.468221703621e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.243555054355e-05 lambda=1.2583080574460418e-02
+48 Nonlinear |R| = 3.243555e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.476763040161e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.443662086039e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.225077759543e-05 lambda=1.2700966328464203e-02
+49 Nonlinear |R| = 3.225078e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.426508167265e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.419053759634e-05 lambda=5.0000000000000003e-02
+      Line search: Cubically determined step, current gnorm 3.206483701513e-05 lambda=1.2823091087849802e-02
+50 Nonlinear |R| = 3.206484e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.376588394360e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.392506475811e-05 lambda=4.9829890130310618e-02
+      Line search: Cubically determined step, current gnorm 3.187769247021e-05 lambda=1.2943167244226199e-02
+51 Nonlinear |R| = 3.187769e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.327009001467e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.365474006554e-05 lambda=4.9609512398061835e-02
+      Line search: Cubically determined step, current gnorm 3.168932454505e-05 lambda=1.3065929005647866e-02
+52 Nonlinear |R| = 3.168932e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.277763367438e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.338513561454e-05 lambda=4.9387959960252449e-02
+      Line search: Cubically determined step, current gnorm 3.149971887471e-05 lambda=1.3193332788103512e-02
+53 Nonlinear |R| = 3.149972e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.228840643987e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.311621568337e-05 lambda=4.9165282275422023e-02
+      Line search: Cubically determined step, current gnorm 3.130885958151e-05 lambda=1.3325499975436271e-02
+54 Nonlinear |R| = 3.130886e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.180230385927e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.284794438159e-05 lambda=4.8941541477044735e-02
+      Line search: Cubically determined step, current gnorm 3.111672924711e-05 lambda=1.3462562954115404e-02
+55 Nonlinear |R| = 3.111673e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.131922514404e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.258028550140e-05 lambda=4.8716813483780951e-02
+      Line search: Cubically determined step, current gnorm 3.092330887808e-05 lambda=1.3604665514318390e-02
+56 Nonlinear |R| = 3.092331e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.083907283662e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.231320236858e-05 lambda=4.8491189225806246e-02
+      Line search: Cubically determined step, current gnorm 3.072857786495e-05 lambda=1.3751963314563595e-02
+57 Nonlinear |R| = 3.072858e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 4.036175248943e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.204665768651e-05 lambda=4.8264775983875519e-02
+      Line search: Cubically determined step, current gnorm 3.053251393461e-05 lambda=1.3904624429753768e-02
+58 Nonlinear |R| = 3.053251e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.988717236912e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.178061337672e-05 lambda=4.8037698855850422e-02
+      Line search: Cubically determined step, current gnorm 3.033509309605e-05 lambda=1.4062829973784734e-02
+59 Nonlinear |R| = 3.033509e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.941524317044e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.151503041132e-05 lambda=4.7810102351119065e-02
+      Line search: Cubically determined step, current gnorm 3.013628957922e-05 lambda=1.4226774812751145e-02
+60 Nonlinear |R| = 3.013629e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.894587774656e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.124986863891e-05 lambda=4.7582152125148706e-02
+      Line search: Cubically determined step, current gnorm 2.993607576668e-05 lambda=1.4396668369202397e-02
+61 Nonlinear |R| = 2.993608e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.847899084891e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.098508660148e-05 lambda=4.7354036857762793e-02
+      Line search: Cubically determined step, current gnorm 2.973442211791e-05 lambda=1.4572735528387993e-02
+62 Nonlinear |R| = 2.973442e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.801449887769e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.072064134225e-05 lambda=4.7125970284776421e-02
+      Line search: Cubically determined step, current gnorm 2.953129708570e-05 lambda=1.4755217654582172e-02
+63 Nonlinear |R| = 2.953130e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.755231963734e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.045648820231e-05 lambda=4.6898193386689047e-02
+      Line search: Cubically determined step, current gnorm 2.932666702430e-05 lambda=1.4944373731459957e-02
+64 Nonlinear |R| = 2.932667e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.709237209845e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 3.019258060588e-05 lambda=4.6670976742925231e-02
+      Line search: Cubically determined step, current gnorm 2.912049608876e-05 lambda=1.5140481638212423e-02
+65 Nonlinear |R| = 2.912050e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.663457616409e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.992886983321e-05 lambda=4.6444623057545646e-02
+      Line search: Cubically determined step, current gnorm 2.891274612482e-05 lambda=1.5343839575518294e-02
+66 Nonlinear |R| = 2.891275e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.617885243702e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.966530477938e-05 lambda=4.6219469859810021e-02
+      Line search: Cubically determined step, current gnorm 2.870337654871e-05 lambda=1.5554767662394622e-02
+67 Nonlinear |R| = 2.870338e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.572512198810e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.940183169881e-05 lambda=4.5995892386433278e-02
+      Line search: Cubically determined step, current gnorm 2.849234421592e-05 lambda=1.5773609722950780e-02
+68 Nonlinear |R| = 2.849234e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.527330612181e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.913839393362e-05 lambda=4.5774306646344180e-02
+      Line search: Cubically determined step, current gnorm 2.827960327817e-05 lambda=1.6000735288775311e-02
+69 Nonlinear |R| = 2.827960e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.482332613973e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.887493162573e-05 lambda=4.5555172674779841e-02
+      Line search: Cubically determined step, current gnorm 2.806510502736e-05 lambda=1.6236541843651173e-02
+70 Nonlinear |R| = 2.806511e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.437510309909e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.861138141130e-05 lambda=4.5338997976568748e-02
+      Line search: Cubically determined step, current gnorm 2.784879772534e-05 lambda=1.6481457345174557e-02
+71 Nonlinear |R| = 2.784880e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.392855756482e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.834767609702e-05 lambda=4.5126341163589219e-02
+      Line search: Cubically determined step, current gnorm 2.763062641817e-05 lambda=1.6735943056738204e-02
+72 Nonlinear |R| = 2.763063e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.348360934981e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.808374431622e-05 lambda=4.4917815784430118e-02
+      Line search: Cubically determined step, current gnorm 2.741053273306e-05 lambda=1.7000496746636940e-02
+73 Nonlinear |R| = 2.741053e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.304017724834e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.781951016597e-05 lambda=4.4714094357356245e-02
+      Line search: Cubically determined step, current gnorm 2.718845465649e-05 lambda=1.7275656288139062e-02
+74 Nonlinear |R| = 2.718845e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.259817875282e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.755489282248e-05 lambda=4.4515912604718544e-02
+      Line search: Cubically determined step, current gnorm 2.696432629099e-05 lambda=1.7562003736874679e-02
+75 Nonlinear |R| = 2.696433e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.215752975616e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.728980613504e-05 lambda=4.4324073903456544e-02
+      Line search: Cubically determined step, current gnorm 2.673807758853e-05 lambda=1.7860169947838650e-02
+76 Nonlinear |R| = 2.673808e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.171814423438e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.702415819702e-05 lambda=4.4139453962525596e-02
+      Line search: Cubically determined step, current gnorm 2.650963405746e-05 lambda=1.8170839820134153e-02
+77 Nonlinear |R| = 2.650963e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.127993390894e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.675785089368e-05 lambda=4.3963005751931912e-02
+      Line search: Cubically determined step, current gnorm 2.627891643990e-05 lambda=1.8494758257750307e-02
+78 Nonlinear |R| = 2.627892e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.084280788199e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.649077942436e-05 lambda=4.3795764713368060e-02
+      Line search: Cubically determined step, current gnorm 2.604584035586e-05 lambda=1.8832736976605501e-02
+79 Nonlinear |R| = 2.604584e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 3.040667224319e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.622283179842e-05 lambda=4.3638854301421219e-02
+      Line search: Cubically determined step, current gnorm 2.581031590955e-05 lambda=1.9185662281358956e-02
+80 Nonlinear |R| = 2.581032e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.997142964333e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.595388830254e-05 lambda=4.3493491920741346e-02
+      Line search: Cubically determined step, current gnorm 2.557224725308e-05 lambda=1.9554503975265817e-02
+81 Nonlinear |R| = 2.557225e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.953697882879e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.568382093623e-05 lambda=4.3360995348355046e-02
+      Line search: Cubically determined step, current gnorm 2.533153210145e-05 lambda=1.9940325602778405e-02
+82 Nonlinear |R| = 2.533153e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.910321413209e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.541249281216e-05 lambda=4.3242789764329000e-02
+      Line search: Cubically determined step, current gnorm 2.508806119200e-05 lambda=2.0344296246646677e-02
+83 Nonlinear |R| = 2.508806e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.867002491110e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.513975751613e-05 lambda=4.3140415548156050e-02
+      Line search: Cubically determined step, current gnorm 2.484171768011e-05 lambda=2.0767704159744316e-02
+84 Nonlinear |R| = 2.484172e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.823729493005e-05
+      Line search: Cubic step no good, shrinking lambda, current gnorm 2.486545841981e-05 lambda=4.3055537049499930e-02
+      Line search: Cubically determined step, current gnorm 2.459237646164e-05 lambda=2.1211972566073104e-02
+85 Nonlinear |R| = 2.459238e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.780490167448e-05
+      Line search: Cubically determined step, current gnorm 2.458942793813e-05 lambda=4.2989952597847068e-02
+86 Nonlinear |R| = 2.458943e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.738317030582e-05
+      Line search: Cubically determined step, current gnorm 2.451182503509e-05 lambda=4.2838049219195831e-02
+87 Nonlinear |R| = 2.451183e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.693005113248e-05
+      Line search: Cubically determined step, current gnorm 2.437277749741e-05 lambda=4.2912354322130135e-02
+88 Nonlinear |R| = 2.437278e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.645188885048e-05
+      Line search: Cubically determined step, current gnorm 2.418195851782e-05 lambda=4.3187854971582521e-02
+89 Nonlinear |R| = 2.418196e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.595305161895e-05
+      Line search: Cubically determined step, current gnorm 2.394653004516e-05 lambda=4.3647577628041841e-02
+90 Nonlinear |R| = 2.394653e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.543655781543e-05
+      Line search: Cubically determined step, current gnorm 2.367183690980e-05 lambda=4.4281062973495981e-02
+91 Nonlinear |R| = 2.367184e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.490448033069e-05
+      Line search: Cubically determined step, current gnorm 2.336188120267e-05 lambda=4.5083301440978878e-02
+92 Nonlinear |R| = 2.336188e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.435821118009e-05
+      Line search: Cubically determined step, current gnorm 2.301964982196e-05 lambda=4.6054046986336535e-02
+93 Nonlinear |R| = 2.301965e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.379863665664e-05
+      Line search: Cubically determined step, current gnorm 2.264734255916e-05 lambda=4.7197445610290066e-02
+94 Nonlinear |R| = 2.264734e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.322625390877e-05
+      Line search: Cubically determined step, current gnorm 2.224653156398e-05 lambda=4.8521938175608702e-02
+95 Nonlinear |R| = 2.224653e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.264124813823e-05
+      Line search: Cubically determined step, current gnorm 2.181811662793e-05 lambda=5.0000000000000003e-02
+96 Nonlinear |R| = 2.181812e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.204358024960e-05
+      Line search: Cubically determined step, current gnorm 2.135852166977e-05 lambda=5.0000000000000003e-02
+97 Nonlinear |R| = 2.135852e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.143591020549e-05
+      Line search: Cubically determined step, current gnorm 2.087363536252e-05 lambda=5.0000000000000003e-02
+98 Nonlinear |R| = 2.087364e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.082180556655e-05
+      Line search: Quadratically determined step, lambda=1.0000000000000001e-01
+99 Nonlinear |R| = 2.082181e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 2.044093019035e-05
+      Line search: Quadratically determined step, lambda=1.0000000000000001e-01
+100 Nonlinear |R| = 2.044093e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 1.982423575101e-05
+      Line search: Quadratically determined step, lambda=1.0000000000000001e-01
+101 Nonlinear |R| = 1.982424e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 1.904302375458e-05
+      Line search: Quadratically determined step, lambda=1.0000000000000001e-01
+102 Nonlinear |R| = 1.904302e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 1.815189734732e-05
+      Line search: Quadratically determined step, lambda=1.0000000000000001e-01
+103 Nonlinear |R| = 1.815190e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 1.719272649371e-05
+      Line search: Quadratically determined step, lambda=1.0000000000000001e-01
+104 Nonlinear |R| = 1.719273e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 1.619759349561e-05
+      Line search: Quadratically determined step, lambda=1.0000000000000001e-01
+105 Nonlinear |R| = 1.619759e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 1.519098724261e-05
+      Line search: Quadratically determined step, lambda=1.0000000000000001e-01
+106 Nonlinear |R| = 1.519099e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 1.419145600353e-05
+      Line search: Quadratically determined step, lambda=1.0000000000000001e-01
+107 Nonlinear |R| = 1.419146e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 1.314469763247e-05
+      Line search: Quadratically determined step, lambda=1.1211402544193905e-01
+108 Nonlinear |R| = 1.314470e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 1.198211805714e-05
+      Line search: Quadratically determined step, lambda=1.4074851035586233e-01
+109 Nonlinear |R| = 1.198212e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 1.065184134156e-05
+      Line search: Quadratically determined step, lambda=1.8836521276086204e-01
+110 Nonlinear |R| = 1.065184e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 9.055556764608e-06
+      Line search: Quadratically determined step, lambda=2.7826309046080561e-01
+111 Nonlinear |R| = 9.055557e-06
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: gnorm after quadratic fit 6.932487315559e-06
+      Line search: Quadratically determined step, lambda=4.7384565653349270e-01
+112 Nonlinear |R| = 6.932487e-06
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: Using full step: fnorm 6.932487315559e-06 gnorm 3.009227439449e-06
+113 Nonlinear |R| = 3.009227e-06
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: Using full step: fnorm 3.009227439449e-06 gnorm 3.130927119691e-08
+114 Nonlinear |R| = 3.130927e-08
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: Using full step: fnorm 3.130927119691e-08 gnorm 1.901588574896e-09
+115 Nonlinear |R| = 1.901589e-09
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: Using full step: fnorm 1.901588574896e-09 gnorm 1.025233381255e-10
+116 Nonlinear |R| = 1.025233e-10
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: Using full step: fnorm 1.025233381255e-10 gnorm 6.672682263368e-12
+117 Nonlinear |R| = 6.672682e-12
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: Using full step: fnorm 6.672682263368e-12 gnorm 4.650974911621e-13
+118 Nonlinear |R| = 4.650975e-13
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: Using full step: fnorm 4.650974911621e-13 gnorm 3.551317889922e-14
+119 Nonlinear |R| = 3.551318e-14
+Nonlinear solve converged due to CONVERGED_FNORM_RELATIVE iterations 119
+
+Outlier Variable Residual Norms:
+  dispy: 3.129502e-14
+
+Postprocessor Values:
++----------------+----------------+----------------+
+| time           | timestep       | volume_ratio   |
++----------------+----------------+----------------+
+|   1.000000e+00 |   0.000000e+00 |   1.000000e+00 |
++----------------+----------------+----------------+
+
+

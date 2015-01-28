@@ -1,0 +1,87 @@
+Framework Information:
+MOOSE version:           git commit da64446 on 2015-01-28
+PETSc Version:           3.5.1
+Current Time:            Wed Jan 28 23:21:58 2015
+Executable Timestamp:    Wed Jan 28 21:27:31 2015
+
+LEGACY MODES ENABLED:
+  Computing EXEC_LINEAR AuxKernel types when any UserObject type is executed.
+  Computing all UserObjects during initial setup.
+
+Parallelism:
+  Num Processors:        4
+  Num Threads:           1
+
+Mesh: 
+  Distribution:          serial
+  Mesh Dimension:        3
+  Spatial Dimension:     3
+  Nodes:                 
+    Total:               1720
+    Local:               473
+  Elems:                 
+    Total:               270
+    Local:               69
+  Num Subdomains:        1
+  Num Partitions:        4
+  Partitioner:           metis
+
+Nonlinear System:
+  Num DOFs:              5656
+  Num Local DOFs:        1559
+  Variables:             { "dispx" "dispy" "dispz" } "pressure" 
+  Finite Element Types:  "LAGRANGE" "LAGRANGE" 
+  Approximation Orders:  "SECOND" "FIRST" 
+
+Auxiliary System:
+  Num DOFs:              4320
+  Num Local DOFs:        1104
+  Variables:             { "stress_xx" "stress_yy" "stress_zz" "stress_xy" "stress_yz" "stress_xz" "E_fibre_x" 
+                           "E_fibre_y" "E_fibre_z" "E_normal_x" "E_normal_y" "E_normal_z" "E_sheet_x" 
+                           "E_sheet_y" "E_sheet_z" "det_displacement_gradient" } 
+  Finite Element Types:  "MONOMIAL" 
+  Approximation Orders:  "CONSTANT" 
+
+Execution Information:
+  Executioner:           Steady
+  Solver Mode:           NEWTON
+
+Outputs:
+  out                    "INITIAL LINEAR NONLINEAR TIMESTEP_END"
+  console                "INITIAL LINEAR NONLINEAR TIMESTEP_BEGIN TIMESTEP_END"
+
+
+ 0 Nonlinear |R| = 3.986603e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 1 Nonlinear |R| = 6.617815e-03
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 2 Nonlinear |R| = 1.250926e-03
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 3 Nonlinear |R| = 2.908200e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 4 Nonlinear |R| = 3.153396e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 5 Nonlinear |R| = 4.655058e-07
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 6 Nonlinear |R| = 2.909025e-08
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 7 Nonlinear |R| = 1.069826e-09
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 8 Nonlinear |R| = 6.276029e-11
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 9 Nonlinear |R| = 3.896243e-12
+  Linear solve converged due to CONVERGED_ITS iterations 1
+10 Nonlinear |R| = 2.801291e-13
+Nonlinear solve converged due to CONVERGED_FNORM_RELATIVE iterations 10
+
+Outlier Variable Residual Norms:
+  dispy: 2.541153e-13
+
+Postprocessor Values:
++----------------+----------------+----------------+
+| time           | timestep       | volume_ratio   |
++----------------+----------------+----------------+
+|   1.000000e+00 |   0.000000e+00 |   1.000000e+00 |
++----------------+----------------+----------------+
+
+

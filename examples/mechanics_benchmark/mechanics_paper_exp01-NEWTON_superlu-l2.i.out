@@ -1,0 +1,155 @@
+Framework Information:
+MOOSE version:           git commit da64446 on 2015-01-28
+PETSc Version:           3.5.1
+Current Time:            Wed Jan 28 23:23:29 2015
+Executable Timestamp:    Wed Jan 28 21:27:31 2015
+
+LEGACY MODES ENABLED:
+  Computing EXEC_LINEAR AuxKernel types when any UserObject type is executed.
+  Computing all UserObjects during initial setup.
+
+Parallelism:
+  Num Processors:        4
+  Num Threads:           1
+
+Mesh: 
+  Distribution:          serial
+  Mesh Dimension:        3
+  Spatial Dimension:     3
+  Nodes:                 
+    Total:               1720
+    Local:               473
+  Elems:                 
+    Total:               270
+    Local:               69
+  Num Subdomains:        1
+  Num Partitions:        4
+  Partitioner:           metis
+
+Nonlinear System:
+  Num DOFs:              5656
+  Num Local DOFs:        1559
+  Variables:             { "dispx" "dispy" "dispz" } "pressure" 
+  Finite Element Types:  "LAGRANGE" "LAGRANGE" 
+  Approximation Orders:  "SECOND" "FIRST" 
+
+Auxiliary System:
+  Num DOFs:              4320
+  Num Local DOFs:        1104
+  Variables:             { "stress_xx" "stress_yy" "stress_zz" "stress_xy" "stress_yz" "stress_xz" "E_fibre_x" 
+                           "E_fibre_y" "E_fibre_z" "E_normal_x" "E_normal_y" "E_normal_z" "E_sheet_x" 
+                           "E_sheet_y" "E_sheet_z" "det_displacement_gradient" } 
+  Finite Element Types:  "MONOMIAL" 
+  Approximation Orders:  "CONSTANT" 
+
+Execution Information:
+  Executioner:           Steady
+  Solver Mode:           NEWTON
+
+Outputs:
+  out                    "INITIAL LINEAR NONLINEAR TIMESTEP_END"
+  console                "INITIAL LINEAR NONLINEAR TIMESTEP_BEGIN TIMESTEP_END"
+
+
+ 0 Nonlinear |R| = 3.986603e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [0.00661782, 0.00147721, 3.9866e-05]
+      Line search terminated: lambda = 0.222351, fnorms = 0.000298551
+ 1 Nonlinear |R| = 2.985515e-04
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [0.000422755, 0.000247716, 0.000298551]
+      Line search terminated: lambda = 0.345673, fnorms = 0.000241215
+ 2 Nonlinear |R| = 2.412150e-04
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [0.00039933, 0.000219918, 0.000241215]
+      Line search terminated: lambda = 0.290608, fnorms = 0.000204602
+ 3 Nonlinear |R| = 2.046021e-04
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [0.000392875, 0.000200189, 0.000204602]
+      Line search terminated: lambda = 0.257697, fnorms = 0.000177869
+ 4 Nonlinear |R| = 1.778688e-04
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [0.000377763, 0.000182731, 0.000177869]
+      Line search terminated: lambda = 0.24185, fnorms = 0.000156742
+ 5 Nonlinear |R| = 1.567422e-04
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [0.000353089, 0.000165807, 0.000156742]
+      Line search terminated: lambda = 0.234489, fnorms = 0.000139133
+ 6 Nonlinear |R| = 1.391334e-04
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [0.000321321, 0.000149017, 0.000139133]
+      Line search terminated: lambda = 0.23179, fnorms = 0.000123862
+ 7 Nonlinear |R| = 1.238624e-04
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [0.000285182, 0.000132401, 0.000123862]
+      Line search terminated: lambda = 0.232243, fnorms = 0.000110209
+ 8 Nonlinear |R| = 1.102086e-04
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [0.000246976, 0.000116128, 0.000110209]
+      Line search terminated: lambda = 0.23549, fnorms = 9.77135e-05
+ 9 Nonlinear |R| = 9.771352e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [0.000208453, 0.000100377, 9.77135e-05]
+      Line search terminated: lambda = 0.241968, fnorms = 8.60729e-05
+10 Nonlinear |R| = 8.607289e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [0.000170868, 8.52895e-05, 8.60729e-05]
+      Line search terminated: lambda = 0.253043, fnorms = 7.50677e-05
+11 Nonlinear |R| = 7.506770e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [0.000135065, 7.09571e-05, 7.50677e-05]
+      Line search terminated: lambda = 0.271736, fnorms = 6.45084e-05
+12 Nonlinear |R| = 6.450840e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [0.000101562, 5.74099e-05, 6.45084e-05]
+      Line search terminated: lambda = 0.304884, fnorms = 5.41738e-05
+13 Nonlinear |R| = 5.417382e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [7.06088e-05, 4.45983e-05, 5.41738e-05]
+      Line search terminated: lambda = 0.369952, fnorms = 4.37092e-05
+14 Nonlinear |R| = 4.370915e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [4.23155e-05, 3.23711e-05, 4.37092e-05]
+      Line search terminated: lambda = 0.518671, fnorms = 3.23561e-05
+15 Nonlinear |R| = 3.235613e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [1.74353e-05, 2.053e-05, 3.23561e-05]
+      Line search terminated: lambda = 0.865651, fnorms = 1.73958e-05
+16 Nonlinear |R| = 1.739580e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [1.78572e-06, 9.14653e-06, 1.73958e-05]
+      Line search terminated: lambda = 1.04054, fnorms = 1.23193e-06
+17 Nonlinear |R| = 1.231927e-06
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [2.18793e-08, 6.20146e-07, 1.23193e-06]
+      Line search terminated: lambda = 1.00642, fnorms = 1.84689e-08
+18 Nonlinear |R| = 1.846895e-08
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [9.06115e-10, 9.61807e-09, 1.84689e-08]
+      Line search terminated: lambda = 1.04216, fnorms = 5.12952e-10
+19 Nonlinear |R| = 5.129525e-10
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [2.76075e-11, 2.58059e-10, 5.12952e-10]
+      Line search terminated: lambda = 1.00186, fnorms = 2.75911e-11
+20 Nonlinear |R| = 2.759108e-11
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [1.91425e-12, 1.42627e-11, 2.75911e-11]
+      Line search terminated: lambda = 1.02893, fnorms = 1.75074e-12
+21 Nonlinear |R| = 1.750741e-12
+  Linear solve converged due to CONVERGED_ITS iterations 1
+      Line search: lambdas = [1, 0.5, 0], fnorms = [1.09383e-13, 8.86618e-13, 1.75074e-12]
+      Line search terminated: lambda = 1.00721, fnorms = 1.08666e-13
+22 Nonlinear |R| = 1.086662e-13
+Nonlinear solve converged due to CONVERGED_FNORM_RELATIVE iterations 22
+
+Outlier Variable Residual Norms:
+  dispy: 7.729449e-14
+
+Postprocessor Values:
++----------------+----------------+----------------+
+| time           | timestep       | volume_ratio   |
++----------------+----------------+----------------+
+|   1.000000e+00 |   0.000000e+00 |   1.000000e+00 |
++----------------+----------------+----------------+
+
+

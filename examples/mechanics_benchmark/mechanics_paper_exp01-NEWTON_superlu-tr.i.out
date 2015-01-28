@@ -1,0 +1,362 @@
+Framework Information:
+MOOSE version:           git commit da64446 on 2015-01-28
+PETSc Version:           3.5.1
+Current Time:            Thu Jan 29 00:18:27 2015
+Executable Timestamp:    Wed Jan 28 21:27:31 2015
+
+LEGACY MODES ENABLED:
+  Computing EXEC_LINEAR AuxKernel types when any UserObject type is executed.
+  Computing all UserObjects during initial setup.
+
+Parallelism:
+  Num Processors:        4
+  Num Threads:           1
+
+Mesh: 
+  Distribution:          serial
+  Mesh Dimension:        3
+  Spatial Dimension:     3
+  Nodes:                 
+    Total:               1720
+    Local:               473
+  Elems:                 
+    Total:               270
+    Local:               69
+  Num Subdomains:        1
+  Num Partitions:        4
+  Partitioner:           metis
+
+Nonlinear System:
+  Num DOFs:              5656
+  Num Local DOFs:        1559
+  Variables:             { "dispx" "dispy" "dispz" } "pressure" 
+  Finite Element Types:  "LAGRANGE" "LAGRANGE" 
+  Approximation Orders:  "SECOND" "FIRST" 
+
+Auxiliary System:
+  Num DOFs:              4320
+  Num Local DOFs:        1104
+  Variables:             { "stress_xx" "stress_yy" "stress_zz" "stress_xy" "stress_yz" "stress_xz" "E_fibre_x" 
+                           "E_fibre_y" "E_fibre_z" "E_normal_x" "E_normal_y" "E_normal_z" "E_sheet_x" 
+                           "E_sheet_y" "E_sheet_z" "det_displacement_gradient" } 
+  Finite Element Types:  "MONOMIAL" 
+  Approximation Orders:  "CONSTANT" 
+
+Execution Information:
+  Executioner:           Steady
+  Solver Mode:           NEWTON
+
+Outputs:
+  out                    "INITIAL LINEAR NONLINEAR TIMESTEP_END"
+  console                "INITIAL LINEAR NONLINEAR TIMESTEP_BEGIN TIMESTEP_END"
+
+
+ 0 Nonlinear |R| = 3.986603e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 1 Nonlinear |R| = 3.986599e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 2 Nonlinear |R| = 3.986590e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 3 Nonlinear |R| = 3.986572e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 4 Nonlinear |R| = 3.986536e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 5 Nonlinear |R| = 3.986465e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 6 Nonlinear |R| = 3.986323e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 7 Nonlinear |R| = 3.986039e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 8 Nonlinear |R| = 3.985473e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+ 9 Nonlinear |R| = 3.984352e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+10 Nonlinear |R| = 3.982146e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+11 Nonlinear |R| = 3.977885e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+12 Nonlinear |R| = 3.969965e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+13 Nonlinear |R| = 3.956544e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+14 Nonlinear |R| = 3.945568e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+15 Nonlinear |R| = 3.929154e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+16 Nonlinear |R| = 3.914771e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+17 Nonlinear |R| = 3.902801e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+18 Nonlinear |R| = 3.886079e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+19 Nonlinear |R| = 3.870845e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+20 Nonlinear |R| = 3.857878e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+21 Nonlinear |R| = 3.847278e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+22 Nonlinear |R| = 3.831371e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+23 Nonlinear |R| = 3.817452e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+24 Nonlinear |R| = 3.805882e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+25 Nonlinear |R| = 3.789609e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+26 Nonlinear |R| = 3.774830e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+27 Nonlinear |R| = 3.762277e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+28 Nonlinear |R| = 3.752031e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+29 Nonlinear |R| = 3.736555e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+30 Nonlinear |R| = 3.723058e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+31 Nonlinear |R| = 3.711864e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+32 Nonlinear |R| = 3.695959e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+33 Nonlinear |R| = 3.681592e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+34 Nonlinear |R| = 3.669429e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+35 Nonlinear |R| = 3.653524e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+36 Nonlinear |R| = 3.638433e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+37 Nonlinear |R| = 3.625310e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+38 Nonlinear |R| = 3.614447e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+39 Nonlinear |R| = 3.598879e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+40 Nonlinear |R| = 3.584880e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+41 Nonlinear |R| = 3.573063e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+42 Nonlinear |R| = 3.557397e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+43 Nonlinear |R| = 3.542644e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+44 Nonlinear |R| = 3.529871e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+45 Nonlinear |R| = 3.519328e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+46 Nonlinear |R| = 3.504046e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+47 Nonlinear |R| = 3.490390e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+48 Nonlinear |R| = 3.478907e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+49 Nonlinear |R| = 3.463428e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+50 Nonlinear |R| = 3.448990e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+51 Nonlinear |R| = 3.436556e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+52 Nonlinear |R| = 3.426326e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+53 Nonlinear |R| = 3.411307e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+54 Nonlinear |R| = 3.397983e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+55 Nonlinear |R| = 3.386829e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+56 Nonlinear |R| = 3.371518e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+57 Nonlinear |R| = 3.357385e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+58 Nonlinear |R| = 3.345287e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+59 Nonlinear |R| = 3.335370e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+60 Nonlinear |R| = 3.320607e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+61 Nonlinear |R| = 3.307609e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+62 Nonlinear |R| = 3.296782e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+63 Nonlinear |R| = 3.281639e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+64 Nonlinear |R| = 3.267815e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+65 Nonlinear |R| = 3.256055e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+66 Nonlinear |R| = 3.246451e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+67 Nonlinear |R| = 3.231951e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+68 Nonlinear |R| = 3.219293e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+69 Nonlinear |R| = 3.208796e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+70 Nonlinear |R| = 3.193836e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+71 Nonlinear |R| = 3.180328e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+72 Nonlinear |R| = 3.168908e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+73 Nonlinear |R| = 3.153823e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+74 Nonlinear |R| = 3.139567e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+75 Nonlinear |R| = 3.127213e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+76 Nonlinear |R| = 3.117013e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+77 Nonlinear |R| = 3.102229e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+78 Nonlinear |R| = 3.089011e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+79 Nonlinear |R| = 3.077900e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+80 Nonlinear |R| = 3.062879e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+81 Nonlinear |R| = 3.048878e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+82 Nonlinear |R| = 3.036836e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+83 Nonlinear |R| = 3.026938e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+84 Nonlinear |R| = 3.012348e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+85 Nonlinear |R| = 2.999432e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+86 Nonlinear |R| = 2.988635e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+87 Nonlinear |R| = 2.973707e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+88 Nonlinear |R| = 2.959979e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+89 Nonlinear |R| = 2.948258e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+90 Nonlinear |R| = 2.938668e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+91 Nonlinear |R| = 2.924295e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+92 Nonlinear |R| = 2.911693e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+93 Nonlinear |R| = 2.901219e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+94 Nonlinear |R| = 2.886417e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+95 Nonlinear |R| = 2.872981e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+96 Nonlinear |R| = 2.861591e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+97 Nonlinear |R| = 2.852312e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+98 Nonlinear |R| = 2.838183e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+99 Nonlinear |R| = 2.825909e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+100 Nonlinear |R| = 2.815763e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+101 Nonlinear |R| = 2.801125e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+102 Nonlinear |R| = 2.787999e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+103 Nonlinear |R| = 2.776948e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+104 Nonlinear |R| = 2.762085e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+105 Nonlinear |R| = 2.748181e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+106 Nonlinear |R| = 2.736204e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+107 Nonlinear |R| = 2.726353e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+108 Nonlinear |R| = 2.711871e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+109 Nonlinear |R| = 2.699027e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+110 Nonlinear |R| = 2.688283e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+111 Nonlinear |R| = 2.673465e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+112 Nonlinear |R| = 2.659811e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+113 Nonlinear |R| = 2.648145e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+114 Nonlinear |R| = 2.638596e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+115 Nonlinear |R| = 2.624302e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+116 Nonlinear |R| = 2.611758e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+117 Nonlinear |R| = 2.601330e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+118 Nonlinear |R| = 2.586602e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+119 Nonlinear |R| = 2.573222e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+120 Nonlinear |R| = 2.561878e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+121 Nonlinear |R| = 2.552637e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+122 Nonlinear |R| = 2.538563e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+123 Nonlinear |R| = 2.526336e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+124 Nonlinear |R| = 2.516230e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+125 Nonlinear |R| = 2.501637e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+126 Nonlinear |R| = 2.488553e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+127 Nonlinear |R| = 2.477541e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+128 Nonlinear |R| = 2.468611e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+129 Nonlinear |R| = 2.454789e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+130 Nonlinear |R| = 2.442892e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+131 Nonlinear |R| = 2.433113e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+132 Nonlinear |R| = 2.418697e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+133 Nonlinear |R| = 2.405928e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+134 Nonlinear |R| = 2.395256e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+135 Nonlinear |R| = 2.386639e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+136 Nonlinear |R| = 2.373095e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+137 Nonlinear |R| = 2.361539e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+138 Nonlinear |R| = 2.352091e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+139 Nonlinear |R| = 2.337890e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+140 Nonlinear |R| = 2.325452e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+141 Nonlinear |R| = 2.315124e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+142 Nonlinear |R| = 2.306820e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+143 Nonlinear |R| = 2.293578e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+144 Nonlinear |R| = 2.282372e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+145 Nonlinear |R| = 2.273256e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+146 Nonlinear |R| = 2.259302e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+147 Nonlinear |R| = 2.247209e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+148 Nonlinear |R| = 2.237229e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+149 Nonlinear |R| = 2.229236e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+150 Nonlinear |R| = 2.216316e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+151 Nonlinear |R| = 2.205465e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+152 Nonlinear |R| = 2.196679e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+153 Nonlinear |R| = 2.183003e-05
+  Linear solve converged due to CONVERGED_ITS iterations 1
+154 Nonlinear |R| = 2.171264e-05
