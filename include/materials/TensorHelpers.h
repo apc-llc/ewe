@@ -29,18 +29,13 @@ namespace TensorHelpers {
 
   /// Computes \f$\mathrm{outer}^\mathrm{T}\,\mathrm{inner}\,\mathrm{outer}\f$.
   const inline SymmTensor symmProd(const RealTensorValue & outer, const SymmTensor & inner) {
-    /** @todo TODO: this would be much more efficient:
     SymmTensor res;
-    for (unsigned int i=0;i<3;i++)
-      for (unsigned int j=i;j<3;j++) {
-        Real s(0);
-        for (unsigned int k=0;k<3;k++)
-          s += outer(k,i) * ( inner(k,0)*outer(0,j) + inner(k,1)*outer(1,j) + inner(k,2)*outer(2,j) );
-        res(i,j) = s;
+    RealTensorValue outerT = outer.transpose();
+    for (unsigned int M=0; M<3; M++)
+      for (unsigned int N=M; N<3; N++) {
+        res(M,N) = outerT.row(M)*(inner*outerT.row(N));
       }
-    */
-    RealTensorValue r(outer.transpose() * STtoRTV(inner) * outer);
-    return SymmTensor(r(0,0), r(1,1), r(2,2), r(0,1), r(1,2), r(0,2) );
+    return res;
   }
 
   /// Computes the symmetric product \f$A^\mathrm{T}A\f$.
