@@ -19,6 +19,12 @@ public:
     this->zero();
   }
 
+  /// default contructor: all elements are zero
+  CardiacElasticityTensor(Real val) {
+    for (unsigned int i = 0;i<21;i++)
+      _val[i] = val;
+  }
+
   /// default destructor
   virtual ~CardiacElasticityTensor() {}
 
@@ -135,33 +141,15 @@ public:
     for (unsigned i(0); i < 21; ++i)
       _val[i] = 0;
   }
-/*
-
-  /// computes \f$\sum_{m,n,p,q} A_{Mm} B_{Nn} C_{Pp} D_{Qq} t_{m,n,p,q}\f$
-  inline CardiacElasticityTensor quadProduct(RealTensorValue & A, RealTensorValue & B, RealTensorValue & C, RealTensorValue & D) const
-  {
-    // insane loop to cover all elements of the symmetric 4th order tensor exactly once. The if-construct avoids douple-counting for major-symmetry pairs of MN<->PQ
-    CardiacElasticityTensor res(0);
-    for (unsigned int M=0;M<3;M++)
-      for (unsigned int N=M;N<3;N++)
-        for (unsigned int P=M;P<3;P++)
-          for (unsigned int Q=P;Q<3;Q++)
-            if (P != M || Q >= N)
-              res(M,N,P,Q) = fullContraction(A.row(M), B.row(N), C.row(P), D.row(Q));
-
-    return res;
-  }
-*/
 
   /// computes \f$\sum_{m,n,p,q} A_{Mm} A_{Nn} A_{Pp} A_{Qq} t_{m,n,p,q}\f$
   inline CardiacElasticityTensor quadProduct(RealTensorValue & A) const
   {
     CardiacElasticityTensor res;
-    for (unsigned int v=0;v<21;v++) {
-      unsigned int minor[4];
-      idx_inv_minor(v, minor);
-      res(v) = fullContraction(A.row(minor[0]), A.row(minor[1]), A.row(minor[2]), A.row(minor[3]));
-    }
+    res.fill_from_minor_iter( [&](const unsigned int M,
+                                  const unsigned int N,
+                                  const unsigned int P,
+                                  const unsigned int Q) -> Real { return fullContraction(A.row(M), A.row(N), A.row(P), A.row(Q)); });
     return res;
   }
 

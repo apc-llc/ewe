@@ -13,6 +13,7 @@
 #include "NeighborElementAverageAux.h"
 #include "MaterialSymmTensorAux.h"
 #include "NewmarkMaterial.h"
+#include "CardiacTestsMaterial.h"
 #include "CardiacKirchhoffStressDivergence.h"
 #include "CardiacLinearOrthotropicMaterial.h"
 #include "CardiacNash2000Material.h"
@@ -93,6 +94,7 @@ EweApp::registerObjects(Factory & factory)
   registerMaterial(CardiacCostaMaterial);
   registerMaterial(CardiacLinearMaterial);
   registerMaterial(CardiacFibresMaterial);
+  registerMaterial(CardiacTestsMaterial);
 
   registerMaterial(ActiveTensionODE);
 
