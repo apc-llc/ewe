@@ -59,26 +59,28 @@ namespace TensorHelpers {
   }
 
   /// Computes \f$C^{-1}\f$ using if \f$\mathrm{det}C\f$ is already known.
+  /// see http://mathworld.wolfram.com/MatrixInverse.html to check ;-)
   const inline SymmTensor symmInv(const SymmTensor & C, const Real det) {
-    return SymmTensor(/* 00 */ C(0,0)*C(1,1)-C(1,2)*C(1,2),
-                      /* 11 */ C(0,0)*C(0,0)-C(0,2)*C(0,2),
-                      /* 22 */ C(0,0)*C(1,1)-C(0,1)*C(0,1),
-                      /* 01 */ C(0,2)*C(1,2)-C(0,0)*C(0,1),
-                      /* 12 */ C(0,1)*C(0,2)-C(0,0)*C(1,2),
+    return SymmTensor(/* 00 */ C(1,1)*C(2,2)-C(1,2)*C(2,1),
+                      /* 11 */ C(0,0)*C(2,2)-C(0,2)*C(2,0),
+                      /* 22 */ C(0,0)*C(1,1)-C(0,1)*C(1,0),
+                      /* 01 */ C(0,2)*C(2,1)-C(0,1)*C(2,2),
+                      /* 12 */ C(0,2)*C(1,0)-C(0,0)*C(1,2),
                       /* 02 */ C(0,1)*C(1,2)-C(0,2)*C(1,1)) * (1./det);
   }
 
   /// Computes \f$F^{-1}\f$ using if \f$\mathrm{det}F\f$ is already known.
+  /// see http://mathworld.wolfram.com/MatrixInverse.html to check ;-)
   const inline RealTensorValue mat_inv(const RealTensorValue & F, const Real det) {
-    return RealTensorValue(/* 00 */ F(1,1)*F(2,2)-F(2,1)*F(1,2),
+    return RealTensorValue(/* 00 */ F(1,1)*F(2,2)-F(1,2)*F(2,1),
                            /* 01 */ F(0,2)*F(2,1)-F(0,1)*F(2,2),
                            /* 02 */ F(0,1)*F(1,2)-F(0,2)*F(1,1),
-                           /* 10 */ F(0,1)*F(1,2)-F(0,2)*F(1,1),
+                           /* 10 */ F(1,2)*F(2,0)-F(1,0)*F(2,2),
                            /* 11 */ F(0,0)*F(2,2)-F(0,2)*F(2,0),
-                           /* 12 */ F(1,0)*F(0,2)-F(0,0)*F(1,2),
-                           /* 20 */ F(1,0)*F(2,1)-F(2,0)*F(1,1),
-                           /* 21 */ F(2,0)*F(0,1)-F(0,0)*F(2,1),
-                           /* 22 */ F(0,0)*F(1,1)-F(1,0)*F(0,1)) * (1./det);
+                           /* 12 */ F(0,2)*F(1,0)-F(0,0)*F(1,2),
+                           /* 20 */ F(1,0)*F(2,1)-F(1,1)*F(2,0),
+                           /* 21 */ F(0,1)*F(2,0)-F(0,0)*F(2,1),
+                           /* 22 */ F(0,0)*F(1,1)-F(0,1)*F(1,0)) * (1./det);
   }
 
   /// Computes \f$\mathbf{A}\cdot\mathbf{A}\f$ for symmetric tensors
