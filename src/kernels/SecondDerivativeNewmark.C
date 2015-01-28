@@ -5,7 +5,7 @@ template<>
 InputParameters validParams<SecondDerivativeNewmark>()
 {
   InputParameters params = validParams<TimeKernel>();
-  params.addParam<Real>("density", 1.0, "Mass density");
+  params.addParam<Real>("density", 1.0, "Mass density in g/cm^3");
   params.addParam<bool>("lumping", false, "True for mass matrix lumping, false otherwise");
   //params.set<bool>("use_displaced_mesh") = true;
 
@@ -15,7 +15,7 @@ InputParameters validParams<SecondDerivativeNewmark>()
 SecondDerivativeNewmark::SecondDerivativeNewmark(const std::string & name, InputParameters parameters) :
     TimeKernel(name, parameters),
     _comp_name(variable().name()),  // we use the name that was supplied as disp parameter to ensure unique naming and finally correct correspondence to NewmarkMaterial.C
-    _density(getParam<Real>("density")),
+    _density(100.*getParam<Real>("density")),  ///< rescaling from g/cm^3 to 1/100 g/cm^3
     _lumping(getParam<bool>("lumping")),
     _acc(getMaterialPropertyOld<Real>("newmark_acceleration-" + _comp_name)),
     _vel(getMaterialPropertyOld<Real>("newmark_velocity-"     + _comp_name)),

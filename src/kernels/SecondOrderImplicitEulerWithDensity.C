@@ -6,7 +6,7 @@ template<>
 InputParameters validParams<SecondOrderImplicitEulerWithDensity>()
 {
   InputParameters params = validParams<SecondDerivativeImplicitEuler>();
-  params.addParam<Real>("density", 1.0, "Mass density");
+  params.addParam<Real>("density", 1.0, "Mass density in g/cm^3");
   params.addParam<bool>("lumping", false, "True for mass matrix lumping, false otherwise");
   return params;
 }
@@ -14,7 +14,7 @@ InputParameters validParams<SecondOrderImplicitEulerWithDensity>()
 SecondOrderImplicitEulerWithDensity::SecondOrderImplicitEulerWithDensity(const std::string & name,
                                              InputParameters parameters) :
     SecondDerivativeImplicitEuler(name,parameters),
-    _density(getParam<Real>("density")),
+    _density(100.*getParam<Real>("density")),  ///< rescaling from g/cm^3 to 1/100 g/cm^3
     _lumping(getParam<bool>("lumping"))
 {}
 

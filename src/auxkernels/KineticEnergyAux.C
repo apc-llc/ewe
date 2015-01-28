@@ -4,7 +4,7 @@ template<>
 InputParameters validParams<KineticEnergyAux>()
 {
   InputParameters params = validParams<AuxKernel>();
-  params.addParam<Real>("density", 1.0, "Mass density");
+  params.addParam<Real>("density", 1.0, "Mass density in g/cm^3");
   params.addRequiredCoupledVar("displacements", "A list of displacement variables");
   //params.set<bool>("use_displaced_mesh") = true;
   return params;
@@ -12,7 +12,7 @@ InputParameters validParams<KineticEnergyAux>()
 
 KineticEnergyAux::KineticEnergyAux(const std::string & name, InputParameters parameters) :
     AuxKernel(name, parameters),
-    _density(getParam<Real>("density"))
+    _density(100.*getParam<Real>("density")) ///< rescaling from g/cm^3 to 1/100 g/cm^3
 {
   // see http://mooseframework.org/wiki/Faq/#coupling-to-an-arbitrary-number-of-variables-back-to-top for details on this magic
   _disp.resize(coupledComponents("displacements"));
