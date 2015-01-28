@@ -41,6 +41,7 @@ protected:
   MaterialProperty<SymmTensor> & _stress;                          ///< 2nd Piola-Kirchhoff stress tensor \f$T_{MN}\f$
   MaterialProperty<CardiacElasticityTensor> & _stress_derivative;   ///< derivative of the 2nd Piola-Kirchhoff stress tensor \f$\frac{\partial T_{MN}}{\partial E_{PQ}}\f$
   MaterialProperty<SymmTensor> & _Cinv;   ///< inverse of the Cauchy-Green deformation tensor
+  MaterialProperty<Real> & _J; ///< det F, i.e. volume change
 
 private:
   Real JacobianSecondOrderContribution(const unsigned int i, const unsigned int k);

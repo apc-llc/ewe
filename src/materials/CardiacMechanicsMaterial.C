@@ -89,16 +89,15 @@ CardiacMechanicsMaterial::computeQpProperties()
     // Add hydrostatic pressure as Lagrange multiplier to ensure incompressibility
     if (_has_p) {
       // _stress(MN) += p*Cinv(MN)
-      _stress[_qp] -= Cinv * _p[_qp];
+      _stress[_qp] -= Cinv * _J[_qp] * _p[_qp];
       // for the derivative of T, things do become slightly complicated as we have to do
       // _stress_derivative(MNPQ) += 2 * p * Cinv(M,P) * Cinv(Q,N)
       CardiacElasticityTensor sdp;
-
                                  /* fancy lambda function syntax makes things much easier here */
       sdp.fill_from_minor_iter( [&](const unsigned int M,
                                     const unsigned int N,
                                     const unsigned int P,
-                                    const unsigned int Q) -> Real { return 2. * _p[_qp] * Cinv(M,P)*Cinv(Q,N); } );
+                                    const unsigned int Q) -> Real { return _p[_qp] * _J[_qp] * (2.*Cinv(M,P)*Cinv(Q,N) - Cinv(Q,P)*Cinv(M,N)); } );
 
       _stress_derivative[_qp] += sdp;
       // no energy contribution from a Lagrange multiplier
@@ -124,7 +123,7 @@ CardiacMechanicsMaterial::computeQpProperties()
       CardiacElasticityTensor sda;
       for (int P=0;P<3;P++)
         for (int Q=P;Q<3;Q++)
-          sda(M,N,P,Q) = -2 * Ta * Cinv(M,P) * Cinv(Q,N);
+          sda(M,N,P,Q) = -2. * Ta * Cinv(M,P) * Cinv(Q,N);
 
       _stress_derivative[_qp] += sda;
       /// @todo TODO: how does this go into the elastic energy ?
