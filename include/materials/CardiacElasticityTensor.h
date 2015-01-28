@@ -2,7 +2,6 @@
 #define CardiacElasticityTensor_H
 
 #include "SymmTensor.h"
-#include <functional>
 
 
 /**
@@ -167,7 +166,11 @@ public:
   }
 
   /// computes \f$\sum_{m,n,p,q} A_{Mm} A_{Nn} A_{Pp} A_{Qq} t_{m,n,p,q}\f$
-  inline void fill_from_minor_iter( std::function<Real (int,int,int,int)> elementfunction )
+  /// \todo: the function header should better read
+  ///        `inline void fill_from_minor_iter( std::function<Real (int,int,int,int)> elementfunction )`
+  ///        but this is not supported by some older clang installations around
+  template <typename Func>
+  inline void fill_from_minor_iter( Func elementfunction )
   {
     for (unsigned int v=0;v<21;v++) {
       unsigned int minor[4];
