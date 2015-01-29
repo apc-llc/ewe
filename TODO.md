@@ -133,3 +133,8 @@ General
 * Further TODOs in the inline documentation, see the \ref todo "TODO list"
 * Add `execute_on=timestep` to all diagnostic variables, add `execute_on='initial timestep_end'` to all `[Outputs]` blocks to include the 0th timestep in the Exodus files.
 * Improve error messages. In particular do not only include class names but object names via their attribute `name`, e.g. as in `CardiacMechanicsPressureBC`
+
+Solver-relevant
+===============
+* check if any eigenvalues of the Jacobian are < 0 which would be bad for convergence guarantee of the Newton method
+* check if <delta_x,nabla_Psi> < 0, which means that the configuration update actually points into the direction of the greatest decrease.
