@@ -1,14 +1,16 @@
 [Mesh]
       file = 'ventricle_coarse.e'
       displacements = 'dispx dispy dispz'
+      block_id='1'
+      block_name='all'
 []
 
 [Variables]
-  [./dispx]  order=FIRST  family=LAGRANGE  [../]
-  [./dispy]  order=FIRST  family=LAGRANGE  [../]
-  [./dispz]  order=FIRST  family=LAGRANGE  [../]
+  [./dispx]  order=SECOND  family=LAGRANGE  [../]
+  [./dispy]  order=SECOND  family=LAGRANGE  [../]
+  [./dispz]  order=SECOND  family=LAGRANGE  [../]
 
-  [./pressure]  order=CONSTANT  family=MONOMIAL  [../]
+  [./pressure]  order=FIRST  family=LAGRANGE  [../]
 []
 
 [Kernels]
@@ -42,7 +44,7 @@
 
   [./fibres]
     type=CardiacFibresMaterial
-    block = '3 5 6 7 8 9 10 11'
+    block = all
     fixed_R='1 0 0
              0 1 0
              0 0 1'
@@ -51,7 +53,7 @@
 
   [./cardiac_material_costa]
     type = CardiacCostaMaterial
-    block = '3 5 6 7 8 9 10 11'
+    block = all
     use_displaced_mesh = false
     # material parameters in the order C, b_f, b_t, b_fs (C in kPa, b unitless)
     material_parameters =           ' 10  1    1    1'
@@ -64,13 +66,13 @@
 
 
 [BCs]
-  [./displacement_x]  type=PresetBC  variable=dispx  boundary=3  value=0.0  [../]
-  [./displacement_y]  type=PresetBC  variable=dispy  boundary=3  value=0.0  [../]
-  [./displacement_z]  type=PresetBC  variable=dispz  boundary=3  value=0.0  [../]
+  [./displacement_x]  type=PresetBC  variable=dispx  boundary=103  value=0.0  [../]
+  [./displacement_y]  type=PresetBC  variable=dispy  boundary=103  value=0.0  [../]
+  [./displacement_z]  type=PresetBC  variable=dispz  boundary=103  value=0.0  [../]
 
-  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary=1  value=10.  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
-  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary=1  value=10.  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
-  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary=1  value=10.  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
+  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary=101  value=1.  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
+  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary=101  value=1.  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
+  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary=101  value=1.  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
 []
 
 [Postprocessors]
