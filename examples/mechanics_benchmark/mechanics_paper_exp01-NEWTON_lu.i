@@ -138,17 +138,6 @@
 
   petsc_options_iname='-snes_type -ksp_type -pc_type -pc_factor_shift_type '
   petsc_options_value=' newtonls   preonly   lu       NONZERO'
-  petsc_options='-fp_trap
-                 -info
-                 -snes_converged_reason
-                 -ksp_converged_reason
-                 -ksp_monitor_true_residual
-                 -snes_linesearch_monitor
-                 -pc_svd_monitor
-                 -snes_test_display
-                 -snes_ksp_ew_conv
-                 '
-#                 -help
   #line_search = 'cubic'
   
   #nl_rel_tol = 1.e-12
