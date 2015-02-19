@@ -70,44 +70,53 @@
   [./displacement_y]  type=PresetBC  variable=dispy  boundary=103  value=0.0  [../]
   [./displacement_z]  type=PresetBC  variable=dispz  boundary=103  value=0.0  [../]
 
-  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary=101  value=5.  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
-  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary=101  value=5.  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
-  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary=101  value=5.  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
+  [./pressure_x]  type=CardiacMechanicsPressureBC  variable=dispx  component=0  boundary=101  value=10.  function=switch_ramp  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
+  [./pressure_y]  type=CardiacMechanicsPressureBC  variable=dispy  component=1  boundary=101  value=10.  function=switch_ramp  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
+  [./pressure_z]  type=CardiacMechanicsPressureBC  variable=dispz  component=2  boundary=101  value=10.  function=switch_ramp  use_current_configuration=true  displacements='dispx dispy dispz'  [../]
 []
 
 [Postprocessors]
   [./volume_ratio]  type=CardiacMaterialVolumeRatioPostprocessor  [../]
   [./timestep]      type=TimestepSize execute_on='timestep_end'  [../]
 []
+
+[Functions]
+  [./switch_ramp]
+    type = PiecewiseLinear
+    x = '0.0  1.0'
+    y = '0.0  1.0'
+    scale_factor = 1
+  [../]
+[]
  
 [Dampers]
 # Use a constant damping parameter
  [./dispx_damp]
-   type = ConstantDamper
-   variable = dispx
-   damping = 0.25
+ type = ConstantDamper
+ variable = dispx
+ damping = 0.8
  [../]
  [./dispy_damp]
-   type = ConstantDamper
-   variable = dispy
-   damping = 0.25
+ type = ConstantDamper
+ variable = dispy
+ damping = 0.8
  [../]
  [./dispz_damp]
-   type = MaxIncrement
-   variable = dispz
-   max_increment = 1.0
+ type = ConstantDamper
+ variable = dispz
+ damping = 0.8
  [../]
 []
 
 [Executioner]
-  type = Steady
+  type = Transient
 
   solve_type = NEWTON
-#  splitting = saddlepoint_fieldsplit
+  #splitting = saddlepoint_fieldsplit
 
-  petsc_options_iname='-snes_type -ksp_type -pc_type -pc_factor_shift_type -snes_linesearch_type -snes_linesearch_damping'
-  petsc_options_value=' newtonls   preonly   lu       NONZERO               basic                 0.3'
- petsc_options='-fp_trap
+  petsc_options_iname='-snes_type -ksp_type -pc_type -pc_factor_shift_type -snes_linesearch_type'
+  petsc_options_value=' newtonls   preonly   lu       NONZERO               basic'
+  petsc_options='-fp_trap
                  -info
                  -snes_converged_reason
                  -ksp_converged_reason
@@ -123,6 +132,11 @@
   #nl_rel_tol = 1.e-12
   #l_max_its = 10
   nl_max_its = 1000
+  
+  dtmin = 0.05
+  dtmax = 0.05
+  start_time = 0
+  end_time   = 1.0
 []
 
 [Preconditioning]
