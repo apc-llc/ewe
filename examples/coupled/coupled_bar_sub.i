@@ -22,9 +22,9 @@
 []
 
 [AuxVariables]
-  [./dispx]    order=FIRST     family = LAGRANGE  [../]
-  [./dispy]    order=FIRST     family = LAGRANGE  [../]
-  [./dispz]    order=FIRST     family = LAGRANGE  [../]
+  [./dispx]    order=SECOND     family = LAGRANGE  [../]
+  [./dispy]    order=SECOND     family = LAGRANGE  [../]
+  [./dispz]    order=SECOND     family = LAGRANGE  [../]
 []
 
 [AuxKernels]

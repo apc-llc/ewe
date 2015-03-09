@@ -137,51 +137,47 @@
   [../]
 []
 
-#[MultiApps]
-#  [./electrocardio]
-#    type=TransientMultiApp
-#    app_type=EweApp
-#    execute_on=timestep_begin
-#    input_files=coupled_bar_sub.i
-#    positions='0.0 0.0 0.0'
-#  [../]
-#[]
+[MultiApps]
+  [./electrocardio]
+    type=TransientMultiApp
+    app_type=EweApp
+    execute_on=timestep_begin
+    input_files=coupled_bar_sub.i
+    positions='0.0 0.0 0.0'
+  [../]
+[]
 #
-#[Transfers]
-#  [./dispx_to_sub]
-#    type=MultiAppNearestNodeTransfer
-#    direction=to_multiapp
-#    execute_on=timestep_begin
-#    multi_app=electrocardio
-#    source_variable=dispx
-#    variable=dispx
-#    fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
-#  [../]
-#  [./dispy_to_sub]
-#    type=MultiAppNearestNodeTransfer
-#    direction=to_multiapp
-#    execute_on=timestep_begin
-#    multi_app=electrocardio
-#    source_variable=dispy
-#    variable=dispy
-#    fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
-#  [../]
-#  [./dispz_to_sub]
-#    type=MultiAppNearestNodeTransfer
-#    direction=to_multiapp
-#    execute_on=timestep_begin
-#    multi_app=electrocardio
-#    source_variable=dispz
-#    variable=dispz
-#    fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
-#  [../]
-#  [./from_sub]
-#    type=MultiAppNearestNodeTransfer
-#    direction=from_multiapp
-#    execute_on=timestep_begin
-#    multi_app=electrocardio
-#    source_variable=potential
-#    variable=potential_from_sub
-#    fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
-#  [../]
-#[]
+[Transfers]
+  [./dispx_to_sub]
+    type=MultiAppMeshFunctionTransfer
+    direction=to_multiapp
+    execute_on=timestep_begin
+    multi_app=electrocardio
+    source_variable=dispx
+    variable=dispx
+  [../]
+  [./dispy_to_sub]
+    type=MultiAppMeshFunctionTransfer
+    direction=to_multiapp
+    execute_on=timestep_begin
+    multi_app=electrocardio
+    source_variable=dispy
+    variable=dispy
+  [../]
+  [./dispz_to_sub]
+    type=MultiAppMeshFunctionTransfer
+    direction=to_multiapp
+    execute_on=timestep_begin
+    multi_app=electrocardio
+    source_variable=dispz
+    variable=dispz
+  [../]
+  [./from_sub]
+    type=MultiAppMeshFunctionTransfer
+    direction=from_multiapp
+    execute_on=timestep_begin
+    multi_app=electrocardio
+    source_variable=potential
+    variable=potential_from_sub
+  [../]
+[]
