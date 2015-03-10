@@ -49,8 +49,8 @@
     type = PiecewiseFunction
     default_function = '0'
     functions = 'PurkinjePacing PurkinjePacing PurkinjePacing'
-    left      = '0.0 250.0 500.0'
-    right     = '5.0 255.0 505.0'
+    left      = '0.0 350.0 700.0'
+    right     = '5.0 355.0 705.0'
   [../]
 []
 
