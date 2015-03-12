@@ -63,17 +63,18 @@
     outputs=all
   [../]
 
-  [./cardiac_material_costa]
-    type = CardiacCostaMaterial
-    block = all
-    use_displaced_mesh = false
-    # material parameters in the order C, b_f, b_t, b_fs (C in kPa, b unitless)
-    material_parameters =           '  2  8    2    4'
-    maximumQ = 15
-    displacements ='dispx dispy dispz'
-    outputs=all
-    hydrostatic_pressure=pressure
-  [../]
+   [./cardiac_material_linear]
+     type = CardiacLinearMaterial
+     block = 0
+     use_displaced_mesh = false
+    # material parameters
+     E  = 0.5
+     nu = 0.3
+     displacements ='dispx dispy dispz'
+     outputs=all
+     active_tension = active_tension
+   [../]
+
 
   [./active_tension_material]
     type=ActiveTensionODE
@@ -98,7 +99,7 @@
   [./volume_ratio]  type=CardiacMaterialVolumeRatioPostprocessor  [../]
   [./timestep]      type=TimestepSize  execute_on='timestep_end'  [../]
 []
-
+ 
 [Executioner]
   type=Transient
 
@@ -106,29 +107,44 @@
 #  petsc_options_iname='-snes_type -ksp_type -pc_type -pc_factor_shift_type'
 #  petsc_options_value=' newtonls   preonly   lu       NONZERO'
 #petsc_options='-fp_trap -info -snes_monitor -snes_converged_reason -ksp_monitor -ksp_converged_reason  -ksp_monitor_true_residual -pc_svd_monitor'
+   petsc_options='-snes_monitor -snes_converged_reason'
 
+  line_search = 'none'
+ 
   nl_rel_tol=1e-5
   nl_abs_tol=1e-5
   nl_rel_step_tol=1e-6
   nl_abs_step_tol=1e-6
 
   l_tol=1.e-6
-  l_max_its=30
+  l_max_its=15
   #l_abs_step_tol=1.e-12
   #l_max_its=20
 
   start_time=0
-  end_time  =20.0
-  dtmin     =0.25
-  dtmax     =0.25
+  end_time  =2.0
+  dtmin     =0.05
+  dtmax     =0.05
  []
 
+#[Preconditioning]
+#  active = my_smp
+#  [./my_smp]
+    # since we are using solve_type=NEWTON instead of PJFNK, this block should be ignored but it isn't:
+    # it still determines how the Jacobian looks like when evaluated by PETSc. The default is to only
+    # include the diagonal block elements which will for sure be wrong if the Jacobian is directly
+    # used for finding the Newton search direction instead of as a preconditioner as it is originally intended
+#    type = SMP
+#    full = true
+#    pc_side = left
+#  [../]
+#[]
 
 [Outputs]
   [./console]
   type=Console
   perf_log=false
-  output_on = 'initial timestep_begin timestep_end'
+  output_on = 'initial nonlinear timestep_begin timestep_end'
   [../]
 
   [./out]
@@ -173,6 +189,7 @@
     variable=dispz
   [../]
   [./from_sub]
+#type=MultiAppNearestNodeTransfer # This, for some reason, leads to a segfault
     type=MultiAppMeshFunctionTransfer
     direction=from_multiapp
     execute_on=timestep_begin

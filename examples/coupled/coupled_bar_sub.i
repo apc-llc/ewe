@@ -131,7 +131,7 @@
   #l_max_its=20
 
   start_time=0
-  end_time  =20.0
+  end_time  =50.0
   dtmin     =0.25
   dtmax     =0.25
 []
