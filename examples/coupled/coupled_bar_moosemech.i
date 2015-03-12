@@ -86,15 +86,20 @@
 #     -ksp_monitor  -ksp_converged_reason  -ksp_monitor_true_residual
 #     -pc_svd_monitor'
  
-  line_search = 'none'
+#  line_search = 'none'
 
-  nl_rel_step_tol = 1.e-5
-  l_max_its = 100
+   nl_rel_tol=1e-5
+   nl_abs_tol=1e-5
+   nl_rel_step_tol=1e-6
+   nl_abs_step_tol=1e-6
+   
+   l_tol=1.e-6
+   l_max_its=15
 
   start_time = 0
-  end_time   = 500.0
+  end_time   = 2.0
   dtmax      = 0.1
-  dtmin      = 0.1
+  dtmin      = 0.5
 []
 
 [Outputs]

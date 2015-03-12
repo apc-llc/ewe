@@ -68,7 +68,7 @@
      block = 0
      use_displaced_mesh = false
     # material parameters
-     E  = 0.5
+     E  = 1.e5
      nu = 0.3
      displacements ='dispx dispy dispz'
      outputs=all
@@ -104,12 +104,10 @@
   type=Transient
 
   solve_type=PJFNK
-#  petsc_options_iname='-snes_type -ksp_type -pc_type -pc_factor_shift_type'
-#  petsc_options_value=' newtonls   preonly   lu       NONZERO'
-#petsc_options='-fp_trap -info -snes_monitor -snes_converged_reason -ksp_monitor -ksp_converged_reason  -ksp_monitor_true_residual -pc_svd_monitor'
-   petsc_options='-snes_monitor -snes_converged_reason'
-
-  line_search = 'none'
+  petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
+  petsc_options_value = '201                 hypre    boomeramg      4'
+#  petsc_options='-snes_monitor -snes_converged_reason'
+#  line_search = 'none'
  
   nl_rel_tol=1e-5
   nl_abs_tol=1e-5
@@ -123,8 +121,8 @@
 
   start_time=0
   end_time  =2.0
-  dtmin     =0.05
-  dtmax     =0.05
+  dtmin     =0.1
+  dtmax     =0.5
  []
 
 #[Preconditioning]
