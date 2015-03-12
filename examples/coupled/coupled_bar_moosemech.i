@@ -1,19 +1,19 @@
 [Mesh]
-#file = 07-heart_geometry_new.e
- displacements = 'dispx dispy dispz'
- dim           = 3
- distribution  = DEFAULT
- nx            = 32
- ny            = 8
- nz            = 8
- type          = GeneratedMesh
- xmax          = 10.0
- xmin          = 0.0
- ymax          = 2.5
- ymin          = 0.0
- zmax          = 2.5
- zmin          = 0.0
- []
+  displacements = 'dispx dispy dispz'
+  dim           = 3
+  distribution  = DEFAULT
+  nx            = 32
+  ny            = 8
+  nz            = 8
+  type          = GeneratedMesh
+  xmax          = 10.0
+  xmin          = 0.0
+  ymax          = 2.5
+  ymin          = 0.0
+  zmax          = 2.5
+  zmin          = 0.0
+  elem_type     = HEX20
+[]
 
 [Variables]
   [./dispx] order = FIRST family = LAGRANGE [../]
@@ -132,39 +132,35 @@
 
 [Transfers]
   [./disp_x_to_sub]
-    type = MultiAppNearestNodeTransfer
+    type = MultiAppMeshFunctionTransfer
     direction = to_multiapp
     execute_on = timestep_begin
     multi_app = electrocardio
     source_variable = dispx
     variable = dispx
-    fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
   [../]
   [./disp_y_to_sub]
-    type = MultiAppNearestNodeTransfer
+    type = MultiAppMeshFunctionTransfer
     direction = to_multiapp
     execute_on = timestep_begin
     multi_app = electrocardio
     source_variable = dispy
     variable = dispy
-    fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
   [../]
   [./disp_z_to_sub]
-    type = MultiAppNearestNodeTransfer
+    type = MultiAppMeshFunctionTransfer
     direction = to_multiapp
     execute_on = timestep_begin
     multi_app = electrocardio
     source_variable = dispz
     variable = dispz
-    fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
   [../]
   [./from_sub]
-    type = MultiAppNearestNodeTransfer
+    type = MultiAppMeshFunctionTransfer
     direction = from_multiapp
     execute_on = timestep_begin
     multi_app = electrocardio
     source_variable = potential
     variable = potential_from_sub
-    fixed_meshes=true # independent of any deformation we want to make sure that transfer always happens between the same node pairs
   [../]
 []
