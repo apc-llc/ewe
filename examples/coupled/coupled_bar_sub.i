@@ -107,7 +107,7 @@
  
   [./conductivity]
     type = ElectrocardioConductivity
-    conductivities = '0.003 0.003 0.003'
+    conductivities = '0.012 0.006 0.006'
     block = all
     #use_displaced_mesh = true # TODO: if activated I am getting a segfault
   [../]
@@ -131,21 +131,18 @@
   #l_max_its=20
 
   start_time=0
-  end_time  =50.0
-  dtmin     =0.25
-  dtmax     =0.25
+  end_time  = 50.0
+  dtmin     = 0.1
+  dtmax     = 1.0
 []
 
  
 [Outputs]
-   [./console]
-   type=Console
-   perf_log=false
-   output_on = 'initial timestep_begin timestep_end'
-   [../]
-   
-   [./out]
-   type=Exodus
-   output_on = 'initial timestep_end'
-   [../]
+  output_on = 'initial timestep_end'
+  exodus=true
+  [./console]
+    type=Console
+    perf_log=false
+    output_on = 'initial nonlinear timestep_begin timestep_end'
+  [../]
  []

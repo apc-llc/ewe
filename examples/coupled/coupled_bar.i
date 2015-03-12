@@ -83,9 +83,9 @@
     # these are the default parameter values, including them here to make sure they are not forgotten as tunable options
     epsilon_recovery=0.01
     epsilon_development=0.04
-    kTa=2.
+    kTa=47.9
     Vrest=-90.272
-    Vmax=120.
+    Vmax=0.
   [../]
 []
 
@@ -107,47 +107,31 @@
   petsc_options_iname = '-ksp_gmres_restart -pc_type -pc_hypre_type -pc_hypre_boomeramg_max_iter'
   petsc_options_value = '201                 hypre    boomeramg      4'
 #  petsc_options='-snes_monitor -snes_converged_reason'
-#  line_search = 'none'
+  line_search = 'none'
  
-  nl_rel_tol=1e-5
-  nl_abs_tol=1e-5
-  nl_rel_step_tol=1e-6
-  nl_abs_step_tol=1e-6
+  nl_rel_tol      = 1e-5
+  nl_abs_tol      = 1e-5
+  nl_rel_step_tol = 1e-6
+  nl_abs_step_tol = 1e-6
 
-  l_tol=1.e-6
-  l_max_its=15
+  l_tol           = 1.e-6
+  l_max_its       = 15
   #l_abs_step_tol=1.e-12
   #l_max_its=20
 
   start_time=0
-  end_time  =2.0
-  dtmin     =0.1
-  dtmax     =0.5
+  end_time  =  15.0
+  dtmin     =   0.1
+  dtmax     =   1.0
  []
 
-#[Preconditioning]
-#  active = my_smp
-#  [./my_smp]
-    # since we are using solve_type=NEWTON instead of PJFNK, this block should be ignored but it isn't:
-    # it still determines how the Jacobian looks like when evaluated by PETSc. The default is to only
-    # include the diagonal block elements which will for sure be wrong if the Jacobian is directly
-    # used for finding the Newton search direction instead of as a preconditioner as it is originally intended
-#    type = SMP
-#    full = true
-#    pc_side = left
-#  [../]
-#[]
-
 [Outputs]
-  [./console]
-  type=Console
-  perf_log=false
-  output_on = 'initial nonlinear timestep_begin timestep_end'
-  [../]
-
-  [./out]
-  type=Exodus
   output_on = 'initial timestep_end'
+  exodus=true
+  [./console]
+    type=Console
+    perf_log=false
+    output_on = 'initial nonlinear timestep_begin timestep_end'
   [../]
 []
 
