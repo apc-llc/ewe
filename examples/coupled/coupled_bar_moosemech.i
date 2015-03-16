@@ -86,8 +86,9 @@
 #     -ksp_monitor  -ksp_converged_reason  -ksp_monitor_true_residual
 #     -pc_svd_monitor'
  
-#  line_search = 'none'
+  line_search = 'none'
 
+<<<<<<< HEAD
    nl_rel_tol=1e-8
    nl_abs_tol=1e-8
    nl_rel_step_tol=1e-6
@@ -100,6 +101,15 @@
   end_time   = 50.0
   dtmax      =  0.1
   dtmin      =  0.5
+=======
+  nl_rel_step_tol = 1.e-5
+  l_max_its = 100
+
+  start_time = 0
+  end_time   = 500.0
+  dtmax      = 0.1
+  dtmin      = 0.1
+>>>>>>> parent of 49fdb06... key to convergence: use ksp_gmres_restart option with larger value for petsc; coupled bar with CardiacLinearMaterial is now converging properly
 []
 
 [Outputs]
