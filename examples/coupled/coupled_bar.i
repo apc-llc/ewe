@@ -84,15 +84,13 @@
     epsilon_recovery=0.01
     epsilon_development=0.04
     kTa=47.9
-    Vrest=-90.272
-    Vmax=0.
+    Vrest=-92.189
+    Vmax= 0.
   [../]
 []
 
 [BCs]
  [./displacement_x]  type=PresetBC  variable=dispx  boundary=left  value=0.0  [../]
- [./displacement_y]  type=PresetBC  variable=dispy  boundary=left  value=0.0  [../]
- [./displacement_z]  type=PresetBC  variable=dispz  boundary=left  value=0.0  [../]
 []
 
 [Postprocessors]
@@ -119,10 +117,10 @@
   #l_abs_step_tol=1.e-12
   #l_max_its=20
 
-  start_time=0
-  end_time  =  15.0
+  start_time=   0.0
+  end_time  =  10.0
   dtmin     =   0.1
-  dtmax     =   1.0
+  dtmax     =   0.1
  []
 
 [Outputs]

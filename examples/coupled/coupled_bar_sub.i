@@ -74,7 +74,7 @@
   [./bc]
     type = NeumannBC
     variable = potential
-    boundary = '1 2 3'
+    boundary = '1 2 3 4 5'
     value = 0
   [../]
 []
@@ -107,7 +107,7 @@
  
   [./conductivity]
     type = ElectrocardioConductivity
-    conductivities = '0.012 0.006 0.006'
+    conductivities = '0.006 0.006 0.006'
     block = all
     #use_displaced_mesh = true # TODO: if activated I am getting a segfault
   [../]
@@ -120,20 +120,20 @@
 # petsc_options_iname='-snes_type -ksp_type -pc_type -pc_factor_shift_type '
 #  petsc_options_value=' newtonls   preonly   lu       NONZERO'
 
-  nl_rel_tol=1e-5
-  nl_abs_tol=1e-5
-  nl_rel_step_tol=1e-6
-  nl_abs_step_tol=1e-6
+  nl_rel_tol=1e-9
+  nl_abs_tol=1e-9
+  nl_rel_step_tol=1e-9
+  nl_abs_step_tol=1e-9
 
   l_tol=1.e-6
   l_max_its=30
   #l_abs_step_tol=1.e-12
   #l_max_its=20
 
-  start_time=0
-  end_time  = 50.0
-  dtmin     = 0.1
-  dtmax     = 1.0
+  start_time=  0.0
+  end_time  = 10.0
+  dtmin     =  0.1
+  dtmax     =  0.2
 []
 
  
