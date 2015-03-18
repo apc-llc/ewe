@@ -130,10 +130,10 @@
   #l_abs_step_tol=1.e-12
   #l_max_its=20
 
-  start_time=  0.0
-  end_time  = 10.0
-  dtmin     =  0.1
-  dtmax     =  0.2
+  start_time=   0.0
+  end_time  = 500.0
+  dtmin     =   0.1
+  dtmax     =   0.25
 []
 
  

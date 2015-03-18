@@ -55,7 +55,7 @@
     type = ParsedFunction
     value = 'A*( exp(-0.5*(pow(x-1.0, 2)+pow(y-1.0, 2)+pow(z-0.5,2))/pow(w,2)) )'
     vars = '  A   w' # amplitude and spatial width of the Gaussians
-    vals = '-30 0.4'
+    vals = '-35 0.5'
   [../]
 []
 
@@ -120,9 +120,9 @@
   #l_max_its=20
 
   start_time=0
-  end_time  = 50.0
-  dtmin     =  0.1
-  dtmax     =  0.5
+  end_time  = 100.0
+  dtmin     =   0.1
+  dtmax     =   0.5
 []
 
  

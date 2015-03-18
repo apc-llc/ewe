@@ -74,7 +74,7 @@
     epsilon_development=0.04
     kTa=47.9
     Vrest=-90.272
-    Vmax=0.
+    Vmax=120.
   [../]
 []
 
@@ -113,9 +113,9 @@
   #l_max_its=20
 
   start_time=0
-  end_time  = 50.0
-  dtmin     =  0.1
-  dtmax     =  0.5
+  end_time  = 100.0
+  dtmin     =   0.1
+  dtmax     =   0.5
  []
 
 [Outputs]
