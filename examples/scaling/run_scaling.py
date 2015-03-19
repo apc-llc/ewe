@@ -18,6 +18,6 @@ for i in range(0,numpy.size(Nprocs)):
     myfile.write("echo JobID $SLURM_JOB_ID \n")
     myfile.write("echo Nodes $SLURM_NNODES \n")
     myfile.write("echo Tasks $SLURM_NTASKS \n")
-    myfile.write("/usr/bin/time mpirun -n "+str(Nproc)+" ../../ewe-opt -i coupled_bar.i \n")
+    myfile.write("/usr/bin/time mpirun -n "+str(Nproc)+" ../../ewe-opt --no-color -i coupled_bar.i \n")
     myfile.close()
   os.system("sbatch submit_ewe_Np"+str(Nproc)+".sh")
