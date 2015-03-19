@@ -11,7 +11,7 @@ for i in range(0,numpy.size(Nprocs)):
     myfile.write("#SBATCH --job-name="+jobname+"\n")
     myfile.write("#SBATCH --nodes="+str(Nnodes)+"\n")
     myfile.write("#SBATCH --ntasks="+str(Nproc)+"\n")
-    myfile.write("#SBATCH --ntasks-per-node="+str(Nproc)+"\n")
+    myfile.write("#SBATCH --ntasks-per-node=8 \n")
     myfile.write("#SBATCH --cpus-per-task=1 \n")
     myfile.write("#SBATCH --time=08:00:00 \n")
     myfile.write("#SBATCH --output="+jobname+".out \n")
