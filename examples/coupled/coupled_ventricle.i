@@ -57,7 +57,7 @@
      block = 1
      use_displaced_mesh = false
     # material parameters
-     E  = 1.e5
+     E  = 1.e2
      nu = 0.3
      displacements ='dispx dispy dispz'
      outputs=all
@@ -74,7 +74,7 @@
     epsilon_development=0.04
     kTa=47.9
     Vrest=-90.272
-    Vmax=120.
+    Vmax=150.
   [../]
 []
 
@@ -112,8 +112,8 @@
   #l_abs_step_tol=1.e-12
   #l_max_its=20
 
-  start_time=0
-  end_time  = 100.0
+  start_time=   0.0
+  end_time  = 500.0
   dtmin     =   0.1
   dtmax     =   0.5
  []

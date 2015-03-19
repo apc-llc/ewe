@@ -96,7 +96,7 @@
  
   [./conductivity]
     type = ElectrocardioConductivity
-    conductivities = '0.003 0.003 0.003'
+    conductivities = '0.006 0.006 0.006'
     block = all
     #use_displaced_mesh = true # TODO: if activated I am getting a segfault
   [../]
@@ -119,8 +119,8 @@
   #l_abs_step_tol=1.e-12
   #l_max_its=20
 
-  start_time=0
-  end_time  = 100.0
+  start_time=   0.0
+  end_time  = 500.0
   dtmin     =   0.1
   dtmax     =   0.5
 []
