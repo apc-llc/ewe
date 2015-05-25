@@ -13,6 +13,9 @@
 #include "Iionmodel.h"
 #include "IionmodelFactory.h"
 
+// #include "CudaIionmodel.h"
+// #include "CudaIionmodelFactory.h"
+
 //Forward Declarations
 class Electrocardio;
 
@@ -29,6 +32,7 @@ public:
                   InputParameters parameters);
 
 protected:
+  virtual void computeProperties();
   virtual void computeQpProperties();
   virtual void initQpStatefulProperties();
 
@@ -38,6 +42,7 @@ private:
   MaterialProperty<std::vector<Real> > & _gates, & _gates_old; // gating variables
   VariableValue & _vmem; // membrane potential
     
+  //CudaIionmodel * _ionmodel;
   Iionmodel * _ionmodel;
     
 };

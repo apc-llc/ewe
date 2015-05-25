@@ -1,4 +1,11 @@
 #include "Electrocardio.h"
+//#include "CudaBernus.cu"
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <time.h>
+
+#define dngates 5
 
 template<>
 InputParameters validParams<Electrocardio>()
@@ -25,6 +32,7 @@ Electrocardio::Electrocardio(const std::string & name,
 {
   
   // Create pointer to a Bernus model object using the factory class
+  //_ionmodel = CudaIionmodelFactory::factory(CudaIionmodelFactory::BERNUS);
   _ionmodel = IionmodelFactory::factory(IionmodelFactory::BERNUS);
 }
 
@@ -32,8 +40,70 @@ void
 Electrocardio::initQpStatefulProperties()
 {
   // initialize local gate variable vector
-  _ionmodel->initialize(&(_gates[_qp]));
+  // std::vector<std::vector<double> > gates(_qrule->n_points(), std::vector<double>(ngates));
+  // for(int i = 0 ; i< _qrule->n_points(); i++){
+  //   gates[i] = _gates[i];
+  // }
+  _ionmodel->initialize(&gates, _qrule->n_points());
 }
+
+
+/*TODO 
+  1. port the computeProperties() on GPUs 
+  2. merge correctly into the moose framework
+*/
+//for (unsigned int qp = 0; qp < _qrule->n_points(); ++qp)
+// void 
+// Electrocardio::computeProperties()
+// {
+
+//   int qpsize = _qrule->n_points();
+//   // std::vector<double> vmem(_qrule->n_points());
+//   // std::vector<double> Iion(_qrule->n_points());
+//   // std::vector<std::vector<double> > gates_old(_qrule->n_points(), std::vector<double>(ngates));
+//   // std::vector<std::vector<double> > gates(_qrule->n_points(), std::vector<double>(ngates));
+  
+//   // for(int i = 0 ; i< vmem.size(); i++){
+//   //   vmem[i] = _vmem[i];
+//   //   Iion[i] = _Iion[i];
+//   //   gates_old[i] = _gates_old[i];
+//   //   gates[i] = _gates[i];
+//   // }
+
+//   double * vmem, * Iion, * gates_old, * gates;
+
+//   gates = (double *)malloc( (dngates) * qpsize  * sizeof(double));
+//   gates_old = (double *)malloc( (dngates) * qpsize  * sizeof(double));
+//   vmem = (double *)malloc( qpsize  * sizeof(double));
+//   Iion = (double *)malloc( qpsize  * sizeof(double));
+  
+
+//   for(int i = 0; i < qpsize; i++ ){
+//     vmem[i] = _vmem[i];
+//     Iion[i] = _Iion[i];
+//     for(int j = 0; j < dngates;j++){
+//       gates_old[i * dngates + j ] = _gates_old[i][j];
+//       gates[i * dngates + j ] = _gates[i][j];
+//     }
+//   }
+
+//   _ionmodel->initialize(gates, _qrule->n_points());
+
+//   _ionmodel->rush_larsen_ionforcing(_dt, vmem, gates_old, gates, Iion, _qrule->n_points());
+
+//   // transform the data as double * back to moose format
+
+//   for(int i = 0 ; i< qpsize; i++){
+//     _vmem[i] = vmem[i];
+//     _Iion[i] = Iion[i];
+//     for(int j = 0; j < dngates;j++){
+//       _gates_old[i][j] = gates_old[i * dngates + j];
+//       _gates[i][j] = gates[i * dngates + j];
+//     }
+//   }
+
+// }
+
 
 /**
  * @todo documentation
