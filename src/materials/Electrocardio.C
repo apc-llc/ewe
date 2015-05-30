@@ -44,7 +44,7 @@ Electrocardio::initQpStatefulProperties()
   // for(int i = 0 ; i< _qrule->n_points(); i++){
   //   gates[i] = _gates[i];
   // }
-  _ionmodel->initialize(&gates, _qrule->n_points());
+  // _ionmodel->initialize(&gates, _qrule->n_points());
 }
 
 
