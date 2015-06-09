@@ -1,3 +1,7 @@
+#ifdef _GLIBCXX_USE_FLOAT128
+#undef _GLIBCXX_USE_FLOAT128 // disable __float128 which is unsupported by NVCC
+#endif
+
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
