@@ -1,0 +1,19 @@
+#!/usr/bin/perl -w
+
+my(@ARGS) = ();
+foreach $ARG (@ARGV)
+{
+	if ($ARG eq "-fPIC")
+	{
+		push(@ARGS, "-Xcompiler $ARG");
+	}
+	else
+	{
+		push(@ARGS, $ARG);
+	}
+}
+
+my($nvcc) = $ENV{"NVCC"};
+my($cmd) = "$nvcc @ARGS";
+#print "$cmd\n";
+exit(system("$cmd"));
