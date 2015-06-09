@@ -57,7 +57,7 @@ public:
   CudaBernus();
   
   //! Destructor
-  ~CudaBernus();
+  virtual ~CudaBernus() { }
   
   //! Initialize gating variables to their steady-state values
   //! for the Bernus model resting potential \\( V=-90.272 mV \\)
@@ -70,14 +70,14 @@ public:
   // void get_gates_dt(double,  std::vector<double>*, std::vector<double>*);
   
   // void rush_larsen_step(double, double,std::vector<double>*);
-  void rush_larsen_ionforcing(double , 
+  virtual void rush_larsen_ionforcing(double , 
           double * , 
           double * ,
           double * ,
           double *,
           int );
            
-  void initialize(double *, int);
+  virtual void initialize(double *, int);
 
   //! Static factory function that instantiates a #bernus object and returns a pointer. Called by the #IionmodelFactory class.
   //! @param[out] Iionmodel* A pointer to an object of type #bernus.
