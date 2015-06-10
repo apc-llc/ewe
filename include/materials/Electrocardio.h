@@ -31,6 +31,8 @@ public:
   Electrocardio(const std::string & name,
                   InputParameters parameters);
 
+  virtual ~Electrocardio() { }
+
 protected:
   virtual void computeProperties();
   virtual void computeQpProperties();
